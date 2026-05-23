@@ -1,41 +1,93 @@
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+
 export default function DashboardPage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white p-10">
-      <h1 className="text-5xl font-bold mb-8">
-        Dashboard
-      </h1>
+    <main className="min-h-screen bg-slate-950 text-white p-8">
+      <section className="mb-12">
+        <h1 className="text-6xl font-bold mb-4">
+          Welcome Back 👋
+        </h1>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-          <h2 className="text-2xl font-semibold">
-            XP Points
+        <p className="text-slate-400 text-lg">
+          Continue mastering Prompt Engineering.
+        </p>
+      </section>
+
+      <section className="grid md:grid-cols-3 gap-6 mb-12">
+        <Card
+          title="XP Points"
+          value="1200"
+          color="text-blue-400"
+        />
+
+        <Card
+          title="Current Streak"
+          value="7 Days"
+          color="text-orange-400"
+        />
+
+        <Card
+          title="Skill Level"
+          value="Beginner"
+          color="text-green-400"
+        />
+      </section>
+
+      <section className="grid lg:grid-cols-2 gap-6">
+        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+          <h2 className="text-3xl font-bold mb-6">
+            Learning Progress
           </h2>
 
-          <p className="text-4xl mt-4 font-bold text-blue-500">
-            1200
-          </p>
+          <div className="space-y-6">
+            <div>
+              <div className="flex justify-between mb-2">
+                <span>Prompt Basics</span>
+                <span>80%</span>
+              </div>
+
+              <div className="w-full h-3 bg-slate-800 rounded-full">
+                <div className="w-[80%] h-3 bg-blue-500 rounded-full"></div>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between mb-2">
+                <span>Chain of Thought</span>
+                <span>45%</span>
+              </div>
+
+              <div className="w-full h-3 bg-slate-800 rounded-full">
+                <div className="w-[45%] h-3 bg-green-500 rounded-full"></div>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between mb-2">
+                <span>AI Agents</span>
+                <span>20%</span>
+              </div>
+
+              <div className="w-full h-3 bg-slate-800 rounded-full">
+                <div className="w-[20%] h-3 bg-purple-500 rounded-full"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-          <h2 className="text-2xl font-semibold">
-            Current Streak
+        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+          <h2 className="text-3xl font-bold mb-6">
+            Daily Challenge
           </h2>
 
-          <p className="text-4xl mt-4 font-bold text-orange-400">
-            7 Days
+          <p className="text-slate-400 mb-8">
+            Create a prompt that forces AI to respond only in JSON format.
           </p>
-        </div>
 
-        <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-          <h2 className="text-2xl font-semibold">
-            Skill Level
-          </h2>
-
-          <p className="text-4xl mt-4 font-bold text-green-400">
-            Beginner
-          </p>
+          <Button text="Start Challenge" />
         </div>
-      </div>
+      </section>
     </main>
   );
 }
