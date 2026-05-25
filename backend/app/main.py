@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from app.config.db import db
+from app.routes.auth import router as auth_router
 
 import requests
 import os
@@ -9,7 +11,6 @@ import os
 load_dotenv()
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-print(OPENROUTER_API_KEY)
 
 app = FastAPI()
 
@@ -22,6 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_router)
+
 class PromptRequest(BaseModel):
     prompt: str
 
@@ -29,6 +32,12 @@ class PromptRequest(BaseModel):
 def root():
     return {
         "message": "Prompto Backend Running Successfully"
+    }
+
+@app.get("/test-db")
+async def test_db():
+    return {
+        "message": "MongoDB Connected Successfully"
     }
 
 @app.post("/generate")
@@ -62,13 +71,13 @@ async def generate_response(data: PromptRequest):
 
     if "choices" not in result:
         return {
-        "success": False,
-        "error": result
-    }
+            "success": False,
+            "error": result
+        }
 
     ai_response = result["choices"][0]["message"]["content"]
 
     return {
-    "success": True,
-    "response": ai_response
+        "success": True,
+        "response": ai_response
     }
