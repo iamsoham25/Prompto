@@ -1,34 +1,68 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function HomePage() {
+import API from "@/services/api";
 
-  const router = useRouter();
+export default function LearnPage() {
+
+  const [lessons, setLessons] = useState([]);
+
+  useEffect(() => {
+
+    fetchLessons();
+
+  }, []);
+
+  const fetchLessons = async () => {
+
+    try {
+
+      const response = await API.get("/lessons");
+
+      setLessons(response.data.lessons);
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+  };
 
   return (
 
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-slate-950 text-white p-10">
 
-      <section className="flex flex-col items-center justify-center text-center h-[85vh] px-6">
+      <h1 className="text-6xl font-bold mb-12">
+        Learn AI Engineering 🚀
+      </h1>
 
-        <h1 className="text-7xl font-bold mb-6">
-          Prompto
-        </h1>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-        <p className="text-slate-400 text-xl max-w-3xl leading-relaxed">
-          Learn Prompt Engineering, AI Agents, RAG, Evals,
-          Multimodal AI, and Production AI Systems from Beginner to Master Level.
-        </p>
+        {lessons.map((lesson: any) => (
 
-        <button
-          onClick={() => router.push("/dashboard")}
-          className="mt-10 px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 transition text-lg font-semibold"
-        >
-          Start Learning
-        </button>
+          <div
+            key={lesson.id}
+            className="bg-slate-900 border border-white/10 rounded-3xl p-8"
+          >
 
-      </section>
+            <h2 className="text-3xl font-bold mb-4">
+              {lesson.title}
+            </h2>
+
+            <p className="text-slate-400 mb-4">
+              {lesson.description}
+            </p>
+
+            <span className="inline-block bg-blue-600 px-4 py-2 rounded-xl text-sm">
+              {lesson.level}
+            </span>
+
+          </div>
+
+        ))}
+
+      </div>
 
     </main>
   );
