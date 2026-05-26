@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Card from "@/components/ui/Card";
@@ -9,17 +9,24 @@ import Button from "@/components/ui/Button";
 export default function DashboardPage() {
 
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   // Protect Dashboard Route
-  useEffect(() => {
+ useEffect(() => {
 
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    if (!token) {
-      router.push("/login");
-    }
+  if (!token) {
 
-  }, []);
+    router.push("/login");
+
+  } else {
+
+    setLoading(false);
+
+  }
+
+}, []);
 
   // Logout Function
   const handleLogout = () => {
@@ -29,7 +36,16 @@ export default function DashboardPage() {
     router.push("/login");
 
   };
+  if (loading) {
 
+  return (
+
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white text-3xl font-bold">
+      Loading Dashboard...
+    </div>
+
+  );
+}
   return (
 
     <main className="min-h-screen bg-slate-950 text-white p-8">
