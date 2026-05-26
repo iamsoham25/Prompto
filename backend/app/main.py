@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from app.config.db import db
 from app.routes.auth import router as auth_router
+from app.routes.lesson import router as lesson_router
 
 import requests
 import os
@@ -24,6 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(lesson_router)
 
 class PromptRequest(BaseModel):
     prompt: str
