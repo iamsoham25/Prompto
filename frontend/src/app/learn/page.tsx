@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
+
 import API from "@/services/api";
 
 export default function LearnPage() {
@@ -41,10 +43,11 @@ export default function LearnPage() {
 
         {lessons.map((lesson: any) => (
 
-          <div
+          <Link
+            href={`/learn/${lesson.id}`}
             key={lesson.id}
-            className="bg-slate-900 border border-white/10 rounded-3xl p-8"
-          >
+            className="bg-slate-900 border border-white/10 rounded-3xl p-8 hover:border-blue-500 transition cursor-pointer"
+           >
 
             <h2 className="text-3xl font-bold mb-4">
               {lesson.title}
@@ -58,7 +61,7 @@ export default function LearnPage() {
               {lesson.level}
             </span>
 
-          </div>
+          </Link>
 
         ))}
 
