@@ -4,168 +4,113 @@ import { useState } from "react";
 
 import API from "@/services/api";
 
-import ChatBubble from "@/components/ui/ChatBubble";
-
-import { Message } from "@/types/chat";
-
-import { SendHorizonal } from "lucide-react";
-
 export default function PlaygroundPage() {
 
   const [prompt, setPrompt] = useState("");
 
+  const [response, setResponse] = useState("");
+
   const [loading, setLoading] = useState(false);
 
-  const [messages, setMessages] = useState<Message[]>([]);
-  const createNewChat = () => {
-  setMessages([]);
-  setPrompt("");
-};
+  const generateAIResponse = async () => {
 
-  const generateResponse = async () => {
-
-    if (!prompt.trim()) return;
-
-    const userMessage: Message = {
-      role: "user",
-      content: prompt,
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-
-    setPrompt("");
+    if (!prompt) {
+      alert("Please enter prompt");
+      return;
+    }
 
     try {
 
       setLoading(true);
 
-      const response = await API.post("/generate", {
+      const res = await API.post("/generate", {
         prompt,
       });
 
-      const aiMessage: Message = {
-        role: "assistant",
-        content: response.data.response,
-      };
+      if (res.data.success) {
 
-      setMessages((prev) => [...prev, aiMessage]);
+        setResponse(res.data.response);
+
+      } else {
+
+        alert("AI Generation Failed");
+
+      }
 
     } catch (error) {
 
-      console.error(error);
+      console.log(error);
 
-      const errorMessage: Message = {
-        role: "assistant",
-        content:
-          "Something went wrong while generating AI response.",
-      };
-
-      setMessages((prev) => [...prev, errorMessage]);
+      alert("Something went wrong");
 
     } finally {
+
       setLoading(false);
+
     }
   };
 
   return (
-    <main className="min-h-screen bg-[#020617] text-white flex">
 
-      {/* Sidebar */}
-      <aside className="w-72 border-r border-slate-800 p-5 hidden md:block">
+    <main className="min-h-screen bg-slate-950 text-white px-8 py-12">
 
-        <button
-  onClick={createNewChat}
-  className="w-full bg-blue-600 hover:bg-blue-700 transition rounded-2xl py-4 font-semibold text-lg"
->
-  + New Chat
-</button>
+      <div className="max-w-6xl mx-auto">
 
-        <div className="mt-10 text-slate-400">
-          Chat history coming soon...
-        </div>
+        <h1 className="text-6xl font-bold mb-4">
+          AI Playground 🚀
+        </h1>
 
-      </aside>
+        <p className="text-slate-400 text-xl mb-10">
+          Test prompts using OpenRouter AI models.
+        </p>
 
-      {/* Main Chat */}
-      <section className="flex-1 flex flex-col h-[calc(100vh-80px)]">
+        <div className="grid lg:grid-cols-2 gap-8">
 
-        {/* Header */}
-        <div className="border-b border-slate-800 px-8 py-5">
-          <h1 className="text-3xl font-bold">
-            Prompto AI Playground
-          </h1>
-        </div>
+          {/* LEFT SIDE */}
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6 pb-32">
+          <div className="bg-slate-900 border border-white/10 rounded-3xl p-8">
 
-          {messages.length === 0 && (
+            <h2 className="text-3xl font-bold mb-6">
+              Enter Prompt
+            </h2>
 
-            <div className="h-full flex items-center justify-center">
-
-              <div className="text-center">
-
-                <h2 className="text-5xl font-bold mb-4">
-                  Start Prompting 🚀
-                </h2>
-
-                <p className="text-slate-400 text-lg">
-                  Ask anything about Prompt Engineering or AI.
-                </p>
-
-              </div>
-
-            </div>
-
-          )}
-
-          {messages.map((message, index) => (
-            <ChatBubble
-              key={index}
-              role={message.role}
-              content={message.content}
+            <textarea
+              rows={12}
+              placeholder="Write your AI prompt here..."
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              className="w-full bg-slate-950 border border-white/10 rounded-2xl p-5 outline-none resize-none"
             />
-          ))}
 
-          {loading && (
+            <button
+              onClick={generateAIResponse}
+              disabled={loading}
+              className="mt-6 w-full bg-blue-600 hover:bg-blue-700 transition-all p-4 rounded-2xl font-semibold"
+            >
+              {loading ? "Generating..." : "Generate Response"}
+            </button>
 
-            <div className="flex justify-start">
+          </div>
 
-              <div className="bg-slate-800 px-5 py-4 rounded-3xl">
-                Thinking...
-              </div>
+          {/* RIGHT SIDE */}
+
+          <div className="bg-slate-900 border border-white/10 rounded-3xl p-8">
+
+            <h2 className="text-3xl font-bold mb-6">
+              AI Response
+            </h2>
+
+            <div className="bg-slate-950 border border-white/10 rounded-2xl p-6 min-h-[400px] whitespace-pre-wrap text-slate-300 leading-8">
+
+              {response || "AI response will appear here..."}
 
             </div>
 
-          )}
+          </div>
 
         </div>
-
-        {/* Input */}
-      <div className="border-t border-slate-800 p-5 bg-[#020617] sticky bottom-0">
-
-        <div className="max-w-5xl mx-auto flex gap-4 items-end">
-
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Ask Prompto AI anything..."
-            className="flex-1 bg-slate-900 border border-slate-700 rounded-2xl p-4 resize-none outline-none min-h-[60px] max-h-[200px]"
-          />
-
-          <button
-            onClick={generateResponse}
-            disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 transition px-6 h-[60px] rounded-2xl flex items-center justify-center"
-        >
-          <SendHorizonal />
-        </button>
 
       </div>
-
-    </div>
-
-    </section>
 
     </main>
   );

@@ -5,9 +5,11 @@ from dotenv import load_dotenv
 from app.config.db import db
 from app.routes.auth import router as auth_router
 from app.routes.lesson import router as lesson_router
+from app.routes.playground import router as playground_router
 
 import requests
 import os
+
 
 load_dotenv()
 
@@ -26,6 +28,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(lesson_router)
+app.include_router(playground_router)
 
 class PromptRequest(BaseModel):
     prompt: str
