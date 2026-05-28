@@ -29,7 +29,16 @@ export default function PlaygroundPage() {
 
       if (res.data.success) {
 
-        setResponse(res.data.response);
+        const aiText = res.data.response;
+
+        setResponse(aiText);
+
+        // Save Chat in MongoDB
+        await API.post("/save-chat", {
+          user_email: "soham@gmail.com",
+          prompt: prompt,
+          response: aiText,
+        });
 
       } else {
 
