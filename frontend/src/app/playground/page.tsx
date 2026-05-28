@@ -8,7 +8,7 @@ export default function PlaygroundPage() {
 
   const [prompt, setPrompt] = useState("");
 
-  const [response, setResponse] = useState("");
+  const [messages, setMessages] = useState<any[]>([]);
 
   const [history, setHistory] = useState<any[]>([]);
 
@@ -20,11 +20,15 @@ export default function PlaygroundPage() {
 
   }, []);
 
+  // FETCH CHAT HISTORY
+
   const fetchHistory = async () => {
 
     try {
 
       const email = localStorage.getItem("userEmail");
+
+      if (!email) return;
 
       const res = await API.get(
         `/chat-history/${email}`
@@ -41,7 +45,10 @@ export default function PlaygroundPage() {
       console.log(error);
 
     }
+
   };
+
+  // GENERATE AI RESPONSE
 
   const generateAIResponse = async () => {
 
@@ -57,6 +64,20 @@ export default function PlaygroundPage() {
 
       setLoading(true);
 
+      // USER MESSAGE
+
+      const userMessage = {
+        role: "user",
+        content: prompt,
+      };
+
+      setMessages((prev) => [
+        ...prev,
+        userMessage,
+      ]);
+
+      // API CALL
+
       const res = await API.post("/generate", {
         prompt,
       });
@@ -65,7 +86,19 @@ export default function PlaygroundPage() {
 
         const aiText = res.data.response;
 
-        setResponse(aiText);
+        // AI MESSAGE
+
+        const aiMessage = {
+          role: "assistant",
+          content: aiText,
+        };
+
+        setMessages((prev) => [
+          ...prev,
+          aiMessage,
+        ]);
+
+        // SAVE CHAT
 
         const email = localStorage.getItem("userEmail");
 
@@ -75,7 +108,13 @@ export default function PlaygroundPage() {
           response: aiText,
         });
 
+        // REFRESH HISTORY
+
         fetchHistory();
+
+        // CLEAR INPUT
+
+        setPrompt("");
 
       } else {
 
@@ -94,6 +133,7 @@ export default function PlaygroundPage() {
       setLoading(false);
 
     }
+
   };
 
   return (
@@ -104,7 +144,7 @@ export default function PlaygroundPage() {
 
       <div className="w-[280px] bg-slate-900 border-r border-white/10 p-5 flex flex-col">
 
-        <h2 className="text-2xl font-bold mb-4">
+        <h2 className="text-2xl font-bold mb-5">
           Chat History
         </h2>
 
@@ -118,9 +158,16 @@ export default function PlaygroundPage() {
                 key={index}
                 onClick={() => {
 
-                  setPrompt(chat.prompt);
-
-                  setResponse(chat.response);
+                  setMessages([
+                    {
+                      role: "user",
+                      content: chat.prompt,
+                    },
+                    {
+                      role: "assistant",
+                      content: chat.response,
+                    },
+                  ]);
 
                 }}
                 className="
@@ -134,7 +181,9 @@ export default function PlaygroundPage() {
               >
 
                 <p className="text-sm text-slate-300 line-clamp-3 leading-6">
+
                   {chat.prompt}
+
                 </p>
 
               </div>
@@ -155,128 +204,120 @@ export default function PlaygroundPage() {
 
       {/* MAIN SECTION */}
 
-      <div className="flex-1 p-6 overflow-hidden">
+      <div className="flex-1 p-6 flex flex-col overflow-hidden">
 
-        <div className="h-full flex flex-col">
+        {/* HEADER */}
 
-          {/* HEADER */}
+        <div className="mb-5">
 
-          <div className="mb-6">
+          <h1 className="text-4xl font-bold mb-2">
+            AI Playground 🚀
+          </h1>
 
-            <h1 className="text-5xl font-bold mb-2">
-              AI Playground 🚀
-            </h1>
+          <p className="text-slate-400 text-base">
+            Test prompts using OpenRouter AI models.
+          </p>
 
-            <p className="text-slate-400 text-lg">
-              Test prompts using OpenRouter AI models.
-            </p>
+        </div>
 
-          </div>
+        {/* CHAT AREA */}
 
-          {/* BOXES */}
+        <div
+          className="
+            flex-1
+            bg-slate-900
+            border
+            border-white/10
+            rounded-3xl
+            p-6
+            overflow-y-auto
+            space-y-5
+          "
+        >
 
-          <div className="grid lg:grid-cols-2 gap-6 flex-1 overflow-hidden">
+          {messages.length === 0 ? (
 
-            {/* PROMPT BOX */}
-
-            <div className="
-              bg-slate-900
-              border
-              border-white/10
-              rounded-3xl
-              p-6
-              flex
-              flex-col
-              overflow-hidden
-            ">
-
-              <h2 className="text-3xl font-bold mb-5">
-                Enter Prompt
-              </h2>
-
-              <textarea
-                placeholder="Write your AI prompt here..."
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                className="
-                  flex-1
-                  bg-slate-950
-                  border
-                  border-white/10
-                  rounded-2xl
-                  p-5
-                  outline-none
-                  resize-none
-                  overflow-y-auto
-                  text-lg
-                  leading-8
-                "
-              />
-
-              <button
-                onClick={generateAIResponse}
-                disabled={loading}
-                className="
-                  mt-5
-                  bg-blue-600
-                  hover:bg-blue-700
-                  transition-all
-                  p-4
-                  rounded-2xl
-                  font-semibold
-                  text-lg
-                "
-              >
-                {loading ? "Generating..." : "Generate Response"}
-              </button>
-
+            <div className="text-slate-500 text-lg">
+              Start chatting with AI...
             </div>
 
-            {/* RESPONSE BOX */}
+          ) : (
 
-            <div className="
-              bg-slate-900
-              border
-              border-white/10
-              rounded-3xl
-              p-6
-              flex
-              flex-col
-              overflow-hidden
-            ">
-
-              <h2 className="text-3xl font-bold mb-5">
-                AI Response
-              </h2>
+            messages.map((message, index) => (
 
               <div
-                className="
-                  flex-1
-                  bg-slate-950
-                  border
-                  border-white/10
-                  rounded-2xl
+                key={index}
+                className={`
+                  max-w-[80%]
                   p-5
-                  overflow-y-auto
+                  rounded-3xl
                   whitespace-pre-wrap
-                  text-slate-300
                   leading-8
-                  text-lg
-                "
+                  text-base
+                  ${
+                    message.role === "user"
+                      ? "ml-auto bg-blue-600 text-white"
+                      : "bg-slate-800 text-slate-200"
+                  }
+                `}
               >
 
-                {response || "AI response will appear here..."}
+                {message.content}
 
               </div>
 
-            </div>
+            ))
 
-          </div>
+          )}
+
+        </div>
+
+        {/* INPUT AREA */}
+
+        <div className="mt-5 flex gap-4">
+
+          <textarea
+            placeholder="Write your AI prompt here..."
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            className="
+              flex-1
+              h-[90px]
+              bg-slate-900
+              border
+              border-white/10
+              rounded-2xl
+              p-5
+              outline-none
+              resize-none
+              text-base
+            "
+          />
+
+          <button
+            onClick={generateAIResponse}
+            disabled={loading}
+            className="
+              w-[220px]
+              bg-blue-600
+              hover:bg-blue-700
+              transition-all
+              rounded-2xl
+              font-semibold
+              text-lg
+            "
+          >
+
+            {loading ? "Generating..." : "Send"}
+
+          </button>
 
         </div>
 
       </div>
 
     </main>
+
   );
+
 }
