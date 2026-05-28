@@ -56,7 +56,7 @@ export default function DashboardPage() {
 
         <div>
 
-          <h1 className="text-6xl font-bold mb-4">
+          <h1 className="text-5xl font-bold mb-4">
             Welcome Back 👋
           </h1>
 
@@ -107,7 +107,7 @@ export default function DashboardPage() {
 
         <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
 
-          <h2 className="text-3xl font-bold mb-6">
+          <h2 className="text-2xl font-bold mb-6">
             Learning Progress
           </h2>
 
@@ -160,7 +160,7 @@ export default function DashboardPage() {
 
         <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
 
-          <h2 className="text-3xl font-bold mb-6">
+          <h2 className="text-2xl font-bold mb-6">
             Daily Challenge
           </h2>
 

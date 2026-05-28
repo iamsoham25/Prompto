@@ -35,7 +35,7 @@ export default function LearnPage() {
 
     <main className="min-h-screen bg-slate-950 text-white p-10">
 
-      <h1 className="text-6xl font-bold mb-12">
+      <h1 className="text-4xl font-bold mb-12">
         Learn AI Engineering 🚀
       </h1>
 
@@ -49,7 +49,7 @@ export default function LearnPage() {
             className="bg-slate-900 border border-white/10 rounded-3xl p-8 hover:border-blue-500 transition cursor-pointer"
            >
 
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-2xl font-bold mb-4">
               {lesson.title}
             </h2>
 

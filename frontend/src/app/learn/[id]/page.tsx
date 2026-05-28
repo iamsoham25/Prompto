@@ -56,13 +56,13 @@ export default function LessonPage() {
 
     <main className="min-h-screen bg-slate-950 text-white px-8 py-12">
 
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-3xl mx-auto">
 
         <span className="bg-blue-600 px-4 py-2 rounded-xl text-sm">
           {lesson.level}
         </span>
 
-        <h1 className="text-6xl font-bold mt-6 mb-6">
+        <h1 className="text-4xl font-bold mt-6 mb-6">
           {lesson.title}
         </h1>
 

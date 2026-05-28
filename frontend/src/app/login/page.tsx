@@ -48,6 +48,11 @@ export default function LoginPage() {
           response.data.token
         );
 
+        localStorage.setItem(
+          "userEmail",
+          email
+        );
+
         alert("Login Successful");
 
         // Redirect to dashboard
