@@ -11,43 +11,53 @@ import Button from "@/components/ui/Button";
 export default function DashboardPage() {
 
   const router = useRouter();
+
   const [loading, setLoading] = useState(true);
-  const [userName, setUserName] = useState("");
-  const [chatCount, setChatCount] = useState(0);
+
+  const [stats, setStats] = useState({
+    username: "",
+    email: "",
+    total_chats: 0,
+    completed_lessons: 0,
+    skill_level: "Beginner",
+  });
 
   // Protect Dashboard Route
 useEffect(() => {
 
-  const token =
-    localStorage.getItem("token");
+  const loadDashboard = async () => {
 
-  const name =
-    localStorage.getItem("userName");
+    const token = localStorage.getItem("token");
 
-  const email =
-    localStorage.getItem("userEmail");
+    const email = localStorage.getItem("userEmail");
 
-  if (!token) {
+    if (!token) {
 
-    router.push("/login");
+      router.push("/login");
 
-    return;
+      return;
 
-  }
+    }
 
-  if (name) {
+    try {
 
-    setUserName(name);
+      await fetchDashboardStats(email);
 
-  }
+    } catch (error) {
 
-  fetchChatCount(email);
+      console.log(error);
 
-  setLoading(false);
+    }
+
+    setLoading(false);
+
+  };
+
+  loadDashboard();
 
 }, []);
 
-const fetchChatCount = async (
+const fetchDashboardStats = async (
   email: string | null
 ) => {
 
@@ -56,12 +66,12 @@ const fetchChatCount = async (
   try {
 
     const res = await API.get(
-      `/chat-count/${email}`
+      `/dashboard-stats/${email}`
     );
 
     if (res.data.success) {
 
-      setChatCount(res.data.count);
+      setStats(res.data);
 
     }
 
@@ -101,7 +111,7 @@ const fetchChatCount = async (
         <div>
 
           <h1 className="text-5xl font-bold mb-4">
-            Welcome Back {userName} 👋
+            Welcome Back {stats.username} 👋
           </h1>
 
           <p className="text-slate-400 text-lg">
@@ -110,37 +120,70 @@ const fetchChatCount = async (
 
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-2xl transition-all"
-        >
-          Logout
-        </button>
-
       </section>
 
-      {/* Stats Cards */}
+        {/* Stats Cards */}
 
-      <section className="grid md:grid-cols-3 gap-6 mb-12">
+        <section className="grid md:grid-cols-3 gap-6 mb-12">
 
         <Card
           title="Chats Generated"
-          value={chatCount.toString()}
+          value={stats.total_chats.toString()}
           color="text-blue-400"
         />
-
+    
         <Card
-          title="Current Streak"
-          value="7 Days"
+          title="Lessons Completed"
+          value={stats.completed_lessons.toString()}
           color="text-orange-400"
         />
-
+    
         <Card
           title="Skill Level"
-          value="Beginner"
+          value={stats.skill_level}
           color="text-green-400"
         />
+    
+      </section>
 
+      {/* stats cards section */}
+
+      <section className="mb-12">
+      
+        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+      
+          <h2 className="text-2xl font-bold mb-4">
+            User Profile
+          </h2>
+
+
+          <div className="space-y-2 text-slate-300">
+
+            <p>
+              <span className="font-semibold text-white">
+                Username:
+              </span>{" "}
+              {stats.username}
+            </p>
+
+            <p>
+              <span className="font-semibold text-white">
+                Email:
+              </span>{" "}
+              {stats.email}
+            </p>
+
+            <p>
+              <span className="font-semibold text-white">
+                Skill Level:
+              </span>{" "}
+              {stats.skill_level}
+            </p>
+      
+          </div>
+      
+        </div>
+      
       </section>
 
       {/* Main Content */}

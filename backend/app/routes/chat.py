@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 from app.config.db import db
 from app.models.chat import ChatModel
+from app.config.db import db
+
+users_collection = db["users"]
 
 router = APIRouter()
 
@@ -50,4 +53,34 @@ async def get_chat_count(email: str):
     return {
         "success": True,
         "count": count
+    }
+
+
+@router.get("/dashboard-stats/{email}")
+async def dashboard_stats(email: str):
+
+    user = await users_collection.find_one(
+        {"email": email}
+    )
+
+    total_chats = await chat_collection.count_documents(
+        {"user_email": email}
+    )
+
+    if total_chats <= 10:
+        skill_level = "Beginner"
+
+    elif total_chats <= 25:
+        skill_level = "Intermediate"
+
+    else:
+        skill_level = "Advanced"
+
+    return {
+        "success": True,
+        "username": user["username"] if user else "User",
+        "email": email,
+        "total_chats": total_chats,
+        "completed_lessons": 0,
+        "skill_level": skill_level
     }

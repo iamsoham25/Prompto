@@ -68,8 +68,6 @@ async def login(user: UserLogin):
     return {
     "success": True,
     "token": token,
-    "user": {
-        "username": existing_user["username"],
-        "email": existing_user["email"]
-    }
-}
+    "email": existing_user["email"],
+    "username": existing_user["username"]
+   }
