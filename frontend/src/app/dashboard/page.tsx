@@ -1,5 +1,7 @@
 "use client";
 
+import API from "@/services/api";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -10,24 +12,66 @@ export default function DashboardPage() {
 
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState("");
+  const [chatCount, setChatCount] = useState(0);
 
   // Protect Dashboard Route
- useEffect(() => {
+useEffect(() => {
 
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
+
+  const name =
+    localStorage.getItem("userName");
+
+  const email =
+    localStorage.getItem("userEmail");
 
   if (!token) {
 
     router.push("/login");
 
-  } else {
-
-    setLoading(false);
+    return;
 
   }
 
+  if (name) {
+
+    setUserName(name);
+
+  }
+
+  fetchChatCount(email);
+
+  setLoading(false);
+
 }, []);
 
+const fetchChatCount = async (
+  email: string | null
+) => {
+
+  if (!email) return;
+
+  try {
+
+    const res = await API.get(
+      `/chat-count/${email}`
+    );
+
+    if (res.data.success) {
+
+      setChatCount(res.data.count);
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
   // Logout Function
   const handleLogout = () => {
 
@@ -57,7 +101,7 @@ export default function DashboardPage() {
         <div>
 
           <h1 className="text-5xl font-bold mb-4">
-            Welcome Back 👋
+            Welcome Back {userName} 👋
           </h1>
 
           <p className="text-slate-400 text-lg">
@@ -80,8 +124,8 @@ export default function DashboardPage() {
       <section className="grid md:grid-cols-3 gap-6 mb-12">
 
         <Card
-          title="XP Points"
-          value="1200"
+          title="Chats Generated"
+          value={chatCount.toString()}
           color="text-blue-400"
         />
 

@@ -6,6 +6,7 @@ router = APIRouter()
 
 chat_collection = db["chat_history"]
 
+
 @router.post("/save-chat")
 async def save_chat(chat: ChatModel):
 
@@ -26,14 +27,27 @@ async def save_chat(chat: ChatModel):
 @router.get("/chat-history/{email}")
 async def get_chat_history(email: str):
 
-    chats = list(
-        chat_collection.find(
-            {"user_email": email},
-            {"_id": 0}
-        )
+    cursor = chat_collection.find(
+        {"user_email": email},
+        {"_id": 0}
     )
+
+    chats = await cursor.to_list(length=100)
 
     return {
         "success": True,
         "history": chats
+    }
+
+
+@router.get("/chat-count/{email}")
+async def get_chat_count(email: str):
+
+    count = await chat_collection.count_documents(
+        {"user_email": email}
+    )
+
+    return {
+        "success": True,
+        "count": count
     }
