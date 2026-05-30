@@ -12,6 +12,8 @@ export default function DashboardPage() {
 
   const router = useRouter();
 
+  const [recentChats, setRecentChats] = useState<any[]>([]);
+
   const [loading, setLoading] = useState(true);
 
   const [stats, setStats] = useState({
@@ -43,6 +45,8 @@ useEffect(() => {
 
       await fetchDashboardStats(email);
 
+      await fetchRecentChats(email);
+
     } catch (error) {
 
       console.log(error);
@@ -56,6 +60,32 @@ useEffect(() => {
   loadDashboard();
 
 }, []);
+
+const fetchRecentChats = async (
+  email: string | null
+) => {
+
+  if (!email) return;
+
+  try {
+
+    const res = await API.get(
+      `/recent-chats/${email}`
+    );
+
+    if (res.data.success) {
+
+      setRecentChats(res.data.chats);
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
 
 const fetchDashboardStats = async (
   email: string | null
@@ -257,6 +287,45 @@ const fetchDashboardStats = async (
 
           <Button text="Start Challenge" />
 
+        </div>
+
+      </section>
+
+      <section className="mt-8">
+
+        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+
+          <h2 className="text-2xl font-bold mb-6">
+            Recent Activity
+          </h2>
+
+          <div className="space-y-3">
+
+            {recentChats.length > 0 ? (
+
+              recentChats.map((chat, index) => (
+
+                <div
+                  key={index}
+                  className="bg-slate-900 p-4 rounded-xl border border-white/5"
+                >
+                  <p className="text-slate-300">
+                    {chat.prompt}
+                  </p>
+                </div>
+
+              ))
+
+            ) : (
+
+              <p className="text-slate-500">
+                No recent chats found
+              </p>
+
+            )}
+
+          </div>
+      
         </div>
 
       </section>

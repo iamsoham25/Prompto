@@ -84,3 +84,18 @@ async def dashboard_stats(email: str):
         "completed_lessons": 0,
         "skill_level": skill_level
     }
+
+@router.get("/recent-chats/{email}")
+async def recent_chats(email: str):
+
+    cursor = chat_collection.find(
+        {"user_email": email},
+        {"_id": 0, "prompt": 1}
+    ).sort("_id", -1).limit(5)
+
+    chats = await cursor.to_list(length=5)
+
+    return {
+        "success": True,
+        "chats": chats
+    }
