@@ -7,6 +7,7 @@ from app.routes.auth import router as auth_router
 from app.routes.lesson import router as lesson_router
 from app.routes.playground import router as playground_router
 from app.routes.chat import router as chat_router
+from app.routes.challenge import router as challenge_router
 
 import requests
 import os
@@ -31,6 +32,7 @@ app.include_router(auth_router)
 app.include_router(lesson_router)
 app.include_router(playground_router)
 app.include_router(chat_router)
+app.include_router(challenge_router)
 
 class PromptRequest(BaseModel):
     prompt: str
