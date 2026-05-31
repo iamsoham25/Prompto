@@ -14,6 +14,10 @@ export default function DashboardPage() {
 
   const [recentChats, setRecentChats] = useState<any[]>([]);
 
+  const [xp, setXp] = useState(0);
+
+  const [completedChallenges, setCompletedChallenges] = useState(0);
+
   const [loading, setLoading] = useState(true);
 
   const [stats, setStats] = useState({
@@ -47,6 +51,8 @@ useEffect(() => {
 
       await fetchRecentChats(email);
 
+      await fetchUserXP(email);
+
     } catch (error) {
 
       console.log(error);
@@ -60,6 +66,54 @@ useEffect(() => {
   loadDashboard();
 
 }, []);
+
+const fetchUserXP = async (
+  email: string | null
+) => {
+
+  if (!email) return;
+
+  try {
+
+    const res = await API.get(
+      `/user-xp/${email}`
+    );
+
+    if (res.data.success) {
+
+      setXp(res.data.xp);
+
+      setCompletedChallenges(
+        Math.floor(res.data.xp / 50)
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+
+const getLevel = () => {
+
+  if (xp >= 300) {
+
+    return "Advanced";
+
+  }
+
+  if (xp >= 100) {
+
+    return "Intermediate";
+
+  }
+
+  return "Beginner";
+
+};
 
 const fetchRecentChats = async (
   email: string | null
@@ -157,20 +211,20 @@ const fetchDashboardStats = async (
         <section className="grid md:grid-cols-3 gap-6 mb-12">
 
         <Card
-          title="Chats Generated"
-          value={stats.total_chats.toString()}
-          color="text-blue-400"
+          title="Total XP"
+          value={`${xp} XP`}
+          color="text-yellow-400"
         />
-    
+
         <Card
-          title="Lessons Completed"
-          value={stats.completed_lessons.toString()}
+          title="Challenges Completed"
+          value={completedChallenges.toString()}
           color="text-orange-400"
         />
-    
+
         <Card
           title="Skill Level"
-          value={stats.skill_level}
+          value={getLevel()}
           color="text-green-400"
         />
     
@@ -207,7 +261,7 @@ const fetchDashboardStats = async (
               <span className="font-semibold text-white">
                 Skill Level:
               </span>{" "}
-              {stats.skill_level}
+              {getLevel()}
             </p>
       
           </div>
