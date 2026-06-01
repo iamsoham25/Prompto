@@ -24,6 +24,8 @@ export default function DashboardPage() {
 
   const [loading, setLoading] = useState(true);
 
+  const [dailyChallenge, setDailyChallenge] = useState<any>(null);
+
   const [stats, setStats] = useState({
     username: "",
     email: "",
@@ -60,6 +62,8 @@ useEffect(() => {
       await fetchLeaderboard();
 
       await fetchAchievements(email);
+
+      await fetchDailyChallenge();
 
     } catch (error) {
 
@@ -230,6 +234,31 @@ const fetchLeaderboard = async () => {
 
       setLeaderboard(
         res.data.leaderboard
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+
+const fetchDailyChallenge =
+  async () => {
+
+  try {
+
+    const res = await API.get(
+      "/daily-challenge"
+    );
+
+    if (res.data.success) {
+
+      setDailyChallenge(
+        res.data.challenge
       );
 
     }
@@ -503,13 +532,27 @@ const progress = getProgressData();
 
         <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
 
-          <h2 className="text-2xl font-bold mb-6">
-            Daily Challenge
+          <h2 className="text-2xl font-bold mb-3">
+            {dailyChallenge?.title}
           </h2>
 
-          <p className="text-slate-400 mb-8">
-            Create a prompt that forces AI to respond only in JSON format.
+          <p className="text-slate-500 mb-6">
+            Daily Challenge 🎯
           </p>
+
+          <p className="text-slate-400 mb-4">
+            {dailyChallenge?.description}
+          </p>
+
+          <div className="mb-6">
+
+            <span className="bg-blue-600 px-3 py-1 rounded-lg text-sm">
+
+              {dailyChallenge?.difficulty}
+
+            </span>
+
+          </div>
 
           <Button text="Start Challenge" />
 
