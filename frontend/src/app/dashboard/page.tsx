@@ -123,6 +123,49 @@ const getLevel = () => {
 
 };
 
+const getProgressData = () => {
+
+  if (xp < 100) {
+
+    return {
+      currentLevel: "Beginner",
+      nextLevel: "Intermediate",
+      currentXP: xp,
+      targetXP: 100,
+      percentage:
+        (xp / 100) * 100
+    };
+
+  }
+
+  if (xp < 300) {
+
+    return {
+      currentLevel:
+        "Intermediate",
+      nextLevel:
+        "Advanced",
+      currentXP:
+        xp - 100,
+      targetXP: 200,
+      percentage:
+        ((xp - 100) / 200) * 100
+    };
+
+  }
+
+  return {
+    currentLevel:
+      "Advanced",
+    nextLevel:
+      "Master",
+    currentXP: 300,
+    targetXP: 300,
+    percentage: 100
+  };
+
+};
+
 const fetchRecentChats = async (
   email: string | null
 ) => {
@@ -245,6 +288,8 @@ const fetchAchievements = async (
 
   );
 }
+
+const progress = getProgressData();
   return (
 
     <main className="min-h-screen bg-slate-950 text-white p-8">
@@ -329,6 +374,72 @@ const fetchAchievements = async (
       
         </div>
       
+      </section>
+
+      <section className="mb-12">
+
+        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+
+          <div className="flex justify-between mb-4">
+
+            <h2 className="text-2xl font-bold">
+
+              Level Progress 📈
+
+            </h2>
+
+            <span className="text-slate-400">
+
+              {progress.currentLevel}
+              {" → "}
+              {progress.nextLevel}
+
+            </span>
+
+          </div>
+
+          <div className="w-full h-4 bg-slate-800 rounded-full overflow-hidden">
+
+            <div
+              className="h-4 bg-blue-500 rounded-full transition-all duration-500"
+              style={{
+                width:
+                  `${progress.percentage}%`
+              }}
+            />
+
+          </div>
+
+          <div className="flex justify-between mt-3 text-sm text-slate-400">
+
+            <span>
+
+              {Math.floor(
+                progress.currentXP
+              )} XP
+
+            </span>
+
+            <span>
+
+              {Math.floor(
+                progress.targetXP
+              )} XP
+
+            </span>
+
+          </div>
+
+          <div className="mt-3 text-center text-blue-400 font-semibold">
+
+            {Math.floor(
+              progress.percentage
+            )}% Completed
+
+          </div>
+
+        </div>
+
       </section>
 
       {/* Main Content */}
