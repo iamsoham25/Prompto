@@ -26,6 +26,8 @@ export default function DashboardPage() {
 
   const [dailyChallenge, setDailyChallenge] = useState<any>(null);  
 
+  const [rank, setRank] = useState<number | null>(null);
+
   const [stats, setStats] = useState({
     username: "",
     email: "",
@@ -64,6 +66,8 @@ useEffect(() => {
       await fetchAchievements(email);
 
       await fetchDailyChallenge();
+
+      await fetchUserRank(email);
 
     } catch (error) {
 
@@ -246,7 +250,33 @@ const fetchLeaderboard = async () => {
 
 };
 
+const fetchUserRank = async (
+  email: string | null
+) => {
 
+  if (!email) return;
+
+  try {
+
+    const res = await API.get(
+      `/user-rank/${email}`
+    );
+
+    if (res.data.success) {
+
+      setRank(
+        res.data.rank
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
 
 const fetchDailyChallenge =
   async () => {
@@ -470,6 +500,88 @@ const progress = getProgressData();
           </div>
 
         </div>
+
+      </section>
+
+      <section className="mb-12">
+
+        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+
+          <h2 className="text-2xl font-bold mb-6">
+
+            Analytics Overview 📊
+
+          </h2>
+
+          <div className="grid md:grid-cols-4 gap-4">
+
+            <div className="bg-slate-900 rounded-2xl p-5">
+
+              <p className="text-slate-400 text-sm">
+
+                Total Chats
+
+              </p>
+
+              <p className="text-3xl font-bold">
+
+                {stats.total_chats}
+
+              </p>
+
+            </div>
+
+            <div className="bg-slate-900 rounded-2xl p-5">
+
+              <p className="text-slate-400 text-sm">
+
+                Total XP
+
+              </p>
+      
+              <p className="text-3xl font-bold text-yellow-400">
+
+                {xp}
+
+              </p>
+
+            </div>
+
+            <div className="bg-slate-900 rounded-2xl p-5">
+
+              <p className="text-slate-400 text-sm">
+
+                Challenges
+
+              </p>
+
+              <p className="text-3xl font-bold text-orange-400">
+
+                {completedChallenges}
+
+              </p>
+
+            </div>
+
+            <div className="bg-slate-900 rounded-2xl p-5">
+
+              <p className="text-slate-400 text-sm">
+
+                Rank
+
+              </p>
+
+              <p className="text-3xl font-bold text-green-400">
+
+                #{rank ?? "-"}
+
+              </p>
+
+            </div>
+
+          </div>
+
+       </div>
 
       </section>
 

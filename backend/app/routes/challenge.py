@@ -322,3 +322,52 @@ async def get_daily_challenge():
         "success": True,
         "challenge": challenges[0]
     }
+
+@router.get("/user-rank/{email}")
+async def get_user_rank(
+    email: str
+):
+
+    cursor = completion_collection.find({})
+
+    completions = await cursor.to_list(
+        length=1000
+    )
+
+    xp_map = {}
+
+    for item in completions:
+
+        user_email = item["user_email"]
+
+        xp = item["xp_earned"]
+
+        if user_email not in xp_map:
+
+            xp_map[user_email] = 0
+
+        xp_map[user_email] += xp
+
+    ranking = sorted(
+        xp_map.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )
+
+    rank = None
+
+    for index, (
+        user_email,
+        _
+    ) in enumerate(ranking):
+
+        if user_email == email:
+
+            rank = index + 1
+
+            break
+
+    return {
+        "success": True,
+        "rank": rank
+    }
