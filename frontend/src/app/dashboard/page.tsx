@@ -18,6 +18,10 @@ export default function DashboardPage() {
 
   const [completedChallenges, setCompletedChallenges] = useState(0);
 
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+
+  const [badges, setBadges] = useState<string[]>([]);
+
   const [loading, setLoading] = useState(true);
 
   const [stats, setStats] = useState({
@@ -52,6 +56,10 @@ useEffect(() => {
       await fetchRecentChats(email);
 
       await fetchUserXP(email);
+
+      await fetchLeaderboard();
+
+      await fetchAchievements(email);
 
     } catch (error) {
 
@@ -166,6 +174,59 @@ const fetchDashboardStats = async (
   }
 
 };
+
+const fetchLeaderboard = async () => {
+
+  try {
+
+    const res = await API.get(
+      "/leaderboard"
+    );
+
+    if (res.data.success) {
+
+      setLeaderboard(
+        res.data.leaderboard
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+
+const fetchAchievements = async (
+  email: string | null
+) => {
+
+  if (!email) return;
+
+  try {
+
+    const res = await API.get(
+      `/achievements/${email}`
+    );
+
+    if (res.data.success) {
+
+      setBadges(
+        res.data.badges
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+
   // Logout Function
   const handleLogout = () => {
 
@@ -380,6 +441,153 @@ const fetchDashboardStats = async (
 
           </div>
       
+        </div>
+
+      </section>
+
+      <section className="mt-8">
+
+        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+      
+          <h2 className="text-2xl font-bold mb-6">
+      
+            Achievements 🏅
+
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-4">
+
+            <div
+              className={`p-4 rounded-xl border ${
+                badges.includes(
+                  "Beginner Explorer"
+                )
+                  ? "bg-green-500/10 border-green-500 text-green-400"
+                  : "bg-slate-900 border-slate-800 text-slate-500"
+              }`}
+            >
+              {badges.includes(
+                "Beginner Explorer"
+              )
+                ? "🏅"
+                : "🔒"}{" "}
+              Beginner Explorer
+            </div>
+
+            <div
+              className={`p-4 rounded-xl border ${
+                badges.includes(
+                  "Prompt Apprentice"
+                )
+                  ? "bg-green-500/10 border-green-500 text-green-400"
+                  : "bg-slate-900 border-slate-800 text-slate-500"
+              }`}
+            >
+              {badges.includes(
+                "Prompt Apprentice"
+              )
+                ? "🏅"
+                : "🔒"}{" "}
+              Prompt Apprentice
+            </div>
+
+            <div
+              className={`p-4 rounded-xl border ${
+                badges.includes(
+                  "Prompt Engineer"
+                )
+                  ? "bg-green-500/10 border-green-500 text-green-400"
+                  : "bg-slate-900 border-slate-800 text-slate-500"
+              }`}
+            >
+              {badges.includes(
+                "Prompt Engineer"
+              )
+                ? "🏅"
+                : "🔒"}{" "}
+              Prompt Engineer
+            </div>
+
+            <div
+              className={`p-4 rounded-xl border ${
+                badges.includes(
+                  "AI Architect"
+                )
+                  ? "bg-green-500/10 border-green-500 text-green-400"
+                  : "bg-slate-900 border-slate-800 text-slate-500"
+              }`}
+            >
+              {badges.includes(
+                "AI Architect"
+              )
+                ? "🏅"
+                : "🔒"}{" "}
+              AI Architect
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <section className="mt-8">
+
+        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+
+          <h2 className="text-2xl font-bold mb-6">
+            Leaderboard 🏆
+          </h2>
+
+          <div className="space-y-3">
+
+            {leaderboard.length > 0 ? (
+
+              leaderboard.map(
+                (user, index) => (
+
+                  <div
+                    key={index}
+                    className="flex justify-between items-center bg-slate-900 p-4 rounded-xl border border-white/5"
+                  >
+
+                    <div>
+
+                <p className="font-semibold">
+
+                  #{index + 1} {user.username}
+
+                      </p>
+
+                      <p className="text-slate-500 text-sm">
+
+                        {user.email}
+
+                      </p>
+
+                    </div>
+
+                    <div className="text-yellow-400 font-bold">      
+
+                {user.xp} XP
+
+                    </div>
+
+                  </div>
+
+                )
+              )
+
+            ) : (      
+
+            <p className="text-slate-500">
+              No leaderboard data
+            </p>
+
+            )}
+
+          </div>
+
         </div>
 
       </section>

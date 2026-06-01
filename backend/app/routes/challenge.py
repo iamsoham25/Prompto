@@ -12,6 +12,7 @@ completion_collection = db[
     "challenge_completions"
 ]
 
+users_collection = db["users"]
 
 @router.get("/challenges")
 async def get_challenges():
@@ -123,4 +124,153 @@ async def get_user_xp(
     return {
         "success": True,
         "xp": total_xp
+    }
+
+@router.get("/leaderboard")
+async def get_leaderboard():
+
+    cursor = completion_collection.find({})
+
+    completions = await cursor.to_list(
+        length=1000
+    )
+
+    leaderboard = {}
+
+    for item in completions:
+
+        email = item["user_email"]
+
+        xp = item["xp_earned"]
+
+        if email not in leaderboard:
+
+            leaderboard[email] = 0
+
+        leaderboard[email] += xp
+
+    ranking = []
+
+    for email, xp in leaderboard.items():
+
+        ranking.append({
+            "email": email,
+            "xp": xp
+        })
+
+    ranking.sort(
+        key=lambda x: x["xp"],
+        reverse=True
+    )
+
+    return {
+        "success": True,
+        "leaderboard": ranking[:10]
+    }
+
+@router.get("/leaderboard")
+async def get_leaderboard():
+
+    cursor = completion_collection.find({})
+
+    completions = await cursor.to_list(
+        length=1000
+    )
+
+    xp_map = {}
+
+    for item in completions:
+
+        email = item["user_email"]
+
+        xp = item["xp_earned"]
+
+        if email not in xp_map:
+
+            xp_map[email] = 0
+
+        xp_map[email] += xp
+
+    leaderboard = []
+
+    for email, xp in xp_map.items():
+
+        user = await users_collection.find_one(
+            {"email": email}
+        )
+
+        username = (
+            user["username"]
+            if user
+            else email
+        )
+
+        leaderboard.append(
+            {
+                "username": username,
+                "xp": xp
+            }
+        )
+
+    leaderboard.sort(
+        key=lambda x: x["xp"],
+        reverse=True
+    )
+
+    return {
+        "success": True,
+        "leaderboard": leaderboard[:10]
+    }
+
+@router.get("/achievements/{email}")
+async def get_achievements(
+    email: str
+):
+
+    cursor = (
+        completion_collection.find(
+            {
+                "user_email": email
+            }
+        )
+    )
+
+    completions = await (
+        cursor.to_list(length=100)
+    )
+
+    total_xp = sum(
+        item["xp_earned"]
+        for item in completions
+    )
+
+    badges = []
+
+    if total_xp >= 50:
+
+        badges.append(
+            "Beginner Explorer"
+        )
+
+    if total_xp >= 100:
+
+        badges.append(
+            "Prompt Apprentice"
+        )
+
+    if total_xp >= 250:
+
+        badges.append(
+            "Prompt Engineer"
+        )
+
+    if total_xp >= 500:
+
+        badges.append(
+            "AI Architect"
+        )
+
+    return {
+        "success": True,
+        "badges": badges
     }
