@@ -127,7 +127,7 @@ export default function ChallengeDetailPage() {
 
   return (
 
-    <main className="min-h-screen bg-slate-950 text-white p-10">
+    <main className="min-h-screen bg-[#F8FAFC] text-slate-900 p-10">
 
       <div className="max-w-4xl mx-auto">
 
@@ -137,17 +137,17 @@ export default function ChallengeDetailPage() {
 
         </h1>
 
-        <div className="bg-slate-900 border border-white/10 rounded-3xl p-8">
+        <div className="bg-white border border-slate-200 shadow-lg rounded-3xl p-8">
 
           <div className="flex gap-4 mb-6">
 
-            <span className="bg-blue-600 px-4 py-2 rounded-xl">
+            <span className="bg-purple-100 text-purple-600 px-4 py-2 rounded-xl">
 
               {challenge.difficulty}
 
             </span>
 
-            <span className="bg-green-600 px-4 py-2 rounded-xl">
+            <span className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl">
 
               {challenge.xp_reward} XP
 
@@ -170,7 +170,7 @@ export default function ChallengeDetailPage() {
                 e.target.value
               )
             }
-            className="w-full bg-slate-950 border border-white/10 rounded-2xl p-4 mb-6 outline-none"
+            className="w-full bg-slate-50 border border-slate-300 rounded-2xl p-4 mb-6 outline-none focus:ring-2 focus:ring-orange-400"
           />
 
           {!completed ? (
@@ -179,7 +179,7 @@ export default function ChallengeDetailPage() {
               onClick={
                 submitChallenge
               }
-              className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-2xl font-semibold"
+              className="bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-2xl font-semibold"
             >
               Submit Answer
             </button>

@@ -28,6 +28,8 @@ export default function DashboardPage() {
 
   const [rank, setRank] = useState<number | null>(null);
 
+  const [greeting, setGreeting] = useState("");
+
   const [stats, setStats] = useState({
     username: "",
     email: "",
@@ -68,6 +70,10 @@ useEffect(() => {
       await fetchDailyChallenge();
 
       await fetchUserRank(email);
+
+      setLoading(false);
+
+      setGreeting(getGreeting());
 
     } catch (error) {
 
@@ -331,6 +337,26 @@ const fetchAchievements = async (
 
 };
 
+const getGreeting = () => {
+
+  const hour = new Date().getHours();
+
+  if (hour < 12) {
+
+    return "Good Morning ☀️";
+
+  }
+
+  if (hour < 18) {
+
+    return "Good Afternoon 🌤️";
+
+  }
+
+  return "Good Evening 🌙";
+
+};
+
   // Logout Function
   const handleLogout = () => {
 
@@ -353,21 +379,64 @@ const fetchAchievements = async (
 const progress = getProgressData();
   return (
 
-    <main className="min-h-screen bg-slate-950 text-white p-8">
+    <main className="min-h-screen bg-slate-50 text-slate-900 p-8">
+
+      <section
+        className="
+        bg-gradient-to-r
+        from-blue-600
+        via-purple-600
+        to-pink-500
+        rounded-3xl
+        p-8
+        text-white
+        mb-8
+        shadow-xl
+      "
+      >
+
+        <h1 className="text-4xl font-bold mb-2">
+
+          {greeting}, {stats.username} 👋
+
+        </h1>
+
+        <p className="text-lg opacity-90">
+
+          Keep learning and level up your
+          Prompt Engineering skills.
+
+        </p>
+
+        <div className="flex flex-wrap gap-4 mt-6">
+
+          <span className="bg-white/20 px-4 py-2 rounded-xl">
+
+            🎯 XP: {xp}
+
+          </span>
+
+          <span className="bg-white/20 px-4 py-2 rounded-xl">
+
+            🏆 Rank #{rank ?? "-"}
+
+          </span>
+
+          <span className="bg-white/20 px-4 py-2 rounded-xl">
+
+            🚀 {stats.skill_level}
+
+          </span>
+
+        </div>
+
+      </section>
 
       {/* Header */}
 
       <section className="flex justify-between items-center mb-12">
 
         <div>
-
-          <h1 className="text-5xl font-bold mb-4">
-            Welcome Back {stats.username} 👋
-          </h1>
-
-          <p className="text-slate-400 text-lg">
-            Continue mastering Prompt Engineering.
-          </p>
 
         </div>
 
@@ -401,31 +470,31 @@ const progress = getProgressData();
 
       <section className="mb-12">
       
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+        <div className="bg-white backdrop-blur-lg border border-slate-200 shadow-md rounded-3xl p-8">
       
           <h2 className="text-2xl font-bold mb-4">
             User Profile
           </h2>
 
 
-          <div className="space-y-2 text-slate-300">
+          <div className="space-y-2 text-slate-600">
 
             <p>
-              <span className="font-semibold text-white">
+              <span className="font-semibold text-slate-900">
                 Username:
               </span>{" "}
               {stats.username}
             </p>
 
             <p>
-              <span className="font-semibold text-white">
+              <span className="font-semibold text-slate-900">
                 Email:
               </span>{" "}
               {stats.email}
             </p>
 
             <p>
-              <span className="font-semibold text-white">
+              <span className="font-semibold text-slate-900">
                 Skill Level:
               </span>{" "}
               {getLevel()}
@@ -439,7 +508,7 @@ const progress = getProgressData();
 
       <section className="mb-12">
 
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+        <div className="bg-white backdrop-blur-lg border border-slate-200 shadow-md rounded-3xl p-8">
 
           <div className="flex justify-between mb-4">
 
@@ -459,10 +528,10 @@ const progress = getProgressData();
 
           </div>
 
-          <div className="w-full h-4 bg-slate-800 rounded-full overflow-hidden">
+          <div className="w-full h-4 bg-bg-slate-200 rounded-full overflow-hidden">
 
             <div
-              className="h-4 bg-blue-500 rounded-full transition-all duration-500"
+              className="h-4 bg-orange-500 rounded-full transition-all duration-500"
               style={{
                 width:
                   `${progress.percentage}%`
@@ -491,7 +560,7 @@ const progress = getProgressData();
 
           </div>
 
-          <div className="mt-3 text-center text-blue-400 font-semibold">
+          <div className="mt-3 text-center text-orange-400 font-semibold">
 
             {Math.floor(
               progress.percentage
@@ -505,7 +574,7 @@ const progress = getProgressData();
 
       <section className="mb-12">
 
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+        <div className="bg-white backdrop-blur-lg border border-slate-200 shadow-md rounded-3xl p-8">
 
           <h2 className="text-2xl font-bold mb-6">
 
@@ -515,7 +584,7 @@ const progress = getProgressData();
 
           <div className="grid md:grid-cols-4 gap-4">
 
-            <div className="bg-slate-900 rounded-2xl p-5">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
 
               <p className="text-slate-400 text-sm">
 
@@ -531,7 +600,7 @@ const progress = getProgressData();
 
             </div>
 
-            <div className="bg-slate-900 rounded-2xl p-5">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
 
               <p className="text-slate-400 text-sm">
 
@@ -539,7 +608,7 @@ const progress = getProgressData();
 
               </p>
       
-              <p className="text-3xl font-bold text-yellow-400">
+              <p className="text-3xl font-bold text-orange-400">
 
                 {xp}
 
@@ -547,7 +616,7 @@ const progress = getProgressData();
 
             </div>
 
-            <div className="bg-slate-900 rounded-2xl p-5">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
 
               <p className="text-slate-400 text-sm">
 
@@ -555,7 +624,7 @@ const progress = getProgressData();
 
               </p>
 
-              <p className="text-3xl font-bold text-orange-400">
+              <p className="text-3xl font-bold text-purple-400">
 
                 {completedChallenges}
 
@@ -563,7 +632,7 @@ const progress = getProgressData();
 
             </div>
 
-            <div className="bg-slate-900 rounded-2xl p-5">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
 
               <p className="text-slate-400 text-sm">
 
@@ -571,7 +640,7 @@ const progress = getProgressData();
 
               </p>
 
-              <p className="text-3xl font-bold text-green-400">
+              <p className="text-3xl font-bold text-green-500">
 
                 #{rank ?? "-"}
 
@@ -591,7 +660,7 @@ const progress = getProgressData();
 
         {/* Learning Progress */}
 
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+        <div className="bg-white backdrop-blur-lg border border-slate-200 shadow-md rounded-3xl p-8">
 
           <h2 className="text-2xl font-bold mb-6">
             Learning Progress
@@ -606,8 +675,8 @@ const progress = getProgressData();
                 <span>80%</span>
               </div>
 
-              <div className="w-full h-3 bg-slate-800 rounded-full">
-                <div className="w-[80%] h-3 bg-blue-500 rounded-full"></div>
+              <div className="w-full h-3 bg-slate-50 rounded-full">
+                <div className="w-[80%] h-3 bg-orange-500 rounded-full"></div>
               </div>
 
             </div>
@@ -644,7 +713,7 @@ const progress = getProgressData();
 
         {/* Daily Challenge */}
 
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+        <div className="bg-white border border-slate-200 shadow-md rounded-3xl p-8">
 
           <h2 className="text-2xl font-bold mb-3">
             {dailyChallenge?.title}
@@ -668,7 +737,7 @@ const progress = getProgressData();
 
           <div className="mb-6">
 
-            <span className="bg-blue-600 px-3 py-1 rounded-lg text-sm">
+            <span className="bg-orange-500 px-3 py-1 rounded-lg text-sm">
 
               {dailyChallenge?.difficulty}
 
@@ -682,9 +751,11 @@ const progress = getProgressData();
 
       </section>
 
+      {/* Recent Activity */}
+
       <section className="mt-8">
 
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+        <div className="bg-white border border-slate-200 shadow-md rounded-3xl p-8">
 
           <h2 className="text-2xl font-bold mb-6">
             Recent Activity
@@ -698,9 +769,9 @@ const progress = getProgressData();
 
                 <div
                   key={index}
-                  className="bg-slate-900 p-4 rounded-xl border border-white/5"
+                  className="bg-slate-50 p-4 rounded-xl border border-white/5"
                 >
-                  <p className="text-slate-300">
+                  <p className="text-slate-700">
                     {chat.prompt}
                   </p>
                 </div>
@@ -721,9 +792,11 @@ const progress = getProgressData();
 
       </section>
 
+      {/* Achievements */}
+
       <section className="mt-8">
 
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+        <div className="bg-white backdrop-blur-lg border border-white/10 rounded-3xl p-8">
       
           <h2 className="text-2xl font-bold mb-6">
       
@@ -738,8 +811,8 @@ const progress = getProgressData();
                 badges.includes(
                   "Beginner Explorer"
                 )
-                  ? "bg-green-500/10 border-green-500 text-green-400"
-                  : "bg-slate-900 border-slate-800 text-slate-500"
+                  ? "bg-green-50 border-green-300 text-green-600"
+                  : "bg-slate-100 border-slate-200 text-slate-500"
               }`}
             >
               {badges.includes(
@@ -755,8 +828,8 @@ const progress = getProgressData();
                 badges.includes(
                   "Prompt Apprentice"
                 )
-                  ? "bg-green-500/10 border-green-500 text-green-400"
-                  : "bg-slate-900 border-slate-800 text-slate-500"
+                  ? "bg-green-50 border-green-300 text-green-600"
+                  : "bg-slate-100 border-slate-200 text-slate-500"
               }`}
             >
               {badges.includes(
@@ -772,8 +845,8 @@ const progress = getProgressData();
                 badges.includes(
                   "Prompt Engineer"
                 )
-                  ? "bg-green-500/10 border-green-500 text-green-400"
-                  : "bg-slate-900 border-slate-800 text-slate-500"
+                  ? "bg-green-50 border-green-300 text-green-600"
+                  : "bg-slate-100 border-slate-200 text-slate-500"
               }`}
             >
               {badges.includes(
@@ -789,8 +862,8 @@ const progress = getProgressData();
                 badges.includes(
                   "AI Architect"
                 )
-                  ? "bg-green-500/10 border-green-500 text-green-400"
-                  : "bg-slate-900 border-slate-800 text-slate-500"
+                  ? "bg-green-50 border-green-300 text-green-600"
+                  : "bg-slate-100 border-slate-200 text-slate-500"
               }`}
             >
               {badges.includes(
@@ -807,9 +880,11 @@ const progress = getProgressData();
 
       </section>
 
+      {/* Leaderboard */}
+
       <section className="mt-8">
 
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8">
+        <div className="bg-white backdrop-blur-lg border border-white/10 rounded-3xl p-8">
 
           <h2 className="text-2xl font-bold mb-6">
             Leaderboard 🏆
@@ -824,7 +899,7 @@ const progress = getProgressData();
 
                   <div
                     key={index}
-                    className="flex justify-between items-center bg-slate-900 p-4 rounded-xl border border-white/5"
+                    className="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-white/5"
                   >
 
                     <div>
@@ -843,7 +918,7 @@ const progress = getProgressData();
 
                     </div>
 
-                    <div className="text-yellow-400 font-bold">      
+                    <div className="text-orange-500 font-bold">      
 
                 {user.xp} XP
 

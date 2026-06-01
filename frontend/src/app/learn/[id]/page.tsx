@@ -45,7 +45,7 @@ export default function LessonPage() {
 
     return (
 
-      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center text-3xl">
+      <div className="min-h-screen bg-[#F8FAFC] text-slate-900 text-white flex items-center justify-center text-3xl">
         Loading...
       </div>
 
@@ -54,11 +54,11 @@ export default function LessonPage() {
 
   return (
 
-    <main className="min-h-screen bg-slate-950 text-white px-8 py-12">
+    <main className="min-h-screen bg-[#F8FAFC] text-slate-900 py-12">
 
       <div className="max-w-3xl mx-auto">
 
-        <span className="bg-blue-600 px-4 py-2 rounded-xl text-sm">
+        <span className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl text-sm">
           {lesson.level}
         </span>
 
@@ -66,33 +66,32 @@ export default function LessonPage() {
           {lesson.title}
         </h1>
 
-        <p className="text-slate-400 text-xl mb-12">
+        <p className="text-slate-600 text-xl mb-12">
           {lesson.description}
         </p>
 
-        <div className="bg-slate-900 border border-white/10 rounded-3xl p-10">
+        <div className="bg-white border border-slate-200 rounded-3xl p-10 shadow-lg">
 
           <article
             className="
               prose
-              prose-invert
               prose-lg
               max-w-none
 
-              prose-h1:text-5xl
+              prose-h1:text-slate-900
               prose-h1:font-bold
 
-              prose-h2:text-3xl
+              prose-h2:text-slate-900
               prose-h2:font-bold
 
-              prose-p:text-slate-300
+              prose-p:text-slate-700
               prose-p:leading-8
 
-              prose-li:text-slate-300
+              prose-li:text-slate-700
 
-              prose-strong:text-white
+              prose-strong:text-slate-900
 
-              prose-code:text-blue-400
+              prose-code:text-orange-600
             "
           >
 

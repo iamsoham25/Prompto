@@ -59,7 +59,7 @@ export default function ChallengesPage() {
 
     return (
 
-      <main className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
+      <main className="min-h-screen bg-slate-50 text-white flex items-center justify-center">
 
         <h1 className="text-3xl font-bold">
           Loading Challenges...
@@ -73,7 +73,7 @@ export default function ChallengesPage() {
 
   return (
 
-    <main className="min-h-screen bg-slate-950 text-white px-10 py-12">
+    <main className="min-h-screen bg-[#F8FAFC] text-slate-900 px-10 py-12">
 
       {/* Page Header */}
 
@@ -83,7 +83,7 @@ export default function ChallengesPage() {
           Prompt Challenges 🚀
         </h1>
 
-        <p className="text-slate-400 text-lg">
+        <p className="text-slate-600 text-lg">
           Complete challenges and improve your prompt engineering skills.
         </p>
 
@@ -98,7 +98,7 @@ export default function ChallengesPage() {
 
             <div
               key={index}
-              className="bg-slate-900 border border-white/10 rounded-3xl p-8 hover:border-blue-500 transition-all"
+              className="bg-white shadow-md border border-slate-200 rounded-3xl p-8 hover:border-blue-500 transition-all"
             >
 
               <div className="flex justify-between items-start mb-6">
@@ -117,7 +117,7 @@ export default function ChallengesPage() {
 
                 </div>
 
-                <div className="bg-blue-600 px-4 py-2 rounded-xl font-semibold">
+                <div className="bg-orange-500 text-white px-4 py-2 rounded-xl font-semibold">
 
                   {challenge.xp_reward} XP
 
@@ -137,7 +137,7 @@ export default function ChallengesPage() {
                     `/challenges/${index}`
                   )
                 }
-                className="w-full bg-blue-600 hover:bg-blue-700 transition-all py-4 rounded-2xl font-semibold"
+                className="w-full bg-orange-500 hover:bg-orange-600 transition-all py-4 rounded-2xl font-semibold"
               >
 
                 Start Challenge

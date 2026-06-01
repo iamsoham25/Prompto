@@ -138,13 +138,13 @@ export default function PlaygroundPage() {
 
   return (
 
-    <main className="h-[calc(100vh-80px)] bg-slate-950 text-white flex overflow-hidden">
+    <main className="h-[calc(100vh-80px)] bg-slate-50 text-white flex overflow-hidden">
 
       {/* SIDEBAR */}
 
-      <div className="w-[280px] bg-slate-900 border-r border-white/10 p-5 flex flex-col">
+      <div className="w-[280px] bg-white border-r border-slate-200 p-5 flex flex-col">
 
-        <h2 className="text-2xl font-bold mb-5">
+        <h2 className="text-2xl font-bold text-slate-900 mb-5">
           Chat History
         </h2>
 
@@ -171,8 +171,8 @@ export default function PlaygroundPage() {
 
                 }}
                 className="
-                  bg-slate-800
-                  hover:bg-slate-700
+                  bg-slate-100
+                  hover:bg-orange-50
                   transition-all
                   cursor-pointer
                   p-4
@@ -180,7 +180,7 @@ export default function PlaygroundPage() {
                 "
               >
 
-                <p className="text-sm text-slate-300 line-clamp-3 leading-6">
+                <p className="text-sm text-slate-700 line-clamp-3 leading-6">
 
                   {chat.prompt}
 
@@ -210,11 +210,11 @@ export default function PlaygroundPage() {
 
         <div className="mb-5">
 
-          <h1 className="text-4xl font-bold mb-2">
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">
             AI Playground 🚀
           </h1>
 
-          <p className="text-slate-400 text-base">
+          <p className="text-slate-600 text-base">
             Test prompts using OpenRouter AI models.
           </p>
 
@@ -225,9 +225,10 @@ export default function PlaygroundPage() {
         <div
           className="
             flex-1
-            bg-slate-900
+            bg-white
             border
-            border-white/10
+            border-slate-200
+            shadow-md
             rounded-3xl
             p-6
             overflow-y-auto
@@ -254,10 +255,11 @@ export default function PlaygroundPage() {
                   whitespace-pre-wrap
                   leading-8
                   text-base
+                  shadow-sm
                   ${
                     message.role === "user"
-                      ? "ml-auto bg-blue-600 text-white"
-                      : "bg-slate-800 text-slate-200"
+                      ? "ml-auto bg-orange-500 text-white"
+                      : "bg-slate-100 text-slate-800 border border-slate-200"
                   }
                 `}
               >
@@ -283,14 +285,18 @@ export default function PlaygroundPage() {
             className="
               flex-1
               h-[90px]
-              bg-slate-900
+              bg-white
               border
-              border-white/10
+              border-slate-300
               rounded-2xl
               p-5
               outline-none
               resize-none
               text-base
+              text-slate-900
+              focus:ring-2
+              focus:ring-orange-400
+              focus:border-orange-400
             "
           />
 
@@ -299,12 +305,14 @@ export default function PlaygroundPage() {
             disabled={loading}
             className="
               w-[220px]
-              bg-blue-600
-              hover:bg-blue-700
+              bg-orange-500
+              hover:bg-orange-600
               transition-all
               rounded-2xl
               font-semibold
               text-lg
+              text-white
+              shadow-lg
             "
           >
 

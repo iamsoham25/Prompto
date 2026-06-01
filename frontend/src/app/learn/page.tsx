@@ -33,9 +33,9 @@ export default function LearnPage() {
 
   return (
 
-    <main className="min-h-screen bg-slate-950 text-white p-10">
+    <main className="min-h-screen bg-[#F8FAFC] px-8 py-12">
 
-      <h1 className="text-4xl font-bold mb-12">
+      <h1 className="text-5xl font-bold text-slate-900 mb-12">
         Learn AI Engineering 🚀
       </h1>
 
@@ -46,18 +46,18 @@ export default function LearnPage() {
           <Link
             href={`/learn/${lesson.id}`}
             key={lesson.id}
-            className="bg-slate-900 border border-white/10 rounded-3xl p-8 hover:border-blue-500 transition cursor-pointer"
+            className="bg-white rounded-3xl p-8 shadow-md border border-slate-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer"
            >
 
-            <h2 className="text-2xl font-bold mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-slate-900">
               {lesson.title}
             </h2>
 
-            <p className="text-slate-400 mb-4">
+            <p className="text-slate-600 mb-5">
               {lesson.description}
             </p>
 
-            <span className="inline-block bg-blue-600 px-4 py-2 rounded-xl text-sm">
+            <span className=" inline-block bg-orange-100 text-orange-600 px-4 py-2 rounded-xl text-sm font-semibold ">
               {lesson.level}
             </span>
 
