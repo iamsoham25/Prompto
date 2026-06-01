@@ -298,3 +298,27 @@ async def get_daily_challenge():
         "success": True,
         "challenge": challenges[0]
     }
+
+@router.get("/daily-challenge")
+async def get_daily_challenge():
+
+    cursor = challenge_collection.find(
+        {},
+        {"_id": 0}
+    )
+
+    challenges = await cursor.to_list(
+        length=100
+    )
+
+    if len(challenges) == 0:
+
+        return {
+            "success": False,
+            "message": "No challenges found"
+        }
+
+    return {
+        "success": True,
+        "challenge": challenges[0]
+    }

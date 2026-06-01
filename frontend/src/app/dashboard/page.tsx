@@ -24,7 +24,7 @@ export default function DashboardPage() {
 
   const [loading, setLoading] = useState(true);
 
-  const [dailyChallenge, setDailyChallenge] = useState<any>(null);
+  const [dailyChallenge, setDailyChallenge] = useState<any>(null);  
 
   const [stats, setStats] = useState({
     username: "",
@@ -245,6 +245,8 @@ const fetchLeaderboard = async () => {
   }
 
 };
+
+
 
 const fetchDailyChallenge =
   async () => {
@@ -536,8 +538,16 @@ const progress = getProgressData();
             {dailyChallenge?.title}
           </h2>
 
+          <h2 className="text-2xl font-bold mb-3">
+
+            {dailyChallenge?.title}
+
+          </h2>
+
           <p className="text-slate-500 mb-6">
+
             Daily Challenge 🎯
+
           </p>
 
           <p className="text-slate-400 mb-4">

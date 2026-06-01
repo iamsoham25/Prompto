@@ -42,22 +42,30 @@ export default function LoginPage() {
 
       if (response.data.success) {
 
-        // Store JWT Token
         localStorage.setItem(
           "token",
           response.data.token
         );
-
+      
         localStorage.setItem(
           "userEmail",
-          email
+          response.data.user.email
         );
-
+      
+        localStorage.setItem(
+          "userName",
+          response.data.user.username
+        );
+      
+        localStorage.setItem(
+          "isLoggedIn",
+          "true"
+        );
+      
         alert("Login Successful");
-
-        // Redirect to dashboard
+      
         router.push("/dashboard");
-
+      
       } else {
 
         alert(response.data.message);
