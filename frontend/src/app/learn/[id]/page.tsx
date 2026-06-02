@@ -22,6 +22,10 @@ export default function LessonPage() {
 
   const [completed, setCompleted] = useState(false);
 
+  const [selectedAnswer, setSelectedAnswer] = useState("");
+
+  const [quizResult, setQuizResult] = useState<"correct" | "wrong" | null>(null);
+
   const [submitting, setSubmitting] = useState(false);
 
   const [showSuccess, setShowSuccess] = useState(false);
@@ -44,8 +48,9 @@ export default function LessonPage() {
 
     } catch (error) {
 
-      console.log(error);
-
+      console.log(lesson);
+      console.log(lesson.quiz_options);
+      console.log(typeof lesson.quiz_options);
     }
   };
 
@@ -113,6 +118,33 @@ export default function LessonPage() {
 
   };
 
+  const checkAnswer = () => {
+
+    console.log(
+      "Selected:",
+      JSON.stringify(selectedAnswer)
+    );
+
+    console.log(
+      "Answer:",
+      JSON.stringify(lesson.quiz_answer)
+    );
+
+    if (
+      selectedAnswer.trim() ===
+      lesson.quiz_answer.trim()
+    ) {
+
+      setQuizResult("correct");
+
+    } else {
+
+      setQuizResult("wrong");
+
+    }
+
+  };
+
   return (
 
     <main className="min-h-screen bg-[#F8FAFC] text-slate-900 py-12">
@@ -162,63 +194,126 @@ export default function LessonPage() {
 
           </article>
 
+          <div className="mt-12">
+
+            <h2 className="text-2xl font-bold mb-6">
+              🧠 Quick Quiz
+            </h2>
+
+            <p className="mb-6 font-medium">
+              {lesson.quiz_question}
+            </p>
+
+            <div className="space-y-4">
+
+              {Array.isArray(lesson.quiz_options)
+                ? lesson.quiz_options.map(
+                    (option: string) => (
+
+                      <label
+                        key={option}
+                        className="block p-4 border rounded-xl"
+                      >
+                        <input
+                          type="radio"
+                          value={option}
+                          name="quiz"
+                          checked={selectedAnswer === option}
+                          onChange={(e) =>
+                            setSelectedAnswer(e.target.value)
+                          }
+                        />
+
+                        <span className="ml-2">
+                          {option}
+                        </span>
+
+                      </label>
+
+                    )
+                  )
+                : null}
+
+            </div>
+
+            <button
+              onClick={checkAnswer}
+              className=" mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold "
+            >
+              Submit Answer
+            </button>
+
+            {quizResult === "correct" && (
+
+              <div
+                className="
+                  mt-4
+                  bg-green-100
+                  text-green-700
+                  p-4
+                  rounded-xl
+                "
+              >
+                ✅ Correct Answer!
+              </div>
+
+            )}
+
+            {quizResult === "wrong" && (
+
+              <div
+                className=" mt-4 bg-red-100 text-red-700 p-4 rounded-xl"
+              >
+                ❌ Wrong Answer 
+
+                <br />
+
+                Correct Answer:
+                {" "}
+                {lesson.quiz_answer}
+              </div>
+
+            )}
+
+          </div>
+
           <div className="mt-10 flex justify-center">
 
-  {!completed ? (
+            {!completed ? (
 
-    <button
-      onClick={completeLesson}
-      disabled={submitting}
-      className="
-        bg-orange-500
-        hover:bg-orange-600
-        text-white
-        px-8
-        py-4
-        rounded-2xl
-        font-semibold
-        shadow-lg
-        transition
-      "
-    >
-      {submitting
-        ? "Completing..."
-        : "Complete Lesson (+25 XP)"}
-    </button>
+              <button
+                onClick={completeLesson}
+                disabled={submitting}
+                className=" bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition "
+              >
+                {submitting
+                  ? "Completing..."
+                  : "Complete Lesson (+25 XP)"}
+              </button>
 
-  ) : (
+            ) : (
+          
+              <div
+                className=" flex items-center gap-4 bg-green-50 border border-green-200 px-6 py-4 rounded-2xl "
+              >
+                <span className="text-3xl">
+                  🏆
+                </span>
 
-    <div
-      className="
-        flex
-        items-center
-        gap-4
-        bg-green-50
-        border
-        border-green-200
-        px-6
-        py-4
-        rounded-2xl
-      "
-    >
-      <span className="text-3xl">
-        🏆
-      </span>
+                <div>
+                  <p className="font-semibold text-green-700">
+                    Lesson Completed
+                  </p>
+          
+                  <p className="text-sm text-green-600">
+                    +25 XP earned
+                  </p>
+                </div>
+              </div>
+          
+            )}
 
-      <div>
-        <p className="font-semibold text-green-700">
-          Lesson Completed
-        </p>
-
-        <p className="text-sm text-green-600">
-          +25 XP earned
-        </p>
-      </div>
-    </div>
-
-  )}
-
-</div>
+          </div>
 
         </div>
 

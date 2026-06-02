@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 class LessonCreate(BaseModel):
 
@@ -9,3 +10,9 @@ class LessonCreate(BaseModel):
     level: str
 
     content: str
+
+    quiz_question: str
+
+    quiz_options: List[str]
+
+    quiz_answer: str
