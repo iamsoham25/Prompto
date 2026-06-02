@@ -8,7 +8,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import API from "@/services/api";
 
@@ -16,7 +16,15 @@ export default function LessonPage() {
 
   const params = useParams();
 
+  const router = useRouter();
+
   const [lesson, setLesson] = useState<any>(null);
+
+  const [completed, setCompleted] = useState(false);
+
+  const [submitting, setSubmitting] = useState(false);
+
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
 
@@ -51,6 +59,59 @@ export default function LessonPage() {
 
     );
   }
+
+  const completeLesson = async () => {
+
+    const email =
+      localStorage.getItem("userEmail");
+
+    if (!email) {
+
+      alert("Please login first");
+
+      return;
+    }
+
+    try {
+ 
+      setSubmitting(true);
+
+      const response = await API.post(
+        "/complete-lesson",
+        {
+          user_email: email,
+          lesson_id: lesson.id,
+          xp_earned: 25
+        }
+      );
+
+      if (response.data.success) {
+
+        setCompleted(true);
+
+        setShowSuccess(true);
+
+      } else {
+
+        alert(response.data.message);
+
+        setCompleted(true);
+
+      }
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Failed to complete lesson");
+
+    } finally {
+
+      setSubmitting(false);
+
+    }
+
+  };
 
   return (
 
@@ -95,36 +156,69 @@ export default function LessonPage() {
             "
           >
 
-            <ReactMarkdown
-              components={{
-                code({ inline, className, children, ...props }: any) {
-
-                  const match = /language-(\w+)/.exec(className || "");
-
-                  return !inline && match ? (
-
-                    <SyntaxHighlighter
-                      style={oneDark}
-                      language={match[1]}
-                      PreTag="div"
-                    >
-                      {String(children).replace(/\n$/, "")}
-                    </SyntaxHighlighter>
-
-                  ) : (
-
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-
-                  );
-                },
-              }}
-            >
+            <div className="whitespace-pre-wrap">
               {lesson.content}
-            </ReactMarkdown>
+            </div>
 
           </article>
+
+          <div className="mt-10 flex justify-center">
+
+  {!completed ? (
+
+    <button
+      onClick={completeLesson}
+      disabled={submitting}
+      className="
+        bg-orange-500
+        hover:bg-orange-600
+        text-white
+        px-8
+        py-4
+        rounded-2xl
+        font-semibold
+        shadow-lg
+        transition
+      "
+    >
+      {submitting
+        ? "Completing..."
+        : "Complete Lesson (+25 XP)"}
+    </button>
+
+  ) : (
+
+    <div
+      className="
+        flex
+        items-center
+        gap-4
+        bg-green-50
+        border
+        border-green-200
+        px-6
+        py-4
+        rounded-2xl
+      "
+    >
+      <span className="text-3xl">
+        🏆
+      </span>
+
+      <div>
+        <p className="font-semibold text-green-700">
+          Lesson Completed
+        </p>
+
+        <p className="text-sm text-green-600">
+          +25 XP earned
+        </p>
+      </div>
+    </div>
+
+  )}
+
+</div>
 
         </div>
 
