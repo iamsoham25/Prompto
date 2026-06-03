@@ -35,7 +35,7 @@ async def get_lessons():
 
     lessons = []
 
-    async for lesson in lessons_collection.find():
+    async for lesson in lessons_collection.find().sort("order", 1):
 
         lessons.append({
             "id": str(lesson["_id"]),
