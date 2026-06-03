@@ -137,6 +137,15 @@ export default function LessonPage() {
 
       setQuizResult("correct");
 
+      setTimeout(() => {
+
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+
+      }, 300);
+
     } else {
 
       setQuizResult("wrong");
@@ -277,14 +286,44 @@ export default function LessonPage() {
 
           </div>
 
+          {quizResult !== "correct" && (
+
+            <div
+              className="
+                mt-6
+                text-center
+                bg-yellow-50
+                border
+                border-yellow-200
+                text-yellow-700
+                p-4
+                rounded-xl
+              "
+            >
+              Complete the quiz correctly to unlock
+              lesson completion.
+            </div>
+
+          )}
+
           <div className="mt-10 flex justify-center">
 
             {!completed ? (
 
               <button
                 onClick={completeLesson}
-                disabled={submitting}
-                className=" bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition "
+                disabled={
+                  submitting ||
+                  quizResult !== "correct"}
+                className={`
+                  px-8 py-4 rounded-2xl font-semibold shadow-lg transition
+
+                  ${
+                    quizResult === "correct"
+                      ? "bg-orange-500 hover:bg-orange-600 text-white"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }
+                `}
               >
                 {submitting
                   ? "Completing..."
