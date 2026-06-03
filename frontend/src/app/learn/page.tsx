@@ -10,8 +10,7 @@ export default function LearnPage() {
 
   const [lessons, setLessons] = useState([]);
 
-  const [completedLessons, setCompletedLessons] =
-    useState<string[]>([]);
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
 
   const [progress, setProgress] = useState(0);
 
@@ -42,7 +41,12 @@ export default function LearnPage() {
 
       const response = await API.get("/lessons");
 
-      setLessons(response.data.lessons);
+      setLessons(
+        response.data.lessons.sort(
+        (a: any, b: any) =>
+        a.order - b.order
+        )
+      );
 
     } catch (error) {
 
@@ -113,6 +117,28 @@ const fetchProgress = async (
 
 };
 
+  const getLessonStatus = (
+    lesson: any,
+    index: number
+  ) => {
+
+    if (
+      completedLessons.includes(
+        lesson.id
+      )
+    ) {
+      return "completed";
+    }
+
+    if (
+      index === completedLessons.length
+    ) {
+      return "current";
+    }
+
+    return "locked";
+  };
+
   return (
 
     <main className="min-h-screen bg-[#F8FAFC] px-8 py-12">
@@ -122,15 +148,7 @@ const fetchProgress = async (
       </h1>
 
       <div
-        className="
-          bg-white
-          rounded-3xl
-          p-8
-          shadow-md
-          border
-          border-slate-200
-          mb-10
-        "
+        className=" bg-white rounded-3xl p-8 shadow-md border border-slate-200 mb-10 "
       >
 
         <div className="flex justify-between mb-4">
@@ -146,23 +164,11 @@ const fetchProgress = async (
         </div>
 
         <div
-          className="
-            w-full
-            h-4
-            bg-slate-200
-            rounded-full
-            overflow-hidden
-          "
+          className=" w-full h-4 bg-slate-200 rounded-full overflow-hidden "
         >
 
           <div
-            className="
-              h-full
-              bg-gradient-to-r
-              from-orange-400
-              to-pink-500
-              transition-all
-            "
+            className=" h-full bg-gradient-to-r from-orange-400 to-pink-500 transition-all "
             style={{
               width: `${progress}%`,
             }}
@@ -198,15 +204,7 @@ const fetchProgress = async (
            >
 
             <h2
-              className="
-                text-2xl
-                font-bold
-                mb-4
-                text-slate-900
-                flex
-                items-center
-                gap-2
-              "
+              className=" text-2xl font-bold mb-4 text-slate-900 flex items-center gap-2 "
             >
 
               {completedLessons.includes(

@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from app.config.db import db
+from app.config.db import user_xp_collection
 from app.models.challenge_completion import (
     ChallengeCompletionModel
 )
@@ -100,30 +101,23 @@ async def complete_challenge(
     }
 
 @router.get("/user-xp/{email}")
-async def get_user_xp(
-    email: str
-):
+async def get_user_xp(email: str):
 
-    cursor = (
-        completion_collection.find(
-            {
-                "user_email": email
-            }
-        )
+    user = await user_xp_collection.find_one(
+        {
+            "user_email": email
+        }
     )
 
-    completions = await (
-        cursor.to_list(length=100)
-    )
-
-    total_xp = sum(
-        item["xp_earned"]
-        for item in completions
-    )
+    if not user:
+        return {
+            "success": True,
+            "xp": 0
+        }
 
     return {
         "success": True,
-        "xp": total_xp
+        "xp": user["xp"]
     }
 
 @router.get("/leaderboard")
