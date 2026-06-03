@@ -43,9 +43,10 @@ async def get_lessons():
             "description": lesson["description"],
             "level": lesson["level"],
             "content": lesson["content"],
-            "quiz_question": lesson["quiz_question"],
-            "quiz_options": lesson["quiz_options"],
-            "quiz_answer": lesson["quiz_answer"]
+            "quiz_question": lesson.get("quiz_question", ""),
+            "quiz_options": lesson.get("quiz_options", []),
+            "quiz_answer": lesson.get("quiz_answer", ""),
+            "order": lesson.get("order", 999)
         })
 
     return {

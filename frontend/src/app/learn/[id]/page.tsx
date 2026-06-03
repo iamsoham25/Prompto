@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 
+import toast from "react-hot-toast";
+
+import Confetti from "react-confetti";
+
 import ReactMarkdown from "react-markdown";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -29,6 +33,9 @@ export default function LessonPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const [showSuccess, setShowSuccess] = useState(false);
+
+  const [showConfetti, setShowConfetti] = useState(false);
+
 
   useEffect(() => {
 
@@ -91,6 +98,18 @@ export default function LessonPage() {
       );
 
       if (response.data.success) {
+
+        toast.success(
+          "🎉 Lesson Completed! +25 XP"
+        );
+      
+        setShowConfetti(true);
+
+        setTimeout(() => {
+
+          setShowConfetti(false);
+
+        }, 5000);
 
         setCompleted(true);
 
@@ -157,6 +176,12 @@ export default function LessonPage() {
   return (
 
     <main className="min-h-screen bg-[#F8FAFC] text-slate-900 py-12">
+      {showConfetti && (
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+        />
+      )}
 
       <div className="max-w-3xl mx-auto">
 
@@ -289,16 +314,7 @@ export default function LessonPage() {
           {quizResult !== "correct" && (
 
             <div
-              className="
-                mt-6
-                text-center
-                bg-yellow-50
-                border
-                border-yellow-200
-                text-yellow-700
-                p-4
-                rounded-xl
-              "
+              className=" mt-6 text-center bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded-xl "
             >
               Complete the quiz correctly to unlock
               lesson completion.
@@ -333,21 +349,19 @@ export default function LessonPage() {
             ) : (
           
               <div
-                className=" flex items-center gap-4 bg-green-50 border border-green-200 px-6 py-4 rounded-2xl "
+                className=" bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-3xl p-8 shadow-xl text-center w-full "
               >
-                <span className="text-3xl">
-                  🏆
-                </span>
-
-                <div>
-                  <p className="font-semibold text-green-700">
-                    Lesson Completed
-                  </p>
-          
-                  <p className="text-sm text-green-600">
-                    +25 XP earned
-                  </p>
+                <div className="text-5xl mb-3">
+                  🎉
                 </div>
+
+                <h2 className="text-2xl font-bold">
+                  Lesson Completed!
+                </h2>
+
+                <p className="mt-2">
+                  You earned +25 XP
+                </p>
               </div>
           
             )}

@@ -10,11 +10,24 @@ export default function LearnPage() {
 
   const [lessons, setLessons] = useState([]);
 
+  const beginnerLessons = lessons.filter(
+  (lesson: any) => lesson.level === "Beginner");
+
+  const intermediateLessons = lessons.filter(
+  (lesson: any) => lesson.level === "Intermediate");
+
+  const advancedLessons = lessons.filter(
+  (lesson: any) => lesson.level === "Advanced");
+
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
 
   const [progress, setProgress] = useState(0);
 
   const [completedCount, setCompletedCount] = useState(0);
+
+  const intermediateUnlocked = completedCount >= 6;
+
+  const advancedUnlocked = completedCount >= 14;
 
   const [totalLessons, setTotalLessons] = useState(0);
 
@@ -139,6 +152,59 @@ const fetchProgress = async (
     return "locked";
   };
 
+  const renderLessonCard = (lesson: any) => (
+
+    <Link
+      href={`/learn/${lesson.id}`}
+      key={lesson.id}
+      className={` bg-white rounded-3xl p-8 min-h-[320px] shadow-md border transition-all duration-300 hover:shadow-xl hover:-translate-y-2 flex flex-col justify-between
+
+        ${
+          completedLessons.includes(lesson.id)
+            ? "border-green-400 bg-green-50"
+            : "border-slate-200"
+        }
+      `}
+    >
+
+      <div className="flex-1">
+
+        <h2 className="text-2xl font-bold mb-4 text-slate-900 line-clamp-2">
+
+          {completedLessons.includes(lesson.id) && "✅ "}
+
+          {lesson.title}
+
+        </h2>
+
+        <p className="text-slate-600 line-clamp-3">
+
+          {lesson.description.length > 80
+            ? lesson.description.slice(0, 80) + "..."
+            : lesson.description}
+
+        </p>
+
+      </div>
+
+      <div>
+
+        <span
+          className=" inline-block bg-orange-100 text-orange-600 px-4 py-2 rounded-xl text-sm font-semibold "
+        >
+          {lesson.level}
+        </span>
+
+        <p className="mt-4 text-orange-500 font-semibold">
+          Read Lesson →
+        </p>
+
+      </div>
+
+    </Link>
+
+  );
+
   return (
 
     <main className="min-h-screen bg-[#F8FAFC] px-8 py-12">
@@ -185,47 +251,89 @@ const fetchProgress = async (
 
       </div>
 
+      {/* Beginner */}
+
+      <h2 className="text-4xl font-bold mt-12 mb-8">
+        📘 Beginner Level
+      </h2>
+
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-        {lessons.map((lesson: any) => (
+        {beginnerLessons.map(renderLessonCard)}
 
-          <Link
-            href={`/learn/${lesson.id}`}
-            key={lesson.id}
-            className={` bg-white rounded-3xl p-8 shadow-md border transition-all duration-300 hover:shadow-xl hover:-translate-y-2
-            ${
-              completedLessons.includes(
-                lesson.id
-              )
-                ? "border-green-400 bg-green-50"
-                : "border-slate-200"
-            }
-          `}
-           >
+      </div>
 
-            <h2
-              className=" text-2xl font-bold mb-4 text-slate-900 flex items-center gap-2 "
+      {/* Intermediate */}
+
+      <h2 className="text-4xl font-bold mt-16 mb-8">
+        📗 Intermediate Level
+      </h2>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        {
+          intermediateUnlocked ? (
+        
+            intermediateLessons.map(
+              renderLessonCard
+            )
+
+          ) : (
+
+            <div
+              className="col-span-3 bg-gray-100 rounded-3xl p-10 text-center "
             >
 
-              {completedLessons.includes(
-                lesson.id
-              ) && "✅"}
+              <h3 className="text-3xl font-bold mb-3">        
+                🔒 Intermediate Locked
+              </h3>
 
-              {lesson.title}
+              <p className="text-slate-600">        
+                Complete all Beginner lessons
+                to unlock Intermediate.
+              </p>
 
-            </h2>
+            </div>
 
-            <p className="text-slate-600 mb-5">
-              {lesson.description}
-            </p>
+          )
+        }
 
-            <span className=" inline-block bg-orange-100 text-orange-600 px-4 py-2 rounded-xl text-sm font-semibold ">
-              {lesson.level}
-            </span>
+      </div>
 
-          </Link>
+      {/* Advanced */}
 
-        ))}
+      <h2 className="text-4xl font-bold mt-16 mb-8">
+        📕 Advanced Level
+      </h2>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        {
+          advancedUnlocked ? (
+
+            advancedLessons.map(
+              renderLessonCard
+            )
+
+          ) : (
+
+            <div
+              className=" col-span-3 bg-gray-100 rounded-3xl p-10 text-center "
+            >
+
+              <h3 className="text-3xl font-bold mb-3">
+                🔒 Advanced Locked
+              </h3>
+
+              <p className="text-slate-600">
+                Complete Intermediate Level
+                to unlock Advanced.
+              </p>
+
+            </div>
+
+          )
+        }
 
       </div>
 
