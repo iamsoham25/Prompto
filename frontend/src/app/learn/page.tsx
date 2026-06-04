@@ -25,9 +25,9 @@ export default function LearnPage() {
 
   const [completedCount, setCompletedCount] = useState(0);
 
-  const intermediateUnlocked = completedCount >= 6;
+  const [intermediateUnlocked, setIntermediateUnlocked] = useState(false);
 
-  const advancedUnlocked = completedCount >= 14;
+  const [advancedUnlocked, setAdvancedUnlocked] = useState(false);
 
   const [totalLessons, setTotalLessons] = useState(0);
 
@@ -106,6 +106,8 @@ const fetchProgress = async (
         `/lesson-progress/${email}`
       );
 
+    console.log(response.data);
+
     if (response.data.success) {
 
       setProgress(
@@ -118,6 +120,14 @@ const fetchProgress = async (
 
       setTotalLessons(
         response.data.total_lessons
+      );
+
+      setIntermediateUnlocked(
+        response.data.intermediate_unlocked
+      );
+
+      setAdvancedUnlocked(
+        response.data.advanced_unlocked
       );
 
     }
@@ -281,10 +291,10 @@ const fetchProgress = async (
           ) : (
 
             <div
-              className="col-span-3 bg-gray-100 rounded-3xl p-10 text-center "
+              className="col-span-3 bg-white rounded-3xl p-16 text-center shadow-md border border-slate-200"
             >
 
-              <h3 className="text-3xl font-bold mb-3">        
+              <h3 className="text-4xl font-bold mb-4 text-slate-900">       
                 🔒 Intermediate Locked
               </h3>
 
@@ -318,10 +328,10 @@ const fetchProgress = async (
           ) : (
 
             <div
-              className=" col-span-3 bg-gray-100 rounded-3xl p-10 text-center "
+              className="col-span-3 bg-white rounded-3xl p-16 text-center shadow-md border border-slate-200"
             >
 
-              <h3 className="text-3xl font-bold mb-3">
+              <h3 className="text-4xl font-bold mb-4 text-slate-900">
                 🔒 Advanced Locked
               </h3>
 

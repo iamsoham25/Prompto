@@ -26,38 +26,65 @@ export default function LessonPage() {
 
   const [completed, setCompleted] = useState(false);
 
-  const [selectedAnswer, setSelectedAnswer] = useState("");
-
-  const [quizResult, setQuizResult] = useState<"correct" | "wrong" | null>(null);
+  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
 
   const [submitting, setSubmitting] = useState(false);
 
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [showConfetti, setShowConfetti] = useState(false);
+  
+  const [nextLessonId, setNextLessonId] = useState<string | null>(null);
 
+  const [questionResults, setQuestionResults] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
-
     fetchLesson();
 
-  }, []);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [params.id]);
 
   const fetchLesson = async () => {
 
     try {
 
       const response = await API.get(
-        `/lessons/${params.id}`
+      `/lessons/${params.id}`
+    );
+
+    console.log("LESSON DATA:", response.data.lesson);
+    
+    setLesson(response.data.lesson);
+
+    // Fetch all lessons
+    const allLessons =
+      await API.get("/lessons");
+
+    const lessons =
+      allLessons.data.lessons;
+
+    // Find current lesson index
+    const currentIndex =
+      lessons.findIndex(
+        (item: any) =>
+          item.id === params.id
       );
 
-      setLesson(response.data.lesson);
+    // Set next lesson
+    if (
+      currentIndex !== -1 &&
+      currentIndex < lessons.length - 1
+    ) {
+      setNextLessonId(
+        lessons[currentIndex + 1].id
+      );
+    }
 
     } catch (error) {
-
-      console.log(lesson);
-      console.log(lesson.quiz_options);
-      console.log(typeof lesson.quiz_options);
+      console.error("Failed to fetch lesson:", error);
     }
   };
 
@@ -71,6 +98,35 @@ export default function LessonPage() {
 
     );
   }
+
+  const quizzes: any[] = [];
+
+// Beginner Lessons
+if (lesson.quiz_question) {
+  quizzes.push({
+    question: lesson.quiz_question,
+    options: lesson.quiz_options,
+    answer: lesson.quiz_answer,
+  });
+}
+
+// Intermediate / Advanced Lessons
+for (let i = 1; i <= 10; i++) {
+  if (lesson[`quiz_question_${i}`]) {
+    quizzes.push({
+      question: lesson[`quiz_question_${i}`],
+      options: lesson[`quiz_options_${i}`],
+      answer: lesson[`quiz_answer_${i}`],
+    });
+  }
+}
+
+  const allQuestionsCorrect =
+  quizzes.length > 0 &&
+  quizzes.every(
+    (_, index) =>
+      questionResults[index] === true
+  );
 
   const completeLesson = async () => {
 
@@ -137,41 +193,26 @@ export default function LessonPage() {
 
   };
 
-  const checkAnswer = () => {
+  
 
-    console.log(
-      "Selected:",
-      JSON.stringify(selectedAnswer)
-    );
+  const checkSingleQuestion = (
+  index: number,
+  correctAnswer: string
+) => {
 
-    console.log(
-      "Answer:",
-      JSON.stringify(lesson.quiz_answer)
-    );
+  const selected =
+    selectedAnswers[index] || "";
 
-    if (
-      selectedAnswer.trim() ===
-      lesson.quiz_answer.trim()
-    ) {
+  const isCorrect =
+    selected.trim() ===
+    correctAnswer.trim();
 
-      setQuizResult("correct");
+  setQuestionResults(prev => ({
+    ...prev,
+    [index]: isCorrect,
+  }));
+};
 
-      setTimeout(() => {
-
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        });
-
-      }, 300);
-
-    } else {
-
-      setQuizResult("wrong");
-
-    }
-
-  };
 
   return (
 
@@ -231,142 +272,161 @@ export default function LessonPage() {
           <div className="mt-12">
 
             <h2 className="text-2xl font-bold mb-6">
-              🧠 Quick Quiz
-            </h2>
+            🧠 Quick Quiz
+          </h2>
 
-            <p className="mb-6 font-medium">
-              {lesson.quiz_question}
-            </p>
+          {quizzes.map((quiz, index) => (
 
-            <div className="space-y-4">
+           <div
+             key={index}
+             className="mb-10 border rounded-xl p-6"
+           >
 
-              {Array.isArray(lesson.quiz_options)
-                ? lesson.quiz_options.map(
-                    (option: string) => (
+             <p className="font-semibold mb-4">
+               Q{index + 1}. {quiz.question}
+             </p>
 
-                      <label
-                        key={option}
-                        className="block p-4 border rounded-xl"
-                      >
-                        <input
-                          type="radio"
-                          value={option}
-                          name="quiz"
-                          checked={selectedAnswer === option}
-                          onChange={(e) =>
-                            setSelectedAnswer(e.target.value)
-                          }
-                        />
+             <div className="space-y-3">
 
-                        <span className="ml-2">
-                          {option}
-                        </span>
+               {quiz.options?.map(
+                 (option: string) => (
 
-                      </label>
+                   <label
+                     key={option}
+                     className="block"
+                   >
 
-                    )
+                     <input
+                       type="radio"
+                       name={`quiz-${index}`}
+                       value={option}
+                       checked={
+                         selectedAnswers[index] === option
+                       }
+                       onChange={(e) =>
+                         setSelectedAnswers(prev => ({
+                           ...prev,
+                           [index]: e.target.value,
+                         }))
+                       }
+                     />
+
+                     <span className="ml-2">
+                       {option}
+                     </span>
+          
+                   </label>
+
+                 )
+               )}
+
+             </div>
+
+              <button
+                onClick={() =>
+                  checkSingleQuestion(
+                    index,
+                    quiz.answer
                   )
-                : null}
+                }
+                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"
+              >
+                Check Answer
+              </button>
+
+              {questionResults[index] === true && (
+
+                <div className="mt-3 text-green-600 font-semibold">
+                  ✅ Correct
+                </div>
+
+              )}
+
+              {questionResults[index] === false && (
+          
+                <div className="mt-3 text-red-600 font-semibold">
+                  ❌ Wrong
+                </div>
+
+              )}
 
             </div>
 
-            <button
-              onClick={checkAnswer}
-              className=" mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold "
-            >
-              Submit Answer
-            </button>
-
-            {quizResult === "correct" && (
-
-              <div
-                className="
-                  mt-4
-                  bg-green-100
-                  text-green-700
-                  p-4
-                  rounded-xl
-                "
-              >
-                ✅ Correct Answer!
-              </div>
-
-            )}
-
-            {quizResult === "wrong" && (
-
-              <div
-                className=" mt-4 bg-red-100 text-red-700 p-4 rounded-xl"
-              >
-                ❌ Wrong Answer 
-
-                <br />
-
-                Correct Answer:
-                {" "}
-                {lesson.quiz_answer}
-              </div>
-
-            )}
+          ))}
 
           </div>
 
-          {quizResult !== "correct" && (
+          {allQuestionsCorrect && (
 
             <div
-              className=" mt-6 text-center bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded-xl "
+              className=" mt-6 bg-green-100 text-green-700 p-4 rounded-xl text-center font-semibold "
             >
-              Complete the quiz correctly to unlock
-              lesson completion.
+              ✅ All Questions Completed Successfully!
             </div>
 
           )}
 
-          <div className="mt-10 flex justify-center">
+          {showSuccess ? (
 
-            {!completed ? (
+          <div
+            className=" bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-3xl p-8 shadow-xl text-center w-full "
+          >
+
+            <div className="text-5xl mb-3">
+              🎉
+            </div>
+
+            <h2 className="text-2xl font-bold">
+              Lesson Completed!
+            </h2>
+
+            <p className="mt-2 mb-6">
+              You earned +25 XP
+            </p>
+
+            <div className="flex justify-center gap-4">
+
+              {nextLessonId && (
+
+                <button
+                  onClick={() =>
+                    router.push(`/learn/${nextLessonId}`)
+                  }
+                  className=" bg-white text-green-600 px-6 py-3 rounded-xl font-semibold "
+                >
+                  Next Lesson →
+                </button>
+
+              )}
 
               <button
-                onClick={completeLesson}
-                disabled={
-                  submitting ||
-                  quizResult !== "correct"}
-                className={`
-                  px-8 py-4 rounded-2xl font-semibold shadow-lg transition
-
-                  ${
-                    quizResult === "correct"
-                      ? "bg-orange-500 hover:bg-orange-600 text-white"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }
-                `}
+                onClick={() =>
+                  router.push("/learn")
+                }
+                className=" bg-green-700 text-white px-6 py-3 rounded-xl font-semibold "
               >
-                {submitting
-                  ? "Completing..."
-                  : "Complete Lesson (+25 XP)"}
+                Back to Learn
               </button>
 
-            ) : (
-          
-              <div
-                className=" bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-3xl p-8 shadow-xl text-center w-full "
-              >
-                <div className="text-5xl mb-3">
-                  🎉
-                </div>
-
-                <h2 className="text-2xl font-bold">
-                  Lesson Completed!
-                </h2>
-
-                <p className="mt-2">
-                  You earned +25 XP
-                </p>
-              </div>
-          
-            )}
+            </div>
 
           </div>
+
+        ) : (
+
+          <div className="flex justify-center mt-6">
+          <button
+            onClick={completeLesson}
+            disabled={ submitting || !allQuestionsCorrect }
+            className=" bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed "
+          >
+            {submitting
+              ? "Completing..."
+              : "Complete Lesson (+25 XP)"}
+          </button>
+        </div>
+        
+        )}
 
         </div>
 
