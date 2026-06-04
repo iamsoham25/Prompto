@@ -38,6 +38,8 @@ export default function LessonPage() {
 
   const [questionResults, setQuestionResults] = useState<{ [key: number]: boolean }>({});
 
+  const [showXpPopup, setShowXpPopup] = useState(false);
+
   useEffect(() => {
     fetchLesson();
 
@@ -161,6 +163,14 @@ for (let i = 1; i <= 10; i++) {
       
         setShowConfetti(true);
 
+        setShowXpPopup(true);
+
+        setTimeout(() => {
+
+          setShowXpPopup(false);
+
+        }, 2500);
+
         setTimeout(() => {
 
           setShowConfetti(false);
@@ -217,6 +227,17 @@ for (let i = 1; i <= 10; i++) {
   return (
 
     <main className="min-h-screen bg-[#F8FAFC] text-slate-900 py-12">
+      {
+        showXpPopup && (
+
+        <div
+          className=" fixed top-24 right-10 z-50 bg-yellow-400 text-white font-bold text-2xl px-6 py-3 rounded-2xl shadow-xl animate-bounce "
+        >
+          +25 XP 🚀
+        </div>
+
+        )}
+      
       {showConfetti && (
         <Confetti
           width={window.innerWidth}

@@ -1,9 +1,8 @@
 from fastapi import APIRouter
 from app.config.db import db
 from app.config.db import user_xp_collection
-from app.models.challenge_completion import (
-    ChallengeCompletionModel
-)
+from app.models.challenge_completion import (ChallengeCompletionModel)
+from app.routes.lesson import (lesson_completion_collection)
 
 router = APIRouter()
 
@@ -120,47 +119,6 @@ async def get_user_xp(email: str):
         "xp": user["xp"]
     }
 
-@router.get("/leaderboard")
-async def get_leaderboard():
-
-    cursor = completion_collection.find({})
-
-    completions = await cursor.to_list(
-        length=1000
-    )
-
-    leaderboard = {}
-
-    for item in completions:
-
-        email = item["user_email"]
-
-        xp = item["xp_earned"]
-
-        if email not in leaderboard:
-
-            leaderboard[email] = 0
-
-        leaderboard[email] += xp
-
-    ranking = []
-
-    for email, xp in leaderboard.items():
-
-        ranking.append({
-            "email": email,
-            "xp": xp
-        })
-
-    ranking.sort(
-        key=lambda x: x["xp"],
-        reverse=True
-    )
-
-    return {
-        "success": True,
-        "leaderboard": ranking[:10]
-    }
 
 @router.get("/leaderboard")
 async def get_leaderboard():
@@ -240,6 +198,8 @@ async def get_achievements(
 
     badges = []
 
+    # XP Badges
+
     if total_xp >= 50:
 
         badges.append(
@@ -263,6 +223,28 @@ async def get_achievements(
         badges.append(
             "AI Architect"
         )
+
+    # Lesson Badges
+
+    lesson_count = await (
+        lesson_completion_collection.count_documents(
+            {
+                "user_email": email
+            }
+        )
+    )
+
+    if lesson_count >= 1:
+
+        badges.append( "First Lesson" )
+
+    if lesson_count >= 5:
+
+        badges.append( "Learning Streak" )
+
+    if lesson_count >= 10:
+
+        badges.append( "AI Explorer" )
 
     return {
         "success": True,
@@ -293,29 +275,6 @@ async def get_daily_challenge():
         "challenge": challenges[0]
     }
 
-@router.get("/daily-challenge")
-async def get_daily_challenge():
-
-    cursor = challenge_collection.find(
-        {},
-        {"_id": 0}
-    )
-
-    challenges = await cursor.to_list(
-        length=100
-    )
-
-    if len(challenges) == 0:
-
-        return {
-            "success": False,
-            "message": "No challenges found"
-        }
-
-    return {
-        "success": True,
-        "challenge": challenges[0]
-    }
 
 @router.get("/user-rank/{email}")
 async def get_user_rank(

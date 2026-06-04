@@ -39,55 +39,59 @@ export default function DashboardPage() {
   });
 
   // Protect Dashboard Route
-useEffect(() => {
+  useEffect(() => {
 
-  const loadDashboard = async () => {
+    // Always open dashboard at top
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
 
-    const token = localStorage.getItem("token");
+    const loadDashboard = async () => {
 
-    const email = localStorage.getItem("userEmail");
+      const token = localStorage.getItem("token");
 
-    if (!token) {
+      const email = localStorage.getItem("userEmail");
 
-      router.push("/login");
+      if (!token) {
 
-      return;
+        router.push("/login");
 
-    }
+        return;
 
-    try {
+      }
 
-      await fetchDashboardStats(email);
+      try {
 
-      await fetchRecentChats(email);
+        await fetchDashboardStats(email);
 
-      await fetchUserXP(email);
+        await fetchRecentChats(email);
 
-      await fetchLeaderboard();
+        await fetchUserXP(email);
 
-      await fetchAchievements(email);
+        await fetchLeaderboard();
 
-      await fetchDailyChallenge();
+        await fetchAchievements(email);
 
-      await fetchUserRank(email);
+        await fetchDailyChallenge();
+
+        await fetchUserRank(email);
+
+        setGreeting(getGreeting());
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
 
       setLoading(false);
 
-      setGreeting(getGreeting());
+    };
 
-    } catch (error) {
+    loadDashboard();
 
-      console.log(error);
-
-    }
-
-    setLoading(false);
-
-  };
-
-  loadDashboard();
-
-}, []);
+  }, []);
 
 const fetchUserXP = async (
   email: string | null
@@ -382,17 +386,7 @@ const progress = getProgressData();
     <main className="min-h-screen bg-slate-50 text-slate-900 p-8">
 
       <section
-        className="
-        bg-gradient-to-r
-        from-blue-600
-        via-purple-600
-        to-pink-500
-        rounded-3xl
-        p-8
-        text-white
-        mb-8
-        shadow-xl
-      "
+        className=" bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 rounded-3xl p-8 text-white mb-8 shadow-xl "
       >
 
         <h1 className="text-4xl font-bold mb-2">
@@ -872,6 +866,57 @@ const progress = getProgressData();
                 ? "🏅"
                 : "🔒"}{" "}
               AI Architect
+            </div>
+
+            <div
+              className={`p-4 rounded-xl border ${
+                badges.includes(
+                  "First Lesson"
+                )
+                  ? "bg-green-50 border-green-300 text-green-600"
+                  : "bg-slate-100 border-slate-200 text-slate-500"
+              }`}
+            >
+              {badges.includes(
+                "First Lesson"
+              )
+                ? "🏅"
+                : "🔒"}{" "}
+              First Lesson
+            </div>
+
+            <div
+              className={`p-4 rounded-xl border ${
+                badges.includes(
+                  "Learning Streak"
+                )
+                  ? "bg-green-50 border-green-300 text-green-600"
+                 : "bg-slate-100 border-slate-200 text-slate-500"
+              }`}
+            >
+              {badges.includes(
+                "Learning Streak"
+              )
+                ? "🏅"
+                : "🔒"}{" "}
+              Learning Streak
+            </div>
+
+            <div
+              className={`p-4 rounded-xl border ${
+                badges.includes(
+                  "AI Explorer"
+                )
+                  ? "bg-green-50 border-green-300 text-green-600"
+                  : "bg-slate-100 border-slate-200 text-slate-500"
+              }`}
+            >
+              {badges.includes(
+                "AI Explorer"
+              )
+                ? "🏅"
+                : "🔒"}{" "}
+              AI Explorer
             </div>
 
           </div>

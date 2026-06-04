@@ -31,6 +31,8 @@ export default function LearnPage() {
 
   const [totalLessons, setTotalLessons] = useState(0);
 
+  const [showUnlock, setShowUnlock] = useState(false);
+
   useEffect(() => {
 
   const email =
@@ -130,6 +132,21 @@ const fetchProgress = async (
         response.data.advanced_unlocked
       );
 
+      if (
+        response.data.intermediate_unlocked ||
+        response.data.advanced_unlocked
+      ) {
+
+        setShowUnlock(true);
+
+        setTimeout(() => {
+
+          setShowUnlock(false);
+
+        }, 4000);
+
+      }
+
     }
 
   } catch (error) {
@@ -219,6 +236,17 @@ const fetchProgress = async (
 
     <main className="min-h-screen bg-[#F8FAFC] px-8 py-12">
 
+      {
+        showUnlock && (
+
+        <div
+          className=" fixed top-10 left-1/2 -translate-x-1/2 bg-green-500 text-white px-10 py-5 rounded-2xl shadow-xl z-50 animate-pulse "
+        >
+          🎉 New Level Unlocked!
+        </div>
+
+        )}
+      
       <h1 className="text-5xl font-bold text-slate-900 mb-12">
         Learn AI Engineering 🚀
       </h1>
