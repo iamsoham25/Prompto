@@ -53,7 +53,7 @@ export default function PlaygroundPage() {
 
 useEffect(() => {
 
-  if (messages.length > 2) {
+  if (messages.length > 0) {
 
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -78,11 +78,6 @@ useEffect(() => {
       );
 
       if (res.data.success) {
-
-        console.log(
-          "CHAT HISTORY:",
-          res.data.history
-        );
 
         setHistory(res.data.history);
 
@@ -112,8 +107,16 @@ useEffect(() => {
 
       if (res.data.success) {
 
+        if (selectedChatId === chatId) {
+
+          setMessages([]);
+
+          setSelectedChatId(null);
+
+        }
+
         fetchHistory();
-  
+
       }
 
     } catch (error) {
@@ -128,7 +131,7 @@ useEffect(() => {
 
   const generateAIResponse = async () => {
 
-    if (!prompt) {
+    if (!prompt.trim()) {
 
       alert("Please enter prompt");
 
@@ -162,7 +165,12 @@ useEffect(() => {
 
       if (res.data.success) {
 
-        const aiText = res.data.response;
+        const aiText =
+          res.data.response
+            .replace(/\n{3,}/g, "\n\n")
+            .trim();
+        console.log(JSON.stringify(aiText));
+        
 
         // AI MESSAGE
 
@@ -239,7 +247,9 @@ useEffect(() => {
 
         const aiMessage = {
           role: "assistant",
-          content: res.data.response,
+          content: res.data.response
+            .replace(/\n{3,}/g, "\n\n")
+            .trim(),
         };
   
         setMessages((prev) => [
@@ -260,6 +270,8 @@ useEffect(() => {
     }
 
   };
+
+  
 
   const exportChat = () => {
 
@@ -328,6 +340,7 @@ useEffect(() => {
               onClick={() => {
                 setMessages([]);
                 setPrompt("");
+                setSelectedChatId(null);
               }}
               className="
         w-full
@@ -394,20 +407,22 @@ useEffect(() => {
                   <div
                     key={chat.id}
                     className={`
-                      group
-                      flex
-                      items-center
-                      justify-between
-                      px-3
-                      py-3
-                      rounded-xl
-                      mb-1
-                      transition
-                      duration-200
+    
+    group
+    flex
+    items-center
+    justify-between                  
+    px-3
+    py-3
+    rounded-xl
+    cursor-pointer
+    mb-1
+    text-sm
+    transition
 
                       ${
                         selectedChatId === chat.id
-                          ? "bg-slate-200 text-slate-900"
+                          ? "bg-orange-100 border border-orange-300 text-slate-900"
                           : "hover:bg-slate-100 text-slate-700"
                       }
                     `}
@@ -435,7 +450,10 @@ useEffect(() => {
                           document.getElementById("chat-container");
 
                         if (chatContainer) {
-                          chatContainer.scrollTop = 0;
+                          chatContainer.scrollTo({
+                            top: 0,
+                            behavior: "smooth",
+                          });
                         }
 
                       }, 100);
@@ -450,7 +468,11 @@ useEffect(() => {
         "
                   >
 
-                    {chat.title || chat.prompt}
+                    {
+                      (chat.title || chat.prompt).length > 30
+                        ? (chat.title || chat.prompt).slice(0, 30) + "..."
+                        : (chat.title || chat.prompt)
+                    }
 
                   </div>
 
@@ -463,12 +485,13 @@ useEffect(() => {
 
                     }}
                     className="
-          opacity-0
-          group-hover:opacity-100
-          text-red-500
-          hover:text-red-700
-          transition
-          ml-2
+  opacity-0
+  group-hover:opacity-100
+  text-red-500
+  hover:text-red-700
+  transition
+  ml-2
+  text-sm
         "
                   >
 
@@ -486,7 +509,7 @@ useEffect(() => {
   
         </div>
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col overflow-hidden">
 
         {/* CHAT AREA */}
 
@@ -496,17 +519,17 @@ useEffect(() => {
           className="
     flex-1
     overflow-y-auto
-    px-8
-    py-8
-    space-y-6
+    px-6
+    py-4
+    space-y-4
   "
         >
 
           {messages.length === 0 ? (
 
-            <div className="h-full flex items-center justify-center">
+            <div className="flex h-full items-center justify-center">
 
-              <div className="text-center">
+              <div className="text-center -mt-20">
 
                 <h2 className="text-6xl font-bold text-slate-800">
                   AI Playground 🚀
@@ -537,12 +560,12 @@ useEffect(() => {
                   className={`
                     group
                     relative
-                    max-w-4xl
+                    max-w-3xl
                     px-5
-                    py-4
+                    py-3
                     rounded-2xl
                     whitespace-pre-wrap
-                    leading-7
+                    leading-6
                     shadow-sm
                     ${
                       message.role === "user"
@@ -554,22 +577,66 @@ useEffect(() => {
 
                   <div>
 
+                
+
                     <ReactMarkdown
                       components={{
+                        br: () => <br />,
+                        p: ({ children }) => (
+                          <p className="leading-6">
+                            {children}
+                          </p>
+                        ),
+
+                        h1: ({ children }) => (
+                          <h1 className="text-2xl font-bold mb-2">
+                            {children}
+                          </h1>
+                        ),
+
+                        h2: ({ children }) => (
+                          <h2 className="text-xl font-semibold mb-2">
+                            {children}
+                          </h2>
+                        ),
+
+                        h3: ({ children }) => (
+                          <h3 className="text-lg font-semibold mb-1">
+                            {children}
+                          </h3>
+                        ),
+
+                        ol: ({ children }) => (
+                        <ol className="pl-5 my-1">
+                          {children}
+                        </ol>
+                        ),
+
+                        ul: ({ children }) => (
+                          <ul className="pl-5 my-1">
+                            {children}
+                          </ul>
+                        ),
+
+                        li: ({ children }) => (
+                          <li className="my-0">
+                            {children}
+                          </li>
+                        ),
+                        
+
                         code({
                           inline,
                           className,
                           children,
                           ...props
                         }: any) {
-                    
                           const match =
                             /language-(\w+)/.exec(
                               className || ""
                             );
 
                           return !inline && match ? (
-
                             <SyntaxHighlighter
                               style={oneDark}
                               language={match[1]}
@@ -581,22 +648,19 @@ useEffect(() => {
                                 ""
                               )}
                             </SyntaxHighlighter>
-                    
                           ) : (
-
                             <code
-                              className={className}
+                              className="bg-slate-100 px-1 rounded"
                               {...props}
                             >
                               {children}
                             </code>
-
                           );
                         },
                       }}
-                    >
+                     >
                       {message.content}
-                    </ReactMarkdown>
+                     </ReactMarkdown>
 
                     {message.role === "assistant" && (
 
@@ -676,19 +740,20 @@ useEffect(() => {
     border-t
     border-slate-200
     bg-slate-50
-    p-6
+    px-6
+    py-3
   "
         >
 
           <div
             className="
-    relative
+     relative
     bg-white
     border
     border-slate-300
     rounded-3xl
     px-4
-    py-3
+    py-2
     shadow-sm
     "
           >
@@ -696,12 +761,30 @@ useEffect(() => {
             <textarea
               value={prompt}
               onChange={(e) => {
+
                 setPrompt(e.target.value);
 
-                e.target.style.height = "auto";
+                e.target.style.height = "20px";
+
                 e.target.style.height =
                   e.target.scrollHeight + "px";
+
               }}
+
+              onKeyDown={(e) => {
+
+                if (
+                  e.key === "Enter" &&
+                  !e.shiftKey
+                ) {
+
+                  e.preventDefault();
+
+                  generateAIResponse();
+
+                }
+
+             }}
               placeholder="Ask anything..."
               rows={1}
               className="
@@ -709,9 +792,11 @@ useEffect(() => {
     resize-none
     outline-none
     text-slate-900
-    min-h-[24px]
-    max-h-[200px]
+    text-base
+    min-h-[20px]
+    max-h-[160px]
     overflow-y-auto
+    leading-6
   "
             />
 
@@ -791,7 +876,7 @@ useEffect(() => {
 
           )}
 
-          <div className="flex justify-between items-center mt-3">
+          <div className="flex items-center justify-between mt-1">
 
             <button
               onClick={() =>
@@ -818,8 +903,8 @@ useEffect(() => {
           bg-orange-500
           hover:bg-orange-600
           text-white
-          px-6
-          py-2
+          px-4
+          py-1.5
           rounded-xl
           font-medium
         "
@@ -831,8 +916,8 @@ useEffect(() => {
             <button
               onClick={exportChat}
               className="
-    px-4
-    py-2
+    px-3
+    py-1.5
     bg-slate-200
     text-slate-700
     rounded-xl

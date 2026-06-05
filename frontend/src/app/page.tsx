@@ -19,7 +19,7 @@ export default function HomePage() {
           shadow-2xl
         "
         >
-          <div className="max-w-4xl">
+          <div className="max-w-2xl">
 
             <div
               className="
