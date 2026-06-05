@@ -13,11 +13,16 @@ chat_collection = db["chat_history"]
 @router.post("/save-chat")
 async def save_chat(chat: ChatModel):
 
+    title = " ".join(
+    chat.prompt.split()[:5]
+)
+
     data = {
-        "user_email": chat.user_email,
-        "prompt": chat.prompt,
-        "response": chat.response
-    }
+    "user_email": chat.user_email,
+    "title": title,
+    "prompt": chat.prompt,
+    "response": chat.response
+}
 
     result = await chat_collection.insert_one(data)
 
@@ -31,15 +36,25 @@ async def save_chat(chat: ChatModel):
 async def get_chat_history(email: str):
 
     cursor = chat_collection.find(
-        {"user_email": email},
-        {"_id": 0}
-    )
+        {"user_email": email}
+    ).sort("_id", -1)
 
     chats = await cursor.to_list(length=100)
 
+    history = []
+
+    for chat in chats:
+
+        history.append({
+            "id": str(chat["_id"]),
+            "title": chat.get("title", ""),
+            "prompt": chat["prompt"],
+            "response": chat["response"]
+})
+
     return {
         "success": True,
-        "history": chats
+        "history": history
     }
 
 
@@ -98,4 +113,27 @@ async def recent_chats(email: str):
     return {
         "success": True,
         "chats": chats
+    }
+
+@router.delete("/delete-chat/{chat_id}")
+async def delete_chat(chat_id: str):
+
+    from bson import ObjectId
+
+    result = await chat_collection.delete_one(
+        {
+            "_id": ObjectId(chat_id)
+        }
+    )
+
+    if result.deleted_count == 0:
+
+        return {
+            "success": False,
+            "message": "Chat not found"
+        }
+
+    return {
+        "success": True,
+        "message": "Chat deleted"
     }

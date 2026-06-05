@@ -4,6 +4,16 @@ import { useEffect, useState } from "react";
 
 import API from "@/services/api";
 
+import { useRef } from "react";
+
+import ReactMarkdown from "react-markdown";
+
+import { Prism as SyntaxHighlighter }
+from "react-syntax-highlighter";
+
+import { oneDark }
+from "react-syntax-highlighter/dist/esm/styles/prism";
+
 export default function PlaygroundPage() {
 
   const [prompt, setPrompt] = useState("");
@@ -14,11 +24,44 @@ export default function PlaygroundPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const [showTemplates, setShowTemplates] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [lastPrompt, setLastPrompt] = useState("");
+
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  const chatAreaRef = useRef<HTMLDivElement>(null);
+
+  const filteredHistory =
+  history.filter((chat) =>
+    (chat.prompt || "")
+      .toLowerCase()
+      .includes(
+        searchTerm.toLowerCase()
+      )
+  );
+
   useEffect(() => {
+  fetchHistory();
+}, []);
 
-    fetchHistory();
+useEffect(() => {
 
-  }, []);
+  if (messages.length > 2) {
+
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+
+  }
+
+}, [messages]);
 
   // FETCH CHAT HISTORY
 
@@ -36,8 +79,41 @@ export default function PlaygroundPage() {
 
       if (res.data.success) {
 
+        console.log(
+          "CHAT HISTORY:",
+          res.data.history
+        );
+
         setHistory(res.data.history);
 
+      }
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+  const deleteChat = async (chatId: string) => {
+
+    const confirmDelete = window.confirm(
+      "Delete this chat?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+
+      const res = await API.delete(
+        `/delete-chat/${chatId}`
+      );
+
+      if (res.data.success) {
+
+        fetchHistory();
+  
       }
 
     } catch (error) {
@@ -65,6 +141,8 @@ export default function PlaygroundPage() {
       setLoading(true);
 
       // USER MESSAGE
+
+      setLastPrompt(prompt);
 
       const userMessage = {
         role: "user",
@@ -136,110 +214,310 @@ export default function PlaygroundPage() {
 
   };
 
+  const regenerateResponse = async () => {
+
+    if (!lastPrompt) {
+
+      alert("No previous prompt found");
+
+      return;
+
+    }
+
+    try {
+
+      setLoading(true);
+
+      const res = await API.post(
+        "/generate",
+        {
+          prompt: lastPrompt,
+        }
+      );
+
+      if (res.data.success) {
+
+        const aiMessage = {
+          role: "assistant",
+          content: res.data.response,
+        };
+  
+        setMessages((prev) => [
+          ...prev,
+          aiMessage,
+        ]);
+
+      }
+  
+    } catch (error) {
+
+      console.log(error);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  const exportChat = () => {
+
+    if (messages.length === 0) {
+
+      alert("No chat to export");
+
+      return;
+
+    }
+
+    let content = "";
+
+    messages.forEach((msg) => {
+
+      content +=
+        `${msg.role.toUpperCase()}:\n`;
+
+      content +=
+        `${msg.content}\n\n`;
+
+    });
+
+    const blob = new Blob(
+      [content],
+      { type: "text/plain" }
+    );
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const a =
+      document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+      "prompto-chat.txt";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+  };
+
   return (
 
     <main className="h-[calc(100vh-80px)] bg-slate-50 text-white flex overflow-hidden">
 
       {/* SIDEBAR */}
 
-      <div className="w-[280px] bg-white border-r border-slate-200 p-5 flex flex-col">
+        <div
+        className="
+        w-72
+        bg-white
+        border-r
+        border-slate-200
+        flex
+        flex-col
+        "
+        >
 
-        <h2 className="text-2xl font-bold text-slate-900 mb-5">
-          Chat History
-        </h2>
+          <div className="p-4 border-b">
 
-        <div className="flex-1 overflow-y-auto space-y-3 pr-2">
+            <button
+              onClick={() => {
+                setMessages([]);
+                setPrompt("");
+              }}
+              className="
+        w-full
+        flex
+        items-center
+        gap-3
+        px-4
+        py-3
+        rounded-xl
+        bg-orange-500
+        text-white
+        font-semibold
+        hover:bg-orange-600
+          "
+            >
+              <span className="text-xl">+</span>
+              New Chat
+            </button>
 
-          {history.length > 0 ? (
+          </div>
 
-            history.map((chat, index) => (
+          <div className="p-4">
 
-              <div
-                key={index}
-                onClick={() => {
+            <input
+              type="text"
+              placeholder="Search chats..."
+              value={searchTerm}
+              onChange={(e) =>
+                setSearchTerm(
+                  e.target.value
+                )
+              }
+              className="
+      w-full
+      px-3
+      py-2
+      border
+      border-slate-300
+      rounded-lg
+      text-sm
+      text-slate-700
+      outline-none
+      focus:ring-2
+      focus:ring-orange-500
+    "
+            />
 
-                  setMessages([
-                    {
-                      role: "user",
-                      content: chat.prompt,
-                    },
-                    {
-                      role: "assistant",
-                      content: chat.response,
-                    },
-                  ]);
+          </div>
 
-                }}
-                className="
-                  bg-slate-100
-                  hover:bg-orange-50
-                  transition-all
-                  cursor-pointer
-                  p-4
-                  rounded-2xl
-                "
-              >
+          <div className="flex-1 overflow-y-auto p-3">
 
-                <p className="text-sm text-slate-700 line-clamp-3 leading-6">
+            {filteredHistory.length === 0 ? ( 
 
-                  {chat.prompt}
+              <div className="p-4 text-slate-400 text-sm">
 
-                </p>
+                No chats yet
 
               </div>
 
-            ))
+            ) : (
 
-          ) : (
+              filteredHistory.map((chat, index) => (
 
-            <p className="text-slate-500">
-              No chats yet...
-            </p>
+                  <div
+                    key={chat.id}
+                    className={`
+                      group
+                      flex
+                      items-center
+                      justify-between
+                      px-3
+                      py-3
+                      rounded-xl
+                      mb-1
+                      transition
+                      duration-200
 
-          )}
+                      ${
+                        selectedChatId === chat.id
+                          ? "bg-slate-200 text-slate-900"
+                          : "hover:bg-slate-100 text-slate-700"
+                      }
+                    `}
+                  >
 
+                  <div
+                    onClick={() => {
+
+                      setSelectedChatId(chat.id);
+
+                      setMessages([
+                        {
+                          role: "user",
+                          content: chat.prompt,
+                        },
+                        {
+                          role: "assistant",
+                          content: chat.response,
+                        },
+                      ]);
+
+                      setTimeout(() => {
+
+                        const chatContainer =
+                          document.getElementById("chat-container");
+
+                        if (chatContainer) {
+                          chatContainer.scrollTop = 0;
+                        }
+
+                      }, 100);
+
+                    }}
+                    className="
+          flex-1
+          cursor-pointer
+          text-slate-700
+          text-sm
+          truncate
+        "
+                  >
+
+                    {chat.title || chat.prompt}
+
+                  </div>
+
+                  <button
+                    onClick={(e) => {
+
+                      e.stopPropagation();
+
+                      deleteChat(chat.id);
+
+                    }}
+                    className="
+          opacity-0
+          group-hover:opacity-100
+          text-red-500
+          hover:text-red-700
+          transition
+          ml-2
+        "
+                  >
+
+                    🗑
+
+                  </button>
+
+                </div>
+
+              ))
+
+            )}
+
+          </div>
+  
         </div>
 
-      </div>
-
-      {/* MAIN SECTION */}
-
-      <div className="flex-1 p-6 flex flex-col overflow-hidden">
-
-        {/* HEADER */}
-
-        <div className="mb-5">
-
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">
-            AI Playground 🚀
-          </h1>
-
-          <p className="text-slate-600 text-base">
-            Test prompts using OpenRouter AI models.
-          </p>
-
-        </div>
+        <div className="flex-1 flex flex-col">
 
         {/* CHAT AREA */}
 
         <div
+          id="chat-container"
+          ref={chatAreaRef}
           className="
-            flex-1
-            bg-white
-            border
-            border-slate-200
-            shadow-md
-            rounded-3xl
-            p-6
-            overflow-y-auto
-            space-y-5
-          "
+    flex-1
+    overflow-y-auto
+    px-8
+    py-8
+    space-y-6
+  "
         >
 
           {messages.length === 0 ? (
 
-            <div className="text-slate-500 text-lg">
-              Start chatting with AI...
+            <div className="h-full flex items-center justify-center">
+
+              <div className="text-center">
+
+                <h2 className="text-6xl font-bold text-slate-800">
+                  AI Playground 🚀
+                </h2>
+
+                <p className="text-slate-500 mt-4 text-xl">
+                  Ask anything and start learning.
+                </p>
+
+              </div>
+
             </div>
 
           ) : (
@@ -248,23 +526,110 @@ export default function PlaygroundPage() {
 
               <div
                 key={index}
-                className={`
-                  max-w-[80%]
-                  p-5
-                  rounded-3xl
-                  whitespace-pre-wrap
-                  leading-8
-                  text-base
-                  shadow-sm
-                  ${
-                    message.role === "user"
-                      ? "ml-auto bg-orange-500 text-white"
-                      : "bg-slate-100 text-slate-800 border border-slate-200"
-                  }
-                `}
+                className={`flex ${
+                  message.role === "user"
+                    ? "justify-end"
+                    : "justify-start"
+                }`}
               >
 
-                {message.content}
+                <div
+                  className={`
+                    group
+                    relative
+                    max-w-4xl
+                    px-5
+                    py-4
+                    rounded-2xl
+                    whitespace-pre-wrap
+                    leading-7
+                    shadow-sm
+                    ${
+                      message.role === "user"
+                        ? "bg-orange-500 text-white"
+                        : "bg-white text-slate-800 border border-slate-200"
+                    }
+                  `}
+                >
+
+                  <div>
+
+                    <ReactMarkdown
+                      components={{
+                        code({
+                          inline,
+                          className,
+                          children,
+                          ...props
+                        }: any) {
+                    
+                          const match =
+                            /language-(\w+)/.exec(
+                              className || ""
+                            );
+
+                          return !inline && match ? (
+
+                            <SyntaxHighlighter
+                              style={oneDark}
+                              language={match[1]}
+                              PreTag="div"
+                              {...props}
+                            >
+                              {String(children).replace(
+                                /\n$/,
+                                ""
+                              )}
+                            </SyntaxHighlighter>
+                    
+                          ) : (
+
+                            <code
+                              className={className}
+                              {...props}
+                            >
+                              {children}
+                            </code>
+
+                          );
+                        },
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
+
+                    {message.role === "assistant" && (
+
+                      <button
+                        onClick={() =>
+                          navigator.clipboard.writeText(
+                            message.content
+                          )
+                        }
+                        className="
+  absolute
+  top-2
+  right-2
+  opacity-0
+  group-hover:opacity-100
+  transition
+  text-xs
+  bg-slate-100
+  px-2
+  py-1
+  rounded
+  text-slate-600
+  hover:text-orange-500
+"
+                      >
+                        Copy
+                      </button>
+
+                    )}
+
+                  </div>
+
+                </div>
 
               </div>
 
@@ -272,53 +637,214 @@ export default function PlaygroundPage() {
 
           )}
 
+          {loading && (
+
+            <div className="flex justify-start">
+
+              <div
+                className="
+      bg-slate-100
+      px-5
+      py-4
+      rounded-2xl
+      flex
+      gap-1
+    "
+              >
+
+                <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
+
+                <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
+
+                <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
+
+              </div>
+
+            </div>
+
+          )}
+
+          <div ref={bottomRef}></div>
+
         </div>
 
-        {/* INPUT AREA */}
+      {/* INPUT AREA */}
 
-        <div className="mt-5 flex gap-4">
+        <div
+          className="
+    shrink-0
+    border-t
+    border-slate-200
+    bg-slate-50
+    p-6
+  "
+        >
 
-          <textarea
-            placeholder="Write your AI prompt here..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
+          <div
             className="
-              flex-1
-              h-[90px]
-              bg-white
-              border
-              border-slate-300
-              rounded-2xl
-              p-5
-              outline-none
-              resize-none
-              text-base
-              text-slate-900
-              focus:ring-2
-              focus:ring-orange-400
-              focus:border-orange-400
-            "
-          />
-
-          <button
-            onClick={generateAIResponse}
-            disabled={loading}
-            className="
-              w-[220px]
-              bg-orange-500
-              hover:bg-orange-600
-              transition-all
-              rounded-2xl
-              font-semibold
-              text-lg
-              text-white
-              shadow-lg
-            "
+    relative
+    bg-white
+    border
+    border-slate-300
+    rounded-3xl
+    px-4
+    py-3
+    shadow-sm
+    "
           >
 
-            {loading ? "Generating..." : "Send"}
+            <textarea
+              value={prompt}
+              onChange={(e) => {
+                setPrompt(e.target.value);
 
-          </button>
+                e.target.style.height = "auto";
+                e.target.style.height =
+                  e.target.scrollHeight + "px";
+              }}
+              placeholder="Ask anything..."
+              rows={1}
+              className="
+    w-full
+    resize-none
+    outline-none
+    text-slate-900
+    min-h-[24px]
+    max-h-[200px]
+    overflow-y-auto
+  "
+            />
+
+            {showTemplates && (
+
+              <div
+                className="
+  absolute
+  bottom-16
+  left-0
+  bg-white
+  border
+  border-slate-200
+  rounded-2xl
+  shadow-xl
+  w-72
+  z-50
+  overflow-hidden
+"
+              >
+
+              <button
+                onClick={() => {
+                  setPrompt("Summarize the following:");
+                  setShowTemplates(false);
+                }}
+                className="
+    w-full
+    text-left
+    px-4
+    py-3
+    hover:bg-slate-100
+    text-slate-800
+    font-medium
+              "
+              >
+                📝 Summarize
+              </button>
+
+              <button
+                onClick={() => {
+                  setPrompt("Write a professional email:");
+                  setShowTemplates(false);
+                }}
+                className="
+    w-full
+    text-left
+    px-4
+    py-3
+    hover:bg-slate-100
+    text-slate-800
+    font-medium
+  "
+              >
+                📧 Email
+              </button>
+
+              <button
+                onClick={() => {
+                  setPrompt("Explain this code:");
+                  setShowTemplates(false);
+                }}
+                className="
+    w-full
+    text-left
+    px-4
+    py-3
+    hover:bg-slate-100
+    text-slate-800
+    font-medium
+  "
+              >
+                💻 Explain Code
+              </button>
+  
+            </div>
+
+          )}
+
+          <div className="flex justify-between items-center mt-3">
+
+            <button
+              onClick={() =>
+                setShowTemplates(!showTemplates)
+              }
+              className="
+          w-10
+          h-10
+          rounded-full
+          bg-slate-100
+          hover:bg-slate-200
+          text-slate-700
+          text-xl
+          transition
+        "
+            >
+              +
+            </button>
+
+            <button
+              onClick={generateAIResponse}
+              disabled={loading}
+              className="
+          bg-orange-500
+          hover:bg-orange-600
+          text-white
+          px-6
+          py-2
+          rounded-xl
+          font-medium
+        "
+            >
+
+              {loading ? "..." : "Send"}
+            </button>
+
+            <button
+              onClick={exportChat}
+              className="
+    px-4
+    py-2
+    bg-slate-200
+    text-slate-700
+    rounded-xl
+    hover:bg-slate-300
+  "
+            >
+              Export
+            </button>
+
+            </div>
+
+          </div>
 
         </div>
 
