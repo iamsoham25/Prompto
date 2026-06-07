@@ -18,6 +18,8 @@ export default function PlaygroundPage() {
 
   const [prompt, setPrompt] = useState("");
 
+  const [conversationId, setConversationId] = useState<string | null>(null);
+
   const [messages, setMessages] = useState<any[]>([]);
 
   const [history, setHistory] = useState<any[]>([]);
@@ -38,6 +40,9 @@ export default function PlaygroundPage() {
 
   const chatAreaRef = useRef<HTMLDivElement>(null);
 
+
+
+
   const filteredHistory =
   history.filter((chat) =>
     (chat.prompt || "")
@@ -48,20 +53,29 @@ export default function PlaygroundPage() {
   );
 
   useEffect(() => {
-  fetchHistory();
-}, []);
+    fetchHistory();
+  }, []);
 
-useEffect(() => {
+  useEffect(() => {
 
-  if (messages.length > 0) {
+    if (messages.length > 0) {
 
-    bottomRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
+      bottomRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
 
-  }
+    }
 
-}, [messages]);
+  }, [messages]);
+
+  useEffect(() => {
+
+    console.log(
+      "Conversation ID:",
+      conversationId
+    );
+
+  }, [conversationId]);
 
   // FETCH CHAT HISTORY
 
@@ -129,6 +143,58 @@ useEffect(() => {
 
   // GENERATE AI RESPONSE
 
+  const createNewConversation = async () => {
+
+  try {
+
+    const email = localStorage.getItem(
+      "userEmail"
+    );
+
+    console.log("EMAIL:", email);
+
+    const res = await API.post(
+      "/new-conversation",
+      {
+        user_email: email,
+      }
+    );
+
+    console.log(
+      "API RESPONSE:",
+      res.data
+    );
+
+    if (res.data.success) {
+
+      console.log(
+        "SETTING CONVERSATION ID:",
+        res.data.conversation_id
+      );
+
+      setConversationId(
+        res.data.conversation_id
+      );
+
+      setMessages([]);
+      setPrompt("");
+      setSelectedChatId(null);
+
+      fetchHistory();
+
+    }
+
+  } catch (error) {
+
+    console.log(
+      "NEW CONVERSATION ERROR:",
+      error
+    );
+
+  }
+
+};
+
   const generateAIResponse = async () => {
 
     if (!prompt.trim()) {
@@ -157,6 +223,20 @@ useEffect(() => {
         userMessage,
       ]);
 
+      if (conversationId) {
+
+        await API.post(
+          "/add-message",
+          {
+            conversation_id:
+              conversationId,
+            role: "user",
+            content: prompt,
+          }
+        );
+
+      }
+
       // API CALL
 
       const res = await API.post("/generate", {
@@ -183,6 +263,20 @@ useEffect(() => {
           ...prev,
           aiMessage,
         ]);
+
+        if (conversationId) {
+
+          await API.post(
+            "/add-message",
+            {
+              conversation_id:
+                conversationId,
+              role: "assistant",
+              content: aiText,
+            }
+          );
+
+        }
 
         // SAVE CHAT
 
