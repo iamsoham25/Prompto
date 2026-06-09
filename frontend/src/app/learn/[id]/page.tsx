@@ -20,6 +20,8 @@ export default function LessonPage() {
 
   const params = useParams();
 
+  const { id } = useParams<{ id: string }>();
+
   const router = useRouter();
 
   const [lesson, setLesson] = useState<any>(null);
@@ -242,7 +244,29 @@ const passedQuiz =
 
   };
 
+  const goToNextLesson = async () => {
 
+  try {
+
+    const res = await API.get(
+      `/next-lesson/${id}`
+    );
+
+    if (res.data.success) {
+
+      router.push(
+        `/learn/${res.data.next_lesson_id}`
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
 
   return (
 
@@ -371,9 +395,9 @@ const passedQuiz =
 
           <div className="text-center mt-8">
 
-          <button
-            onClick={submitQuiz}
-            className="
+            <button
+              onClick={submitQuiz}
+              className="
       bg-blue-600
       hover:bg-blue-700
       text-white
@@ -382,11 +406,11 @@ const passedQuiz =
       rounded-xl
       font-semibold
     "
-          >
-            Submit Quiz
-          </button>
+            >
+              Submit Quiz
+            </button>
 
-        </div>
+          </div>
 
         {quizSubmitted && (
 
@@ -399,15 +423,6 @@ const passedQuiz =
       rounded-xl
     "
           >
-
-            <h3 className="text-xl font-bold">
-
-              Score:
-              {quizScore}
-              /
-              {quizzes.length}
-
-            </h3>
 
             <p
               className={
@@ -429,82 +444,174 @@ const passedQuiz =
 
           </div>
 
-          {allQuestionsCorrect && (
+            {allQuestionsCorrect && (
 
-            <div
-              className=" mt-6 bg-green-100 text-green-700 p-4 rounded-xl text-center font-semibold "
-            >
-              ✅ All Questions Completed Successfully!
-            </div>
+              <div
+                className=" mt-6 bg-green-100 text-green-700 p-4 rounded-xl text-center font-semibold "
+              >
+                ✅ All Questions Completed Successfully!
+              </div>
 
-          )}
+            )}
 
-          {showSuccess ? (
+            {showSuccess && (
 
-          <div
-            className=" bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-3xl p-8 shadow-xl text-center w-full "
-          >
+              <div
+                className="
+      bg-gradient-to-r
+      from-green-500
+      to-emerald-600
+      text-white
+      rounded-3xl
+      p-8
+      shadow-xl
+      text-center
+      w-full
+                "
+              >
 
-            <div className="text-5xl mb-3">
-              🎉
-            </div>
+                <div className="text-5xl mb-4">
+                  🎉
+                </div>
 
-            <h2 className="text-2xl font-bold">
-              Lesson Completed!
-            </h2>
+                <h2 className="text-4xl font-bold">
+                  Lesson Completed
+                </h2>
 
-            <p className="mt-2 mb-6">
-              You earned +25 XP
-            </p>
+                <div
+                  className="
+        mt-6
+        bg-white
+        text-slate-800
+        rounded-2xl
+        p-6
+      "
+                >
 
-            <div className="flex justify-center gap-4">
+                  <div className="grid grid-cols-3 gap-4">
 
-              {nextLessonId && (
+                    <div>
+                      <p className="text-sm text-slate-500">
+                        Score
+                      </p>
+
+                      <p className="text-2xl font-bold">
+                        {quizScore}/{quizzes.length}
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-sm text-slate-500">
+                        Accuracy
+                      </p>
+
+                      <p className="text-2xl font-bold">
+                        {Math.round(
+                          (quizScore / quizzes.length) * 100
+                        )}%
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-sm text-slate-500">
+                        XP Earned
+                      </p>
+
+                      <p className="text-2xl font-bold text-yellow-500">
+                        +25
+                      </p>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <p className="mt-6 text-lg">
+                  🚀 Complete all lessons in this level
+                  to unlock the next stage.
+                </p>
+            
+                <div
+                  className="
+        flex
+        justify-center
+        gap-4
+        mt-8
+      "
+                >
+
+                  <button
+                    onClick={goToNextLesson}
+                    className="
+          bg-white
+          text-green-600
+          px-6
+          py-3
+          rounded-xl
+          font-semibold
+        "
+                  >
+                    Next Lesson →
+                  </button>
+
+                  <button
+                    onClick={() => router.push("/learn")}
+                    className="
+          bg-green-700
+          px-6
+          py-3
+          rounded-xl
+          font-semibold
+        "
+                  >
+                    Back to Learn
+                  </button>
+
+                </div>
+
+              </div>
+
+            )}
+
+            {!showSuccess && (
+
+              <div className="flex justify-center mt-6">
 
                 <button
-                  onClick={() =>
-                    router.push(`/learn/${nextLessonId}`)
-                  }
-                  className=" bg-white text-green-600 px-6 py-3 rounded-xl font-semibold "
+                  onClick={completeLesson}
+                  disabled={submitting || !passedQuiz}
+                  className="
+        bg-orange-500
+        hover:bg-orange-600
+        text-white
+        px-8
+        py-4
+        rounded-2xl
+        font-semibold
+        shadow-lg
+        transition
+        disabled:bg-gray-300
+        disabled:text-gray-500
+        disabled:cursor-not-allowed
+      "
                 >
-                  Next Lesson →
+
+                  {submitting
+                    ? "Completing..."
+                    : "Complete Lesson (+25 XP)"}
+
                 </button>
 
-              )}
+              </div>
 
-              <button
-                onClick={() =>
-                  router.push("/learn")
-                }
-                className=" bg-green-700 text-white px-6 py-3 rounded-xl font-semibold "
-              >
-                Back to Learn
-              </button>
-
-            </div>
-
-          </div>
-
-        ) : (
-
-          <div className="flex justify-center mt-6">
-          <button
-            onClick={completeLesson}
-            disabled={ submitting || !passedQuiz }
-            className=" bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed "
-          >
-            {submitting
-              ? "Completing..."
-              : "Complete Lesson (+25 XP)"}
-          </button>
-        </div>
-        
-        )}
+            )}
 
         </div>
 
       </div>
 
     </main>
+
   );
+
 }
