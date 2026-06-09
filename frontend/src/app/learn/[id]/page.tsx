@@ -28,6 +28,12 @@ export default function LessonPage() {
 
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
 
+  const [questionResults, setQuestionResults] = useState<{ [key: number]: boolean }>({});
+
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
+
+  const [quizScore, setQuizScore] = useState(0);
+
   const [submitting, setSubmitting] = useState(false);
 
   const [showSuccess, setShowSuccess] = useState(false);
@@ -35,8 +41,6 @@ export default function LessonPage() {
   const [showConfetti, setShowConfetti] = useState(false);
   
   const [nextLessonId, setNextLessonId] = useState<string | null>(null);
-
-  const [questionResults, setQuestionResults] = useState<{ [key: number]: boolean }>({});
 
   const [showXpPopup, setShowXpPopup] = useState(false);
 
@@ -103,6 +107,7 @@ export default function LessonPage() {
 
   const quizzes: any[] = [];
 
+
 // Beginner Lessons
 if (lesson.quiz_question) {
   quizzes.push({
@@ -123,12 +128,46 @@ for (let i = 1; i <= 10; i++) {
   }
 }
 
-  const allQuestionsCorrect =
+const allQuestionsCorrect =
   quizzes.length > 0 &&
   quizzes.every(
     (_, index) =>
       questionResults[index] === true
+  );  
+
+const passedQuiz =
+  quizSubmitted &&
+  quizScore >=
+  Math.ceil(
+    quizzes.length * 0.7
   );
+
+
+  const submitQuiz = () => {
+
+    let score = 0;
+
+    quizzes.forEach(
+      (quiz, index) => {
+
+        const selected =
+          selectedAnswers[index];
+
+        if (
+          selected ===
+          quiz.answer
+        ) {
+          score++;
+        }
+
+      }
+    );
+
+    setQuizScore(score);
+
+    setQuizSubmitted(true);
+
+  };
 
   const completeLesson = async () => {
 
@@ -203,25 +242,6 @@ for (let i = 1; i <= 10; i++) {
 
   };
 
-  
-
-  const checkSingleQuestion = (
-  index: number,
-  correctAnswer: string
-) => {
-
-  const selected =
-    selectedAnswers[index] || "";
-
-  const isCorrect =
-    selected.trim() ===
-    correctAnswer.trim();
-
-  setQuestionResults(prev => ({
-    ...prev,
-    [index]: isCorrect,
-  }));
-};
 
 
   return (
@@ -298,82 +318,114 @@ for (let i = 1; i <= 10; i++) {
 
           {quizzes.map((quiz, index) => (
 
-           <div
-             key={index}
-             className="mb-10 border rounded-xl p-6"
-           >
+            <div
+              key={index}
+              className="mb-10 border rounded-xl p-6"
+            >
 
-             <p className="font-semibold mb-4">
-               Q{index + 1}. {quiz.question}
-             </p>
+              <p className="font-semibold mb-4">
+                Q{index + 1}. {quiz.question}
+              </p>
 
-             <div className="space-y-3">
+              <div className="space-y-3">
 
-               {quiz.options?.map(
-                 (option: string) => (
+                {quiz.options?.map(
+                  (option: string) => (
+ 
+                    <label
+                      key={option}
+                      className="block"
+                    >
 
-                   <label
-                     key={option}
-                     className="block"
-                   >
+                      <input
+                        type="radio"
+                        name={`quiz-${index}`}
+                        value={option}
+                        checked={
+                          selectedAnswers[index] === option
+                        }
+                        onChange={(e) =>
+                          setSelectedAnswers(prev => ({
+                            ...prev,
+                            [index]: e.target.value,
+                          }))
+                        }
+                      />
 
-                     <input
-                       type="radio"
-                       name={`quiz-${index}`}
-                       value={option}
-                       checked={
-                         selectedAnswers[index] === option
-                       }
-                       onChange={(e) =>
-                         setSelectedAnswers(prev => ({
-                           ...prev,
-                           [index]: e.target.value,
-                         }))
-                       }
-                     />
-
-                     <span className="ml-2">
-                       {option}
-                     </span>
+                      <span className="ml-2">
+                        {option}
+                      </span>
           
-                   </label>
+                    </label>
 
-                 )
-               )}
-
-             </div>
-
-              <button
-                onClick={() =>
-                  checkSingleQuestion(
-                    index,
-                    quiz.answer
                   )
-                }
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"
-              >
-                Check Answer
-              </button>
 
-              {questionResults[index] === true && (
+                
+                )}
 
-                <div className="mt-3 text-green-600 font-semibold">
-                  ✅ Correct
-                </div>
-
-              )}
-
-              {questionResults[index] === false && (
-          
-                <div className="mt-3 text-red-600 font-semibold">
-                  ❌ Wrong
-                </div>
-
-              )}
+              </div>
 
             </div>
 
           ))}
+
+          <div className="text-center mt-8">
+
+          <button
+            onClick={submitQuiz}
+            className="
+      bg-blue-600
+      hover:bg-blue-700
+      text-white
+      px-8
+      py-3
+      rounded-xl
+      font-semibold
+    "
+          >
+            Submit Quiz
+          </button>
+
+        </div>
+
+        {quizSubmitted && (
+
+          <div
+            className="
+      mt-6
+      text-center
+      bg-slate-100
+      p-4
+      rounded-xl
+    "
+          >
+
+            <h3 className="text-xl font-bold">
+
+              Score:
+              {quizScore}
+              /
+              {quizzes.length}
+
+            </h3>
+
+            <p
+              className={
+                passedQuiz
+                  ? "text-green-600"
+                  : "text-red-600"
+              }
+            >
+
+              {passedQuiz
+                ? "✅ Passed"
+                : "❌ Failed"}
+
+            </p>
+
+          </div>
+
+        )}
 
           </div>
 
@@ -438,7 +490,7 @@ for (let i = 1; i <= 10; i++) {
           <div className="flex justify-center mt-6">
           <button
             onClick={completeLesson}
-            disabled={ submitting || !allQuestionsCorrect }
+            disabled={ submitting || !passedQuiz }
             className=" bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed "
           >
             {submitting

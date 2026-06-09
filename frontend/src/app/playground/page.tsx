@@ -40,9 +40,6 @@ export default function PlaygroundPage() {
 
   const chatAreaRef = useRef<HTMLDivElement>(null);
 
-
-
-
   const filteredHistory =
   history.filter((chat) =>
     (chat.prompt || "")
