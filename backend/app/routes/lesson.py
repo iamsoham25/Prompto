@@ -6,6 +6,8 @@ from app.schemas.lesson_schema import LessonCreate
 
 from app.models.lesson_completion import LessonCompletion
 
+from datetime import datetime, timedelta
+
 from bson import ObjectId
 
 router = APIRouter()
@@ -15,6 +17,8 @@ lessons_collection = db["lessons"]
 lesson_completion_collection = db["lesson_completions"]
 
 user_xp_collection = db["user_xp"]
+
+streak_collection = db["user_learning_streak"]
 
 # Create Lesson
 @router.post("/lessons")
@@ -155,6 +159,80 @@ async def complete_lesson(
         "xp_earned": completion.xp_earned
     }
 
+    
+    # =========================
+    # LEARNING STREAK LOGIC
+    # =========================
+
+    from datetime import datetime, timedelta
+
+    today = datetime.utcnow().date()
+
+    streak = await streak_collection.find_one(
+        {
+            "user_email": completion.user_email
+        }
+    )
+
+    if not streak:
+
+        await streak_collection.insert_one({
+            "user_email": completion.user_email,
+            "current_streak": 1,
+            "best_streak": 1,
+            "last_learning_date": str(today)
+        })
+
+    else:
+
+        last_date = datetime.strptime(
+            streak["last_learning_date"],
+            "%Y-%m-%d"
+        ).date()
+
+        if last_date == today:
+            pass
+
+        elif last_date == today - timedelta(days=1):
+    
+            new_streak = streak["current_streak"] + 1
+
+            await streak_collection.update_one(
+                {
+                    "user_email": completion.user_email
+                },
+                {
+                    "$set": {
+                        "current_streak": new_streak,
+                        "best_streak": max(
+                            new_streak,
+                            streak["best_streak"]
+                        ),
+                        "last_learning_date": str(today)
+                    }
+                }
+            )
+
+        else:
+
+            await streak_collection.update_one(
+                {
+                    "user_email": completion.user_email
+                },
+                {
+                    "$set": {
+                        "current_streak": 1,
+                        "last_learning_date": str(today)
+                    }
+                }
+            )
+
+    
+    return {
+        "success": True,
+        "xp_earned": completion.xp_earned
+    }
+
 @router.get("/completed-lessons/{email}")
 
 async def get_completed_lessons(
@@ -263,4 +341,54 @@ async def get_next_lesson(
     return {
         "success": False,
         "message": "Last lesson"
+    }
+
+@router.get("/previous-lesson/{lesson_id}")
+async def get_previous_lesson(lesson_id: str):
+
+    lessons = []
+
+    async for lesson in lessons_collection.find().sort("order", 1):
+        lessons.append(lesson)
+
+    for index, lesson in enumerate(lessons):
+
+        if str(lesson["_id"]) == lesson_id:
+
+            if index > 0:
+
+                return {
+                    "success": True,
+                    "previous_lesson_id": str(
+                        lessons[index - 1]["_id"]
+                    )
+                }
+
+    return {
+        "success": False
+    }
+
+@router.get("/learning-streak/{email}")
+async def get_learning_streak(email: str):
+
+    streak = await streak_collection.find_one(
+        {
+            "user_email": email
+        }
+    )
+
+    if not streak:
+
+        return {
+            "success": True,
+            "current_streak": 0,
+            "best_streak": 0
+        }
+
+    return {
+        "success": True,
+        "current_streak":
+            streak["current_streak"],
+        "best_streak":
+            streak["best_streak"]
     }
