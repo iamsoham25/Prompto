@@ -12,6 +12,9 @@ from app.routes.conversation import router as conversation_router
 from app.routes.prompt_evaluator import (router as evaluator_router)
 from app.routes.prompt_improver import (router as improver_router)
 from app.routes.prompt_feedback import (router as feedback_router)
+from app.routes.prompt_coach import (router as coach_router)
+from app.routes.prompt_recommender import (router as recommender_router)
+from app.routes.challenge_validator import (router as challenge_router)
 
 import requests
 import os
@@ -41,6 +44,9 @@ app.include_router(conversation_router)
 app.include_router(evaluator_router)
 app.include_router(improver_router)
 app.include_router(feedback_router)
+app.include_router(coach_router)
+app.include_router(recommender_router)
+app.include_router(challenge_router)
 
 class PromptRequest(BaseModel):
     prompt: str
