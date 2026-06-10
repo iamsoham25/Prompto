@@ -10,6 +10,7 @@ from app.routes.chat import router as chat_router
 from app.routes.challenge import router as challenge_router
 from app.routes.conversation import router as conversation_router
 from app.routes.prompt_evaluator import (router as evaluator_router)
+from app.routes.prompt_improver import (router as improver_router)
 
 import requests
 import os
@@ -37,6 +38,7 @@ app.include_router(chat_router)
 app.include_router(challenge_router)
 app.include_router(conversation_router)
 app.include_router(evaluator_router)
+app.include_router(improver_router)
 
 class PromptRequest(BaseModel):
     prompt: str
