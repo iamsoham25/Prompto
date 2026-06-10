@@ -26,6 +26,12 @@ export default function PlaygroundPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const [promptAnalysis, setPromptAnalysis] = useState<any>(null);
+
+  const [improvedPrompt, setImprovedPrompt] = useState("");
+
+  const [promptSuggestions, setPromptSuggestions] = useState<string[]>([]);
+
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const [showTemplates, setShowTemplates] = useState(false);
@@ -236,9 +242,12 @@ export default function PlaygroundPage() {
 
       // API CALL
 
-      const res = await API.post("/generate", {
-        prompt,
-      });
+      const res = await API.post(
+        "/generate",
+        {
+          prompt,
+        }
+      );
 
       if (res.data.success) {
 
@@ -246,10 +255,6 @@ export default function PlaygroundPage() {
           res.data.response
             .replace(/\n{3,}/g, "\n\n")
             .trim();
-        console.log(JSON.stringify(aiText));
-        
-
-        // AI MESSAGE
 
         const aiMessage = {
           role: "assistant",
@@ -277,19 +282,51 @@ export default function PlaygroundPage() {
 
         // SAVE CHAT
 
-        const email = localStorage.getItem("userEmail");
+        const email =
+          localStorage.getItem(
+            "userEmail"
+          );
 
-        await API.post("/save-chat", {
-          user_email: email,
-          prompt: prompt,
-          response: aiText,
-        });
+        try {
 
-        // REFRESH HISTORY
+          const coachRes =
+            await API.post(
+              "/prompt-coach",
+              {
+                user_email: email,
+                prompt: prompt,
+              }
+            );
 
-        fetchHistory();
+          console.log(
+            "Coach Response:",
+            coachRes.data
+          );
 
-        // CLEAR INPUT
+          if (coachRes.data.success) {
+        
+            setPromptAnalysis(
+              coachRes.data.evaluation
+            );
+        
+            setImprovedPrompt(
+              coachRes.data.improved_prompt
+            );
+
+            setPromptSuggestions(
+              coachRes.data.suggestions
+            );
+
+          }
+
+        } catch (error) {
+
+          console.log(
+            "Prompt Coach Error:",
+            error
+          );
+
+        }
 
         setPrompt("");
 
@@ -820,6 +857,193 @@ export default function PlaygroundPage() {
           )}
 
           <div ref={bottomRef}></div>
+            {promptAnalysis && (
+
+              <div
+                className="
+      mt-8
+      bg-white
+      border
+      border-slate-200
+      rounded-3xl
+      p-8
+      shadow-lg
+    "
+              >
+
+                <h3
+                  className="
+        text-2xl
+        font-bold
+        text-slate-800
+        mb-6
+      "
+                >
+                  📊 Prompt Analysis
+                </h3>
+
+                <div
+                  className="
+        grid
+        grid-cols-2
+        md:grid-cols-5
+        gap-4
+      "
+                >
+
+                  <div className="bg-blue-50 rounded-2xl p-4 text-center">
+                    <p className="text-slate-500 text-sm">
+                      Clarity
+                    </p>
+
+                    <p className="text-3xl font-bold text-blue-600">
+                      {promptAnalysis.clarity}
+                    </p>
+                  </div>
+
+                  <div className="bg-purple-50 rounded-2xl p-4 text-center">
+                    <p className="text-slate-500 text-sm">
+                      Specificity
+                    </p>
+
+                    <p className="text-3xl font-bold text-purple-600">
+                      {promptAnalysis.specificity}
+                    </p>
+                  </div>
+
+                  <div className="bg-orange-50 rounded-2xl p-4 text-center">
+                    <p className="text-slate-500 text-sm">
+                      Context
+                    </p>
+
+                    <p className="text-3xl font-bold text-orange-600">
+                      {promptAnalysis.context}
+                    </p>
+                  </div>
+
+                  <div className="bg-red-50 rounded-2xl p-4 text-center">
+                    <p className="text-slate-500 text-sm">
+                      Constraints
+                    </p>
+
+                    <p className="text-3xl font-bold text-red-600">
+                      {promptAnalysis.constraints}
+                    </p>
+                  </div>
+            
+                  <div className="bg-green-50 rounded-2xl p-4 text-center">
+                    <p className="text-slate-500 text-sm">
+                      Overall
+                    </p>
+
+                    <p className="text-3xl font-bold text-green-600">
+                      {promptAnalysis.overall}
+                    </p>
+                  </div>
+
+                </div>
+
+              </div>
+
+            )}
+
+          {promptSuggestions.length > 0 && (
+
+            <div
+              className="
+      mt-6
+      bg-amber-50
+      border
+      border-yellow-200
+      rounded-3xl
+      p-6
+      shadow-sm
+    "
+            >
+
+              <h3
+                className="
+    text-xl
+    font-bold
+    text-yellow-800
+    mb-4
+  "
+              >
+                💡 Suggestions
+              </h3>
+
+              <ul
+                className="
+    list-disc
+    pl-5
+    space-y-3
+    text-slate-700
+    font-medium
+      "
+              >
+
+                {promptSuggestions.map(
+                  (
+                    suggestion,
+                    index
+                  ) => (
+          
+                    <li
+                      key={index}
+                      className="
+    text-slate-700
+    leading-relaxed
+  "
+                    >
+                      {suggestion}
+                    </li>
+          
+                  )
+                )}
+
+              </ul>
+
+            </div>
+
+          )}
+
+          {improvedPrompt && (
+
+            <div
+              className="
+      mt-6
+      bg-green-50
+      border
+      border-green-200
+      rounded-3xl
+      p-6
+    "
+            >
+
+              <h3
+                className="
+    text-xl
+    font-bold
+    text-green-800
+    mb-4
+  "
+              >
+                ✨ Improved Prompt
+              </h3>
+
+              <p
+                className="
+        whitespace-pre-wrap
+        text-slate-700
+        leading-relaxed
+        "
+              >
+                {improvedPrompt}
+              </p>
+
+            </div>
+
+          )}
 
         </div>
 
