@@ -107,42 +107,50 @@ export default function LessonPage() {
     );
   }
 
+  const wordCount =
+    lesson?.content?.split(" ").length || 0;
+
+  const readingTime =
+    Math.max(
+      1,
+      Math.ceil(wordCount / 200)
+    );
+
   const quizzes: any[] = [];
 
-
-// Beginner Lessons
-if (lesson.quiz_question) {
-  quizzes.push({
-    question: lesson.quiz_question,
-    options: lesson.quiz_options,
-    answer: lesson.quiz_answer,
-  });
-}
-
-// Intermediate / Advanced Lessons
-for (let i = 1; i <= 10; i++) {
-  if (lesson[`quiz_question_${i}`]) {
+  // Beginner Lessons
+  if (lesson.quiz_question) {
     quizzes.push({
-      question: lesson[`quiz_question_${i}`],
-      options: lesson[`quiz_options_${i}`],
-      answer: lesson[`quiz_answer_${i}`],
+      question: lesson.quiz_question,
+      options: lesson.quiz_options,
+      answer: lesson.quiz_answer,
     });
   }
-}
 
-const allQuestionsCorrect =
-  quizzes.length > 0 &&
-  quizzes.every(
-    (_, index) =>
-      questionResults[index] === true
-  );  
+  // Intermediate / Advanced Lessons
+  for (let i = 1; i <= 10; i++) {
+    if (lesson[`quiz_question_${i}`]) {
+      quizzes.push({
+        question: lesson[`quiz_question_${i}`],
+        options: lesson[`quiz_options_${i}`],
+        answer: lesson[`quiz_answer_${i}`],
+      });
+    }
+  }
 
-const passedQuiz =
-  quizSubmitted &&
-  quizScore >=
-  Math.ceil(
-    quizzes.length * 0.7
-  );
+  const allQuestionsCorrect =
+    quizzes.length > 0 &&
+    quizzes.every(
+      (_, index) =>
+        questionResults[index] === true
+    );  
+
+  const passedQuiz =
+    quizSubmitted &&
+    quizScore >=
+    Math.ceil(
+      quizzes.length * 0.7
+    );
 
 
   const submitQuiz = () => {
@@ -298,6 +306,24 @@ const passedQuiz =
         <h1 className="text-4xl font-bold mt-6 mb-6">
           {lesson.title}
         </h1>
+
+        <div className="mt-3">
+
+          <span
+            className="
+      bg-blue-100
+      text-blue-700
+      px-3
+      py-1
+      rounded-full
+      text-sm
+      font-medium
+    "
+          >
+            ⏱ {readingTime} min read
+          </span>
+
+        </div>
 
         <p className="text-slate-600 text-xl mb-12">
           {lesson.description}
