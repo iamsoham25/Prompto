@@ -4,6 +4,7 @@ from pydantic import BaseModel
 router = APIRouter()
 
 class PromptRequest(BaseModel):
+    user_email: str
     prompt: str
 
 @router.post("/generate")
