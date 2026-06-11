@@ -509,19 +509,178 @@ const progress = getProgressData();
 
       {promptMastery && (
 
-        <div>
+        <div
+          className="
+      mt-8
+      bg-white
+      rounded-3xl
+      p-8
+      shadow-lg
+      border
+      border-slate-200
+    "
+        >
 
-          <h2>
-            Prompt Mastery Loaded
+          <h2
+            className="
+        text-3xl
+        font-bold
+        text-slate-800
+        mb-6
+      "
+          >
+            🎯 Prompt Mastery
           </h2>
 
-          <pre>
-            {JSON.stringify(
-              promptMastery,
-              null,
-              2
-            )}
-          </pre>
+          <div
+            className="
+        grid
+        grid-cols-2
+        md:grid-cols-3
+        gap-6
+      "
+          >
+
+            <div
+              className="
+          bg-blue-50
+          rounded-2xl
+          p-5
+          text-center
+        "
+            >
+              <p className="text-slate-500">
+                Total Prompts
+              </p>
+      
+              <h3
+                className="
+            text-3xl
+            font-bold
+            text-blue-600
+          "
+              >
+                {promptMastery.total_prompts}
+              </h3>
+            </div>
+
+            <div
+              className="
+          bg-green-50
+          rounded-2xl
+          p-5
+          text-center
+        "
+            >
+              <p className="text-slate-500">
+                Clarity
+              </p>
+
+              <h3
+                className="
+            text-3xl
+            font-bold
+            text-green-600
+          "
+              >
+                {promptMastery.average_clarity}/10
+              </h3>
+            </div>
+
+            <div
+              className="
+          bg-purple-50
+          rounded-2xl
+          p-5
+          text-center
+        "
+            >
+              <p className="text-slate-500">
+                Specificity
+              </p>
+
+              <h3
+                className="
+            text-3xl
+            font-bold
+            text-purple-600
+          "
+              >
+                {promptMastery.average_specificity}/10
+              </h3>
+            </div>
+
+            <div
+              className="
+          bg-yellow-50
+          rounded-2xl
+          p-5
+          text-center
+        "
+            >
+              <p className="text-slate-500">
+                Context
+              </p>
+
+              <h3
+                className="
+            text-3xl
+            font-bold
+            text-yellow-600
+          "
+              >
+                {promptMastery.average_context}/10
+              </h3>
+            </div>
+
+            <div
+              className="
+          bg-red-50
+          rounded-2xl
+          p-5
+          text-center
+        "
+            >
+              <p className="text-slate-500">
+                Constraints
+              </p>
+
+              <h3
+                className="
+            text-3xl
+            font-bold
+            text-red-600
+          "
+              >
+                {promptMastery.average_constraints}/10
+              </h3>
+            </div>
+
+            <div
+              className="
+          bg-orange-50
+          rounded-2xl
+          p-5
+          text-center
+        "
+            >
+              <p className="text-slate-500">
+                Overall Score
+              </p>
+
+              <h3
+                className="
+            text-3xl
+            font-bold
+            text-orange-600
+          "
+              >
+                {promptMastery.average_overall}/10
+              </h3>
+              
+            </div>
+
+          </div>
 
         </div>
 
