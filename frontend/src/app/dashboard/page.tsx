@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import { pre } from "framer-motion/m";
 
 export default function DashboardPage() {
 
@@ -30,6 +31,10 @@ export default function DashboardPage() {
 
   const [greeting, setGreeting] = useState("");
 
+  const [promptMastery, setPromptMastery] = useState<any>(null);
+
+  const [masteryLoading, setMasteryLoading] = useState(true);
+
   const [stats, setStats] = useState({
     username: "",
     email: "",
@@ -40,6 +45,8 @@ export default function DashboardPage() {
 
   // Protect Dashboard Route
   useEffect(() => {
+
+    fetchPromptMastery();
 
     // Always open dashboard at top
     window.scrollTo({
@@ -92,6 +99,44 @@ export default function DashboardPage() {
     loadDashboard();
 
   }, []);
+
+const fetchPromptMastery =
+  async () => {
+
+    try {
+
+      const email =
+        localStorage.getItem(
+          "userEmail"
+        );
+
+      const res =
+        await API.get(
+          `/prompt-mastery/${email}`
+        );
+
+      if (res.data.success) {
+
+        setPromptMastery(
+          res.data
+        );
+
+      }
+
+    } catch (error) {
+
+      console.log(
+        "Prompt Mastery Error:",
+        error
+      );
+
+    } finally {
+
+      setMasteryLoading(false);
+
+    }
+
+  };
 
 const fetchUserXP = async (
   email: string | null
@@ -426,6 +471,8 @@ const progress = getProgressData();
 
       </section>
 
+      
+
       {/* Header */}
 
       <section className="flex justify-between items-center mb-12">
@@ -459,6 +506,26 @@ const progress = getProgressData();
         />
     
       </section>
+
+      {promptMastery && (
+
+        <div>
+
+          <h2>
+            Prompt Mastery Loaded
+          </h2>
+
+          <pre>
+            {JSON.stringify(
+              promptMastery,
+              null,
+              2
+            )}
+          </pre>
+
+        </div>
+
+      )}
 
       {/* stats cards section */}
 
