@@ -416,62 +416,189 @@ const getGreeting = () => {
   };
   if (loading) {
 
-  return (
+    return (
 
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white text-3xl font-bold">
-      Loading Dashboard...
-    </div>
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white text-3xl font-bold">
+        Loading Dashboard...
+      </div>
 
-  );
-}
+    );
+  }
 
 const progress = getProgressData();
+
+let promptLevel =
+  "🟢 Beginner";
+
+if (
+  promptMastery?.average_overall >= 3
+) {
+  promptLevel =
+    "🟡 Intermediate";
+}
+
+if (
+  promptMastery?.average_overall >= 6
+) {
+  promptLevel =
+    "🔵 Advanced";
+}
+
+if (
+  promptMastery?.average_overall >= 8
+) {
+  promptLevel =
+    "🟣 Prompt Engineer";
+}
+
   return (
 
     <main className="min-h-screen bg-slate-50 text-slate-900 p-8">
 
       <section
-        className=" bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 rounded-3xl p-8 text-white mb-8 shadow-xl "
+        className="
+    bg-gradient-to-r
+    from-blue-600
+    via-purple-600
+    to-pink-500
+    rounded-3xl
+    p-8
+    text-white
+    mb-8
+    shadow-xl
+  "
       >
 
-        <h1 className="text-4xl font-bold mb-2">
+        <div
+          className="
+      flex
+      justify-between
+      items-start
+      gap-10
+    "
+        >
+      
+          {/* LEFT SIDE */}
 
-          {greeting}, {stats.username} 👋
+          <div className="flex-1">
 
-        </h1>
+            <h1 className="text-5xl font-bold mb-3">
 
-        <p className="text-lg opacity-90">
+              {greeting}, {stats.username} 👋
 
-          Keep learning and level up your
-          Prompt Engineering skills.
+            </h1>
 
-        </p>
+            <p className="text-xl opacity-90">
 
-        <div className="flex flex-wrap gap-4 mt-6">
+              Keep learning and level up your
+              Prompt Engineering skills.
 
-          <span className="bg-white/20 px-4 py-2 rounded-xl">
+            </p>
 
-            🎯 XP: {xp}
+            <div className="flex gap-4 mt-8 flex-wrap">
 
-          </span>
+              <span
+                className="
+            bg-white/20
+            backdrop-blur-md
+            px-5
+            py-3
+            rounded-2xl
+          "
+              >
+                🎯 XP: {xp}
+              </span>
 
-          <span className="bg-white/20 px-4 py-2 rounded-xl">
+              <span
+                className="
+            bg-white/20
+            backdrop-blur-md
+            px-5
+            py-3
+            rounded-2xl
+          "
+              >
+                🏆 Rank #{rank ?? "-"}
+              </span>
 
-            🏆 Rank #{rank ?? "-"}
+              <span
+                className="
+            bg-white/20
+            backdrop-blur-md
+            px-5
+            py-3
+            rounded-2xl
+          "
+              >
+                🚀 {stats.skill_level}
+              </span>
+      
+            </div>
+      
+          </div>
 
-          </span>
+          {/* RIGHT SIDE */}
 
-          <span className="bg-white/20 px-4 py-2 rounded-xl">
+          <div
+            className="
+        bg-gradient-to-br
+        from-emerald-500
+        to-green-700
+        rounded-3xl
+        px-8
+        py-6
+        shadow-2xl
+        min-w-[320px]
+      "
+          >
 
-            🚀 {stats.skill_level}
+            <p
+              className="
+          text-sm
+          text-center
+          opacity-90
+        "
+            >
+              Prompt Level
+            </p>
 
-          </span>
+            <div
+              className="
+          flex
+          items-center
+          justify-center
+          gap-4
+          mt-4
+        "
+            >
+
+              <h3
+                className="
+            text-4xl
+            font-extrabold
+          "
+              >
+                {promptLevel}
+              </h3>
+
+            </div>
+
+            <p
+              className="
+          text-sm
+          text-center
+          mt-4
+          opacity-90
+        "
+            >
+              Your current prompt engineering level
+            </p>
+
+          </div>
 
         </div>
 
       </section>
-
-      
 
       {/* Header */}
 
@@ -508,7 +635,7 @@ const progress = getProgressData();
       </section>
 
       {promptMastery && (
-
+        
         <div
           className="
       mt-8
@@ -541,47 +668,72 @@ const progress = getProgressData();
       "
           >
 
+           {/* ADD THIS CARD */}
+
+
+
             <div
               className="
-          bg-blue-50
-          rounded-2xl
-          p-5
-          text-center
+    bg-gradient-to-r
+    from-blue-500
+    to-cyan-500
+    text-white
+    rounded-3xl
+    p-6
+    shadow-lg
+    hover:scale-105
+    transition-all
+    duration-300
         "
             >
-              <p className="text-slate-500">
+              <p className="text-white/80 text-sm text-center">
                 Total Prompts
               </p>
       
               <h3
                 className="
-            text-3xl
-            font-bold
-            text-blue-600
+    text-5xl
+    font-bold
+    mt-3
+    text-center
           "
               >
                 {promptMastery.total_prompts}
               </h3>
+
+              <p className="mt-3 text-white/80 text-sm text-center">
+                Prompts analyzed
+              </p>
+
             </div>
 
             <div
               className="
-    bg-green-50
-    rounded-2xl
-    p-5
+  bg-gradient-to-r
+  from-green-500
+  to-emerald-600
+  text-white
+  rounded-3xl
+  p-6
+  shadow-lg
+  hover:scale-105
+  transition-all
+  duration-300
+  text-center
   "
             >
 
-              <p className="text-slate-500">
+              <p className="text-white/80">
                 Clarity
               </p>
 
               <h3
                 className="
-      text-3xl
+      text-5xl
       font-bold
-      text-green-600
-      mb-3
+      text-white-600
+      mb-2
+      text-center
     "
               >
                 {promptMastery.average_clarity}/10
@@ -590,7 +742,7 @@ const progress = getProgressData();
               <div
                 className="
       w-full
-      bg-slate-200
+      bg-white/30
       rounded-full
       h-3
     "
@@ -598,7 +750,7 @@ const progress = getProgressData();
 
                 <div
                   className="
-  bg-green-500
+  bg-white
   h-3
   rounded-full
   transition-all
@@ -617,22 +769,31 @@ const progress = getProgressData();
 
             <div
               className="
-    bg-green-50
-    rounded-2xl
-    p-5
+  bg-gradient-to-r
+  from-purple-500
+  to-violet-600
+  text-white
+  rounded-3xl
+  p-6
+  shadow-lg
+  hover:scale-105
+  transition-all
+  duration-300
+  text-center
   "
             >
 
-              <p className="text-slate-500">
+              <p className="text-white/80">
                 Specificity
               </p>
 
               <h3
                 className="
-      text-3xl
+      text-5xl
       font-bold
-      text-green-600
-      mb-3
+      text-white-600
+      mb-2
+      text-center
     "
               >
                 {promptMastery.average_specificity}/10
@@ -668,22 +829,31 @@ const progress = getProgressData();
 
             <div
               className="
-    bg-green-50
-    rounded-2xl
-    p-5
+  bg-gradient-to-r
+  from-yellow-500
+  to-orange-500
+  text-white
+  rounded-3xl
+  p-6
+  shadow-lg
+  hover:scale-105
+  transition-all
+  duration-300
+  text-center
   "
             >
 
-              <p className="text-slate-500">
+              <p className="text-white/80">
                 Context
               </p>
 
               <h3
                 className="
-      text-3xl
+      text-5xl
       font-bold
-      text-green-600
-      mb-3
+      text-white-600
+      mb-2
+      text-center
     "
               >
                 {promptMastery.average_context}/10
@@ -719,22 +889,31 @@ const progress = getProgressData();
 
             <div
               className="
-    bg-green-50
-    rounded-2xl
-    p-5
+  bg-gradient-to-r
+  from-red-500
+  to-pink-600
+  text-white
+  rounded-3xl
+  p-6
+  shadow-lg
+  hover:scale-105
+  transition-all
+  duration-300
+  text-center
   "
             >
 
-              <p className="text-slate-500">
+              <p className="text-white/80">
                 Contraints
               </p>
 
               <h3
                 className="
-      text-3xl
+      text-5xl
       font-bold
-      text-green-600
-      mb-3
+      text-white-600
+      mb-2
+      text-center 
     "
               >
                 {promptMastery.average_constraints}/10
@@ -743,7 +922,7 @@ const progress = getProgressData();
               <div
                 className="
       w-full
-      bg-slate-200
+      bg-white/30
       rounded-full
       h-3
     "
@@ -770,26 +949,40 @@ const progress = getProgressData();
 
             <div
               className="
-    bg-green-50
-    rounded-2xl
-    p-5
+  bg-gradient-to-r
+  from-indigo-600
+  via-purple-600
+  to-pink-600
+  text-white
+  rounded-3xl
+  p-6
+  shadow-xl
+  hover:scale-105
+  transition-all
+  duration-300
+  text-center
   "
             >
 
-              <p className="text-slate-500">
+              <p className="text-white/80">
                 Overall
               </p>
 
               <h3
                 className="
-      text-3xl
+      text-5xl
       font-bold
-      text-green-600
-      mb-3
+      text-white-600
+      mb-2
+      text-center 
     "
               >
                 {promptMastery.average_overall}/10
               </h3>
+
+              <p className="mt-3 text-white/80">
+                Prompt Quality Index
+              </p>
 
               <div
                 className="
