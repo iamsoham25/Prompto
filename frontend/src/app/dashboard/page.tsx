@@ -566,118 +566,257 @@ const progress = getProgressData();
 
             <div
               className="
-          bg-green-50
-          rounded-2xl
-          p-5
-          text-center
-        "
+    bg-green-50
+    rounded-2xl
+    p-5
+  "
             >
+
               <p className="text-slate-500">
                 Clarity
               </p>
 
               <h3
                 className="
-            text-3xl
-            font-bold
-            text-green-600
-          "
+      text-3xl
+      font-bold
+      text-green-600
+      mb-3
+    "
               >
                 {promptMastery.average_clarity}/10
               </h3>
+
+              <div
+                className="
+      w-full
+      bg-slate-200
+      rounded-full
+      h-3
+    "
+              >
+
+                <div
+                  className="
+  bg-green-500
+  h-3
+  rounded-full
+  transition-all
+  duration-700
+      "
+                  style={{
+                    width: `${
+                      promptMastery.average_clarity * 10
+                    }%`
+                  }}
+                />
+
+              </div>
+
             </div>
 
             <div
               className="
-          bg-purple-50
-          rounded-2xl
-          p-5
-          text-center
-        "
+    bg-green-50
+    rounded-2xl
+    p-5
+  "
             >
+
               <p className="text-slate-500">
                 Specificity
               </p>
 
               <h3
                 className="
-            text-3xl
-            font-bold
-            text-purple-600
-          "
+      text-3xl
+      font-bold
+      text-green-600
+      mb-3
+    "
               >
                 {promptMastery.average_specificity}/10
               </h3>
+
+              <div
+                className="
+      w-full
+      bg-slate-200
+      rounded-full
+      h-3
+    "
+              >
+
+                <div
+                  className="
+  bg-green-500
+  h-3
+  rounded-full
+  transition-all
+  duration-700
+      "
+                  style={{
+                    width: `${
+                      promptMastery.average_specificity * 10
+                    }%`
+                  }}
+                />
+
+              </div>
+
             </div>
 
             <div
               className="
-          bg-yellow-50
-          rounded-2xl
-          p-5
-          text-center
-        "
+    bg-green-50
+    rounded-2xl
+    p-5
+  "
             >
+
               <p className="text-slate-500">
                 Context
               </p>
 
               <h3
                 className="
-            text-3xl
-            font-bold
-            text-yellow-600
-          "
+      text-3xl
+      font-bold
+      text-green-600
+      mb-3
+    "
               >
                 {promptMastery.average_context}/10
               </h3>
+
+              <div
+                className="
+      w-full
+      bg-slate-200
+      rounded-full
+      h-3
+    "
+              >
+
+                <div
+                  className="
+  bg-green-500
+  h-3
+  rounded-full
+  transition-all
+  duration-700
+      "
+                  style={{
+                    width: `${
+                      promptMastery.average_context * 10
+                    }%`
+                  }}
+                />
+
+              </div>
+
             </div>
 
             <div
               className="
-          bg-red-50
-          rounded-2xl
-          p-5
-          text-center
-        "
+    bg-green-50
+    rounded-2xl
+    p-5
+  "
             >
+
               <p className="text-slate-500">
-                Constraints
+                Contraints
               </p>
 
               <h3
                 className="
-            text-3xl
-            font-bold
-            text-red-600
-          "
+      text-3xl
+      font-bold
+      text-green-600
+      mb-3
+    "
               >
                 {promptMastery.average_constraints}/10
               </h3>
+
+              <div
+                className="
+      w-full
+      bg-slate-200
+      rounded-full
+      h-3
+    "
+              >
+
+                <div
+                  className="
+  bg-green-500
+  h-3
+  rounded-full
+  transition-all
+  duration-700
+      "
+                  style={{
+                    width: `${
+                      promptMastery.average_constraints * 10
+                    }%`
+                  }}
+                />
+
+              </div>
+
             </div>
 
             <div
               className="
-          bg-orange-50
-          rounded-2xl
-          p-5
-          text-center
-        "
+    bg-green-50
+    rounded-2xl
+    p-5
+  "
             >
+
               <p className="text-slate-500">
-                Overall Score
+                Overall
               </p>
 
               <h3
                 className="
-            text-3xl
-            font-bold
-            text-orange-600
-          "
+      text-3xl
+      font-bold
+      text-green-600
+      mb-3
+    "
               >
                 {promptMastery.average_overall}/10
               </h3>
-              
+
+              <div
+                className="
+      w-full
+      bg-slate-200
+      rounded-full
+      h-3
+    "
+              >
+
+                <div
+                  className="
+  bg-green-500
+  h-3
+  rounded-full
+  transition-all
+  duration-700
+      "
+                  style={{
+                    width: `${
+                      promptMastery.average_overall * 10
+                    }%`
+                  }}
+                />
+
+              </div>
+
             </div>
 
           </div>
