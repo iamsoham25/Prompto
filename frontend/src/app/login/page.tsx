@@ -23,67 +23,79 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+  if (!email || !password) {
+    alert("Please fill all fields");
+    return;
+  }
 
-    if (!email || !password) {
-      alert("Please fill all fields");
-      return;
-    }
+  try {
+    setLoading(true);
 
-    try {
+    const response = await API.post("/login", {
+      email,
+      password,
+    });
 
-      setLoading(true);
+    console.log("LOGIN RESPONSE:");
+    console.log(response.data);
 
-      const response = await API.post("/login", {
-        email,
-        password,
-      });
+    if (response.data.success) {
 
-      console.log(response.data);
+      // Save everything
+      localStorage.setItem(
+        "token",
+        response.data.token || ""
+      );
 
-      if (response.data.success) {
+      localStorage.setItem(
+        "userEmail",
+        response.data.email || ""
+      );
 
-        localStorage.setItem(
-          "token",
-          response.data.token
-        );
-      
-        localStorage.setItem(
-          "userEmail",
-          response.data.user.email
-        );
-      
-        localStorage.setItem(
-          "userName",
-          response.data.user.username
-        );
-      
-        localStorage.setItem(
-          "isLoggedIn",
-          "true"
-        );
-      
-        alert("Login Successful");
-      
+      localStorage.setItem(
+        "userName",
+        response.data.username || ""
+      );
+
+      localStorage.setItem(
+        "isLoggedIn",
+        "true"
+      );
+
+      // Verify immediately
+      console.log(
+        "Stored Email:",
+        localStorage.getItem("userEmail")
+      );
+
+      console.log(
+        "Stored Username:",
+        localStorage.getItem("userName")
+      );
+
+      console.log(
+        "Stored Token:",
+        localStorage.getItem("token")
+      );
+
+      alert("Login Successful");
+
+      // Give browser time to save
+      setTimeout(() => {
         router.push("/dashboard");
-      
-      } else {
+      }, 300);
 
-        alert(response.data.message);
-
-      }
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert("Login Failed");
-
-    } finally {
-
-      setLoading(false);
-
+    } else {
+      alert(response.data.message);
     }
-  };
+
+  } catch (error) {
+    console.log(error);
+    alert("Login Failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
 

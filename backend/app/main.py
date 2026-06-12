@@ -15,6 +15,7 @@ from app.routes.prompt_feedback import (router as feedback_router)
 from app.routes.prompt_coach import (router as coach_router)
 from app.routes.prompt_recommender import (router as recommender_router)
 from app.routes.challenge_validator import (router as challenge_router)
+from app.routes.dashboard import (router as dashboard_router)
 
 import requests
 import os
@@ -29,7 +30,10 @@ app = FastAPI()
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -47,6 +51,7 @@ app.include_router(feedback_router)
 app.include_router(coach_router)
 app.include_router(recommender_router)
 app.include_router(challenge_router)
+app.include_router(dashboard_router)
 
 class PromptRequest(BaseModel):
     prompt: str

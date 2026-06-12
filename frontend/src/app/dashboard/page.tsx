@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
-import { pre } from "framer-motion/m";
 
 export default function DashboardPage() {
 
@@ -31,10 +30,10 @@ export default function DashboardPage() {
 
   const [greeting, setGreeting] = useState("");
 
+  const [masteryLoading, setMasteryLoading] = useState(false);
+
   const [promptMastery, setPromptMastery] = useState<any>(null);
-
-  const [masteryLoading, setMasteryLoading] = useState(true);
-
+  
   const [stats, setStats] = useState({
     username: "",
     email: "",
@@ -43,65 +42,104 @@ export default function DashboardPage() {
     skill_level: "Beginner",
   });
 
+  const [lessonProgress, setLessonProgress] = useState({
+    total_lessons: 0,
+    completed_lessons: 0,
+    progress: 0,
+    beginner_completed: 0,
+    intermediate_completed: 0,
+    intermediate_unlocked: false,
+    advanced_unlocked: false,
+  });
+
   // Protect Dashboard Route
-  useEffect(() => {
+useEffect(() => {
 
-    fetchPromptMastery();
+  const loadDashboard = async () => {
 
-    // Always open dashboard at top
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    const token =
+      localStorage.getItem(
+        "token"
+      );
 
-    const loadDashboard = async () => {
+    const email =
+      localStorage.getItem("userEmail");
 
-      const token = localStorage.getItem("token");
+    const username =
+      localStorage.getItem("userName");
 
-      const email = localStorage.getItem("userEmail");
+    console.log(
+     "Dashboard Email:",
+     email
+    );
 
-      if (!token) {
+    console.log(
+     "Dashboard Username:",
+     username
+    );
 
-        router.push("/login");
+    console.log(
+  "Dashboard Email:",
+  localStorage.getItem("userEmail")
+);
 
-        return;
+console.log(
+  "Dashboard Username:",
+  localStorage.getItem("userName")
+);
 
-      }
+    if (!token) {
 
-      try {
+      router.push("/login");
 
-        await fetchDashboardStats(email);
+      return;
 
-        await fetchRecentChats(email);
+    }
 
-        await fetchUserXP(email);
+    try {
 
-        await fetchLeaderboard();
+      await fetchDashboardStats(email);
 
-        await fetchAchievements(email);
+      await fetchRecentChats(email);
 
-        await fetchDailyChallenge();
+      await fetchUserXP(email);
 
-        await fetchUserRank(email);
+      await fetchLessonProgress(email);
 
-        setGreeting(getGreeting());
+      await fetchLeaderboard();
 
-      } catch (error) {
+      await fetchAchievements(email);
 
-        console.log(error);
+      await fetchDailyChallenge();
 
-      }
+      await fetchUserRank(email);
 
-      setLoading(false);
+      await fetchPromptMastery();
 
-    };
+      setGreeting(getGreeting());
 
-    loadDashboard();
+    } catch (error) {
 
-  }, []);
+      console.log(error);
 
-const fetchPromptMastery =
-  async () => {
+    }
+
+    setLoading(false);
+
+  };
+
+  loadDashboard();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+
+}, []);
+
+const fetchPromptMastery = async () => {
+
+  setMasteryLoading(true);
 
     try {
 
@@ -147,16 +185,58 @@ const fetchUserXP = async (
   try {
 
     const res = await API.get(
-      `/user-xp/${email}`
+     `/user-xp/${email}`
+    );
+
+    console.log(
+      "USER XP RESPONSE:",
+      res.data
     );
 
     if (res.data.success) {
 
+      console.log(
+        "XP API Response:",
+        res.data
+      );
+      
       setXp(res.data.xp);
 
       setCompletedChallenges(
         Math.floor(res.data.xp / 50)
       );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+
+
+const fetchLessonProgress = async (
+  email: string | null
+) => {
+
+  if (!email) return;
+
+  try {
+
+    const res = await API.get(
+      `/lesson-progress/${email}`
+    );
+
+    console.log(
+      "LESSON PROGRESS:",
+      res.data
+    );
+
+    if (res.data.success) {
+
+      setLessonProgress(res.data);
 
     }
 
@@ -373,7 +453,7 @@ const fetchAchievements = async (
     if (res.data.success) {
 
       setBadges(
-        res.data.badges
+        res.data.achievements
       );
 
     }
@@ -409,9 +489,9 @@ const getGreeting = () => {
   // Logout Function
   const handleLogout = () => {
 
-    localStorage.removeItem("token");
+  localStorage.clear();
 
-    router.push("/login");
+  router.push("/login");
 
   };
   if (loading) {
@@ -484,7 +564,7 @@ if (
 
             <h1 className="text-5xl font-bold mb-3">
 
-              {greeting}, {stats.username} 👋
+              {greeting || "Welcome"}, {stats.username} 👋
 
             </h1>
 
@@ -1223,38 +1303,51 @@ if (
             <div>
 
               <div className="flex justify-between mb-2">
-                <span>Prompt Basics</span>
-                <span>80%</span>
+                <span>Completed Lessons</span>
+                <span>
+                  {lessonProgress.completed_lessons}
+                  /
+                  {lessonProgress.total_lessons}
+                </span>
               </div>
 
-              <div className="w-full h-3 bg-slate-50 rounded-full">
-                <div className="w-[80%] h-3 bg-orange-500 rounded-full"></div>
+              <div className="w-full h-3 bg-slate-200 rounded-full">
+
+                <div
+                  className="h-3 bg-orange-500 rounded-full"
+                  style={{
+                    width: `${lessonProgress.progress}%`
+                  }}
+                />
+
               </div>
 
             </div>
 
-            <div>
+            <div className="grid grid-cols-2 gap-4">
 
-              <div className="flex justify-between mb-2">
-                <span>Chain of Thought</span>
-                <span>45%</span>
+              <div className="bg-blue-50 p-4 rounded-xl">
+
+                <p className="text-sm text-slate-500">
+                  Beginner Completed
+                </p>
+
+                <p className="text-2xl font-bold">
+                  {lessonProgress.beginner_completed}
+                </p>
+
               </div>
 
-              <div className="w-full h-3 bg-slate-800 rounded-full">
-                <div className="w-[45%] h-3 bg-green-500 rounded-full"></div>
-              </div>
+              <div className="bg-green-50 p-4 rounded-xl">
 
-            </div>
+                <p className="text-sm text-slate-500">
+                  Intermediate Completed
+                </p>
 
-            <div>
+                <p className="text-2xl font-bold">
+                  {lessonProgress.intermediate_completed}
+                </p>
 
-              <div className="flex justify-between mb-2">
-                <span>AI Agents</span>
-                <span>20%</span>
-              </div>
-
-              <div className="w-full h-3 bg-slate-800 rounded-full">
-                <div className="w-[20%] h-3 bg-purple-500 rounded-full"></div>
               </div>
 
             </div>
@@ -1266,10 +1359,6 @@ if (
         {/* Daily Challenge */}
 
         <div className="bg-white border border-slate-200 shadow-md rounded-3xl p-8">
-
-          <h2 className="text-2xl font-bold mb-3">
-            {dailyChallenge?.title}
-          </h2>
 
           <h2 className="text-2xl font-bold mb-3">
 
@@ -1348,134 +1437,40 @@ if (
 
       <section className="mt-8">
 
-        <div className="bg-white backdrop-blur-lg border border-white/10 rounded-3xl p-8">
-      
-          <h2 className="text-2xl font-bold mb-6">
-      
-            Achievements 🏅
+        <div className="bg-white rounded-3xl p-8 shadow-md">
 
+          <h2 className="text-2xl font-bold mb-6">
+            Achievements 🏅
           </h2>
 
           <div className="grid md:grid-cols-2 gap-4">
 
-            <div
-              className={`p-4 rounded-xl border ${
-                badges.includes(
-                  "Beginner Explorer"
-                )
-                  ? "bg-green-50 border-green-300 text-green-600"
-                  : "bg-slate-100 border-slate-200 text-slate-500"
-              }`}
-            >
-              {badges.includes(
-                "Beginner Explorer"
-              )
-                ? "🏅"
-                : "🔒"}{" "}
-              Beginner Explorer
-            </div>
+            {badges.length > 0 ? (
+      
+              badges.map((badge, index) => (
 
-            <div
-              className={`p-4 rounded-xl border ${
-                badges.includes(
-                  "Prompt Apprentice"
-                )
-                  ? "bg-green-50 border-green-300 text-green-600"
-                  : "bg-slate-100 border-slate-200 text-slate-500"
-              }`}
-            >
-              {badges.includes(
-                "Prompt Apprentice"
-              )
-                ? "🏅"
-                : "🔒"}{" "}
-              Prompt Apprentice
-            </div>
+                <div
+                  key={index}
+                  className="
+            p-4
+            rounded-xl
+            bg-green-50
+            border
+            border-green-300
+            text-green-700
+            font-semibold
+          "
+                >
+                  🏅 {badge}
+                </div>
 
-            <div
-              className={`p-4 rounded-xl border ${
-                badges.includes(
-                  "Prompt Engineer"
-                )
-                  ? "bg-green-50 border-green-300 text-green-600"
-                  : "bg-slate-100 border-slate-200 text-slate-500"
-              }`}
-            >
-              {badges.includes(
-                "Prompt Engineer"
-              )
-                ? "🏅"
-                : "🔒"}{" "}
-              Prompt Engineer
-            </div>
+              ))
+      
+            ) : (
+      
+              <p>No achievements unlocked yet.</p>
 
-            <div
-              className={`p-4 rounded-xl border ${
-                badges.includes(
-                  "AI Architect"
-                )
-                  ? "bg-green-50 border-green-300 text-green-600"
-                  : "bg-slate-100 border-slate-200 text-slate-500"
-              }`}
-            >
-              {badges.includes(
-                "AI Architect"
-              )
-                ? "🏅"
-                : "🔒"}{" "}
-              AI Architect
-            </div>
-
-            <div
-              className={`p-4 rounded-xl border ${
-                badges.includes(
-                  "First Lesson"
-                )
-                  ? "bg-green-50 border-green-300 text-green-600"
-                  : "bg-slate-100 border-slate-200 text-slate-500"
-              }`}
-            >
-              {badges.includes(
-                "First Lesson"
-              )
-                ? "🏅"
-                : "🔒"}{" "}
-              First Lesson
-            </div>
-
-            <div
-              className={`p-4 rounded-xl border ${
-                badges.includes(
-                  "Learning Streak"
-                )
-                  ? "bg-green-50 border-green-300 text-green-600"
-                 : "bg-slate-100 border-slate-200 text-slate-500"
-              }`}
-            >
-              {badges.includes(
-                "Learning Streak"
-              )
-                ? "🏅"
-                : "🔒"}{" "}
-              Learning Streak
-            </div>
-
-            <div
-              className={`p-4 rounded-xl border ${
-                badges.includes(
-                  "AI Explorer"
-                )
-                  ? "bg-green-50 border-green-300 text-green-600"
-                  : "bg-slate-100 border-slate-200 text-slate-500"
-              }`}
-            >
-              {badges.includes(
-                "AI Explorer"
-              )
-                ? "🏅"
-                : "🔒"}{" "}
-              AI Explorer
-            </div>
+            )}
 
           </div>
 
@@ -1507,23 +1502,19 @@ if (
 
                     <div>
 
-                <p className="font-semibold">
-
-                  #{index + 1} {user.username}
-
+                      <p className="font-semibold">
+                        #{index + 1} {user.name}
                       </p>
 
                       <p className="text-slate-500 text-sm">
-
-                        {user.email}
-
+                        Prompt Engineer
                       </p>
 
                     </div>
 
                     <div className="text-orange-500 font-bold">      
 
-                {user.xp} XP
+                    {user.xp} XP
 
                     </div>
 

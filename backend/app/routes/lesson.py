@@ -154,11 +154,6 @@ async def complete_lesson(
             "xp": completion.xp_earned
         })
 
-    return {
-        "success": True,
-        "xp_earned": completion.xp_earned
-    }
-
     
     # =========================
     # LEARNING STREAK LOGIC
