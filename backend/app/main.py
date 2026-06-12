@@ -16,6 +16,7 @@ from app.routes.prompt_coach import (router as coach_router)
 from app.routes.prompt_recommender import (router as recommender_router)
 from app.routes.challenge_validator import (router as challenge_router)
 from app.routes.dashboard import (router as dashboard_router)
+from app.routes import prompt_comparator
 
 import requests
 import os
@@ -52,6 +53,7 @@ app.include_router(coach_router)
 app.include_router(recommender_router)
 app.include_router(challenge_router)
 app.include_router(dashboard_router)
+app.include_router(prompt_comparator.router)
 
 class PromptRequest(BaseModel):
     prompt: str
