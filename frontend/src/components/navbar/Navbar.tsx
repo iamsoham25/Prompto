@@ -98,6 +98,13 @@ export default function Navbar() {
         </Link>
 
         <Link
+          href="/templates"
+          className="hover:text-orange-500 transition "
+        >
+         Templates
+        </Link>
+
+        <Link
           href="/challenges"
           className="hover:text-orange-500 transition"
         >

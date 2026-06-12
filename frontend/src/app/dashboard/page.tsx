@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip} from "recharts";
+
 export default function DashboardPage() {
 
   const router = useRouter();
@@ -31,6 +33,8 @@ export default function DashboardPage() {
   const [greeting, setGreeting] = useState("");
 
   const [masteryLoading, setMasteryLoading] = useState(false);
+
+  const [promptTrend, setPromptTrend] = useState<number[]>([]);
 
   const [promptMastery, setPromptMastery] = useState<any>(null);
   
@@ -71,6 +75,8 @@ useEffect(() => {
 
     console.log("Dashboard Username:",localStorage.getItem("userName"));
 
+  
+
     if (!token) {
 
       router.push("/login");
@@ -99,7 +105,10 @@ useEffect(() => {
 
       await fetchPromptMastery();
 
+      await fetchPromptTrend();
+
       setGreeting(getGreeting());
+      
 
     } catch (error) {
 
@@ -145,6 +154,45 @@ const fetchPromptMastery = async () => {
       setMasteryLoading(false);
     }
   };
+
+  const fetchPromptTrend = async () => {
+
+  try {
+
+    const email =
+      localStorage.getItem(
+        "userEmail"
+      );
+
+    const res =
+      await API.get(
+        `/prompt-trend/${email}`
+      );
+
+    console.log(
+      "PROMPT TREND:",
+      res.data
+    );
+
+    if (res.data.success) {
+
+      setPromptTrend(
+        res.data.scores
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(
+      "Prompt Trend Error:",
+      error
+    );
+
+  }
+
+};
+
 
 const fetchUserXP = async (email: string | null) => {
 
@@ -447,7 +495,17 @@ const getGreeting = () => {
   router.push("/login");
 
   };
+
+
   if (loading) {
+
+    const chartData = promptTrend.map(
+      (score, index) => ({
+        prompt: index + 1,
+        score
+      })
+    );
+  
 
     return (
 
@@ -664,6 +722,8 @@ const progress = getProgressData();
       </section>
 
       {promptMastery && (
+
+        
         
         <div
           className="
@@ -690,10 +750,11 @@ const progress = getProgressData();
 
           <div
             className="
-        grid
-        grid-cols-2
-        md:grid-cols-3
-        gap-6
+grid
+grid-cols-1
+sm:grid-cols-2
+lg:grid-cols-3
+gap-6
       "
           >
 
@@ -933,7 +994,7 @@ const progress = getProgressData();
             >
 
               <p className="text-white/80">
-                Contraints
+                Constraints
               </p>
 
               <h3
@@ -1009,27 +1070,132 @@ const progress = getProgressData();
                 {promptMastery.average_overall}/10
               </h3>
 
+              <div
+                className="
+  bg-gradient-to-r
+  from-cyan-500
+  to-blue-600
+  text-white
+  rounded-3xl
+  p-6
+  shadow-lg
+  hover:scale-105
+  transition-all
+  duration-300
+  text-center
+"
+              >
+                <p className="text-white/80">
+                  Best Score
+                </p>
+
+                <div
+                  className="
+  bg-gradient-to-r
+  from-orange-500
+  to-red-500
+  text-white
+  rounded-3xl
+  p-6
+  shadow-lg
+  hover:scale-105
+  transition-all
+  duration-300
+  text-center
+"
+                >
+                  <p className="text-white/80">
+                    Improvement
+                  </p>
+
+                  <h3 className="text-5xl font-bold mt-2">
+                    {promptMastery.improvement > 0
+                      ? `+${promptMastery.improvement}`
+                      : promptMastery.improvement}
+                  </h3>
+
+                  <p className="mt-3 text-white/80">
+                    Growth Since First Prompt
+                  </p>
+                </div>
+
+                <h3 className="text-5xl font-bold mt-2">
+                  {promptMastery.best_score}
+                </h3>
+
+                <p className="mt-3 text-white/80">
+                  Highest Prompt Score
+                </p>
+              </div>
+
+              <div
+                className="
+  bg-gradient-to-r
+  from-orange-500
+  to-red-500
+  text-white
+  rounded-3xl
+  p-6
+  shadow-lg
+  hover:scale-105
+  transition-all
+  duration-300
+  text-center
+"
+               >
+                <p className="text-white/80">
+                  Improvement
+                </p>
+
+                <h3 className="text-5xl font-bold mt-2">
+                  {promptMastery.improvement > 0
+                    ? `+${promptMastery.improvement}`
+                    : promptMastery.improvement}
+                </h3>
+
+                <p className="mt-3 text-white/80">
+                  Growth Since First Prompt
+                </p>
+              </div>
+
+              <div
+                className="
+  bg-gradient-to-r
+  from-purple-600
+  to-pink-600
+  text-white
+  rounded-3xl
+  p-6
+  shadow-lg
+  hover:scale-105
+  transition-all
+  duration-300
+  text-center
+"
+              >
+                <p className="text-white/80">
+                  Mastery Level
+                </p>
+
+                <h3 className="text-3xl font-bold mt-4">
+                  {promptMastery.mastery_level}
+                </h3>
+
+                <p className="mt-3 text-white/80">
+                  Current Prompt Skill
+                </p>
+              </div>
+
               <p className="mt-3 text-white/80">
                 Prompt Quality Index
               </p>
 
               <div
-                className="
-      w-full
-      bg-slate-200
-      rounded-full
-      h-3
-    "
+                className=" w-full bg-slate-200 rounded-full h-3 "
               >
 
                 <div
-                  className="
-  bg-green-500
-  h-3
-  rounded-full
-  transition-all
-  duration-700
-      "
+                  className=" bg-green-500 h-3 rounded-full transition-all duration-700 "
                   style={{
                     width: `${
                       promptMastery.average_overall * 10
@@ -1046,6 +1212,66 @@ const progress = getProgressData();
         </div>
 
       )}
+
+      <section className="mt-8">
+
+        <div className="bg-white rounded-3xl p-8 shadow-lg">
+      
+          <h2 className="text-3xl font-bold mb-6">
+      
+            📈 Prompt Growth Trend
+
+          </h2>
+
+          <ResponsiveContainer
+            width="100%"
+            height={300}
+          >
+
+            {promptTrend.length === 0 ? (
+              <div className="text-center py-20 text-slate-500">
+                No prompt history yet.
+              </div>
+            ) : (
+
+              <LineChart
+                data={promptTrend.map((score, index) => ({
+                  prompt: `Prompt ${index + 1}`,
+                  score: score
+                }))}
+              >
+  
+                <XAxis dataKey="prompt" />
+
+                <YAxis domain={[0, 10]} />
+
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "16px",
+                    border: "none"
+                  }}
+                />
+
+                <Line
+                  type="monotone"
+                  dataKey="score"
+                  stroke="#8b5cf6"
+                  strokeWidth={4}
+                  dot={{ r: 6 }}
+                  activeDot={{ r: 8 }}
+                />
+
+              </LineChart>
+
+            )}
+
+          </ResponsiveContainer>
+
+        </div>
+
+
+
+      </section>
 
       {/* stats cards section */}
 
