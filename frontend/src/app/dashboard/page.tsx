@@ -57,36 +57,19 @@ useEffect(() => {
 
   const loadDashboard = async () => {
 
-    const token =
-      localStorage.getItem(
-        "token"
-      );
+    const token =localStorage.getItem("token");
 
-    const email =
-      localStorage.getItem("userEmail");
+    const email = localStorage.getItem("userEmail");
 
-    const username =
-      localStorage.getItem("userName");
+    const username = localStorage.getItem("userName");
 
-    console.log(
-     "Dashboard Email:",
-     email
-    );
+    console.log( "Dashboard Email:", email);
 
-    console.log(
-     "Dashboard Username:",
-     username
-    );
+    console.log("Dashboard Username:",username);
 
-    console.log(
-  "Dashboard Email:",
-  localStorage.getItem("userEmail")
-);
+    console.log("Dashboard Email:",localStorage.getItem("userEmail"));
 
-console.log(
-  "Dashboard Username:",
-  localStorage.getItem("userName")
-);
+    console.log("Dashboard Username:",localStorage.getItem("userName"));
 
     if (!token) {
 
@@ -143,62 +126,39 @@ const fetchPromptMastery = async () => {
 
     try {
 
-      const email =
-        localStorage.getItem(
-          "userEmail"
-        );
+      const email =localStorage.getItem("userEmail");
 
-      const res =
-        await API.get(
-          `/prompt-mastery/${email}`
-        );
+      const res =await API.get(`/prompt-mastery/${email}`);
+
+      console.log("PROMPT MASTERY:", res.data);
 
       if (res.data.success) {
-
         setPromptMastery(
           res.data
         );
-
       }
-
     } catch (error) {
 
-      console.log(
-        "Prompt Mastery Error:",
-        error
-      );
+      console.log("Prompt Mastery Error:",error);
 
     } finally {
-
       setMasteryLoading(false);
-
     }
-
   };
 
-const fetchUserXP = async (
-  email: string | null
-) => {
+const fetchUserXP = async (email: string | null) => {
 
   if (!email) return;
 
   try {
 
-    const res = await API.get(
-     `/user-xp/${email}`
-    );
+    const res = await API.get(`/user-xp/${email}`);
 
-    console.log(
-      "USER XP RESPONSE:",
-      res.data
-    );
+    console.log("USER XP RESPONSE:",res.data);
 
     if (res.data.success) {
 
-      console.log(
-        "XP API Response:",
-        res.data
-      );
+      console.log("XP API Response:",res.data);
       
       setXp(res.data.xp);
 
@@ -217,22 +177,15 @@ const fetchUserXP = async (
 };
 
 
-const fetchLessonProgress = async (
-  email: string | null
-) => {
+const fetchLessonProgress = async (email: string | null) => {
 
   if (!email) return;
 
   try {
 
-    const res = await API.get(
-      `/lesson-progress/${email}`
-    );
+    const res = await API.get(`/lesson-progress/${email}`);
 
-    console.log(
-      "LESSON PROGRESS:",
-      res.data
-    );
+    console.log("LESSON PROGRESS:",res.data);
 
     if (res.data.success) {
 
@@ -507,29 +460,25 @@ const getGreeting = () => {
 
 const progress = getProgressData();
 
-let promptLevel =
-  "🟢 Beginner";
+  let promptLevel = "🟢 Beginner";
 
-if (
-  promptMastery?.average_overall >= 3
-) {
-  promptLevel =
-    "🟡 Intermediate";
-}
+    if (
+      promptMastery?.average_overall >= 3
+    ) {
+      promptLevel = "🟡 Intermediate";
+    }
 
-if (
-  promptMastery?.average_overall >= 6
-) {
-  promptLevel =
-    "🔵 Advanced";
-}
+    if (
+      promptMastery?.average_overall >= 6
+    ) {
+      promptLevel = "🔵 Advanced";
+    }
 
-if (
-  promptMastery?.average_overall >= 8
-) {
-  promptLevel =
-    "🟣 Prompt Engineer";
-}
+    if (
+      promptMastery?.average_overall >= 8
+    ) {
+      promptLevel = "🟣 Prompt Engineer";
+    }
 
   return (
 
