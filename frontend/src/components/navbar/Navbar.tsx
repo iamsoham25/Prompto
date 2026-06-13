@@ -105,6 +105,13 @@ export default function Navbar() {
         </Link>
 
         <Link
+          href="/mentor"
+          className=" hover:text-orange-500 transition "
+        >
+           Mentor
+        </Link>
+
+        <Link
           href="/challenges"
           className="hover:text-orange-500 transition"
         >
