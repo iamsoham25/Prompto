@@ -449,10 +449,15 @@ const fetchAchievements = async (email: string | null) => {
       `/achievements/${email}`
     );
 
+    console.log(
+      "ACHIEVEMENTS RESPONSE:",
+      res.data
+    );
+
     if (res.data.success) {
 
       setBadges(
-        res.data.badges
+        res.data.badges || []
       );
 
     }
@@ -461,9 +466,12 @@ const fetchAchievements = async (email: string | null) => {
 
     console.log(error);
 
+    setBadges([]);
+
   }
 
 };
+
 
 const getGreeting = () => {
 
@@ -1559,7 +1567,13 @@ gap-6
 
           </div>
 
-          <Button text="Start Challenge" />
+          <button
+            type="button"
+            className="px-8 py-4 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg hover:scale-105 transition-all duration-300"
+            onClick={() => router.push("/challenges/0")}
+          >
+            Start Challenge
+          </button>
 
         </div>
 
@@ -1676,7 +1690,7 @@ gap-6
                     <div>
 
                       <p className="font-semibold">
-                        #{index + 1} {user.name}
+                        #{index + 1} {user.username}
                       </p>
 
                       <p className="text-slate-500 text-sm">
