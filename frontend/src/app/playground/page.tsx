@@ -1,136 +1,187 @@
-"use client";
+  "use client";
 
-import { useEffect, useState } from "react";
+  import { useEffect, useState } from "react";
 
-import API from "@/services/api";
+  import API from "@/services/api";
 
-import { useRef } from "react";
+  import { useRef } from "react";
 
-import ReactMarkdown from "react-markdown";
+  import ReactMarkdown from "react-markdown";
 
-import { Prism as SyntaxHighlighter }
-from "react-syntax-highlighter";
+  import { Prism as SyntaxHighlighter }
+  from "react-syntax-highlighter";
 
-import { oneDark }
-from "react-syntax-highlighter/dist/esm/styles/prism";
+  import { oneDark }
+  from "react-syntax-highlighter/dist/esm/styles/prism";
 
-export default function PlaygroundPage() {
+  export default function PlaygroundPage() {
 
-  const [prompt, setPrompt] = useState("");
+    const [prompt, setPrompt] = useState("");
 
-  const [conversationId, setConversationId] = useState<string | null>(null);
+    const [conversationId, setConversationId] = useState<string | null>(null);
 
-  const [messages, setMessages] = useState<any[]>([]);
+    const [messages, setMessages] = useState<any[]>([]);
 
-  const [history, setHistory] = useState<any[]>([]);
+    const [history, setHistory] = useState<any[]>([]);
 
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-  const [promptAnalysis, setPromptAnalysis] = useState<any>(null);
+    const [promptAnalysis, setPromptAnalysis] = useState<any>(null);
 
-  const [improvedPrompt, setImprovedPrompt] = useState("");
+    const [improvedPrompt, setImprovedPrompt] = useState("");
 
-  const [promptSuggestions, setPromptSuggestions] = useState<string[]>([]);
+    const [promptSuggestions, setPromptSuggestions] = useState<string[]>([]);
 
-  const bottomRef = useRef<HTMLDivElement>(null);
+    const bottomRef = useRef<HTMLDivElement>(null);
 
-  const [showTemplates, setShowTemplates] = useState(false);
+    const [showTemplates, setShowTemplates] = useState(false);
 
-  const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
 
-  const [lastPrompt, setLastPrompt] = useState("");
+    const [lastPrompt, setLastPrompt] = useState("");
 
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+    const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const chatAreaRef = useRef<HTMLDivElement>(null);
+    const chatAreaRef = useRef<HTMLDivElement>(null);
 
-  const filteredHistory =
-  history.filter((chat) =>
-    (chat.prompt || "")
-      .toLowerCase()
-      .includes(
-        searchTerm.toLowerCase()
-      )
-  );
-
-  useEffect(() => {
-    fetchHistory();
-  }, []);
-
-  useEffect(() => {
-
-    if (messages.length > 0) {
-
-      bottomRef.current?.scrollIntoView({
-        behavior: "smooth",
-      });
-
-    }
-
-  }, [messages]);
-
-  useEffect(() => {
-
-    console.log(
-      "Conversation ID:",
-      conversationId
+    const filteredHistory =
+    history.filter((chat) =>
+      (chat.prompt || "")
+        .toLowerCase()
+        .includes(
+          searchTerm.toLowerCase()
+        )
     );
 
-  }, [conversationId]);
+    useEffect(() => {
+      fetchHistory();
+    }, []);
 
-  // FETCH CHAT HISTORY
+    useEffect(() => {
 
-  const fetchHistory = async () => {
+      if (messages.length > 0) {
 
-    try {
-
-      const email = localStorage.getItem("userEmail");
-
-      if (!email) return;
-
-      const res = await API.get(
-        `/chat-history/${email}`
-      );
-
-      if (res.data.success) {
-
-        setHistory(res.data.history);
+        bottomRef.current?.scrollIntoView({
+          behavior: "smooth",
+        });
 
       }
 
-    } catch (error) {
+    }, [messages]);
 
-      console.log(error);
+    useEffect(() => {
 
-    }
+      console.log(
+        "Conversation ID:",
+        conversationId
+      );
 
-  };
+    }, [conversationId]);
 
-  const deleteChat = async (chatId: string) => {
+    // FETCH CHAT HISTORY
 
-    const confirmDelete = window.confirm(
-      "Delete this chat?"
-    );
+    const fetchHistory = async () => {
 
-    if (!confirmDelete) return;
+      try {
+
+        const email = localStorage.getItem("userEmail");
+
+        if (!email) return;
+
+        const res = await API.get(
+          `/chat-history/${email}`
+        );
+
+        if (res.data.success) {
+
+          setHistory(res.data.history);
+
+        }
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+    const deleteChat = async (chatId: string) => {
+
+      const confirmDelete = window.confirm(
+        "Delete this chat?"
+      );
+
+      if (!confirmDelete) return;
+
+      try {
+
+        const res = await API.delete(
+          `/delete-chat/${chatId}`
+        );
+
+        if (res.data.success) {
+
+          if (selectedChatId === chatId) {
+
+            setMessages([]);
+
+            setSelectedChatId(null);
+
+          }
+
+          fetchHistory();
+
+        }
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+    // GENERATE AI RESPONSE
+
+  const createNewConversation = async () => {
 
     try {
 
-      const res = await API.delete(
-        `/delete-chat/${chatId}`
+      const email = localStorage.getItem(
+        "userEmail"
+      );
+
+      console.log("EMAIL:", email);
+
+      const res = await API.post(
+        "/new-conversation",
+        {
+          user_email: email,
+        }
+      );
+
+      console.log(
+        "API RESPONSE:",
+        res.data
       );
 
       if (res.data.success) {
 
-        if (selectedChatId === chatId) {
+        console.log(
+          "SETTING CONVERSATION ID:",
+          res.data.conversation_id
+        );
 
-          setMessages([]);
+        setConversationId(
+          res.data.conversation_id
+        );
 
-          setSelectedChatId(null);
-
-        }
+        setMessages([]);
+        setPrompt("");
+        setSelectedChatId(null);
 
         fetchHistory();
 
@@ -138,132 +189,41 @@ export default function PlaygroundPage() {
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "NEW CONVERSATION ERROR:",
+        error
+      );
 
     }
 
   };
 
-  // GENERATE AI RESPONSE
+    const generateAIResponse = async () => {
 
-  const createNewConversation = async () => {
+      if (!prompt.trim()) {
 
-  try {
+        alert("Please enter prompt");
 
-    const email = localStorage.getItem(
-      "userEmail"
-    );
-
-    console.log("EMAIL:", email);
-
-    const res = await API.post(
-      "/new-conversation",
-      {
-        user_email: email,
-      }
-    );
-
-    console.log(
-      "API RESPONSE:",
-      res.data
-    );
-
-    if (res.data.success) {
-
-      console.log(
-        "SETTING CONVERSATION ID:",
-        res.data.conversation_id
-      );
-
-      setConversationId(
-        res.data.conversation_id
-      );
-
-      setMessages([]);
-      setPrompt("");
-      setSelectedChatId(null);
-
-      fetchHistory();
-
-    }
-
-  } catch (error) {
-
-    console.log(
-      "NEW CONVERSATION ERROR:",
-      error
-    );
-
-  }
-
-};
-
-  const generateAIResponse = async () => {
-
-    if (!prompt.trim()) {
-
-      alert("Please enter prompt");
-
-      return;
-
-    }
-
-    try {
-
-      setLoading(true);
-
-      // USER MESSAGE
-
-      setLastPrompt(prompt);
-
-      const userMessage = {
-        role: "user",
-        content: prompt,
-      };
-
-      setMessages((prev) => [
-        ...prev,
-        userMessage,
-      ]);
-
-      if (conversationId) {
-
-        await API.post(
-          "/add-message",
-          {
-            conversation_id:
-              conversationId,
-            role: "user",
-            content: prompt,
-          }
-        );
+        return;
 
       }
 
-      // API CALL
+      try {
 
-      const res = await API.post(
-        "/generate",
-        {
-          prompt,
-        }
-      );
+        setLoading(true);
 
-      if (res.data.success) {
+        // USER MESSAGE
 
-        const aiText =
-          res.data.response
-            .replace(/\n{3,}/g, "\n\n")
-            .trim();
+        setLastPrompt(prompt);
 
-        const aiMessage = {
-          role: "assistant",
-          content: aiText,
+        const userMessage = {
+          role: "user",
+          content: prompt,
         };
 
         setMessages((prev) => [
           ...prev,
-          aiMessage,
+          userMessage,
         ]);
 
         if (conversationId) {
@@ -273,359 +233,596 @@ export default function PlaygroundPage() {
             {
               conversation_id:
                 conversationId,
-              role: "assistant",
-              content: aiText,
+              role: "user",
+              content: prompt,
             }
           );
 
         }
 
-        // SAVE CHAT
+        // API CALL
 
-        const email =
-          localStorage.getItem(
-            "userEmail"
-          );
+        const res = await API.post(
+          "/generate",
+          {
+            prompt,
+          }
+        );
 
-        try {
+        if (res.data.success) {
 
-          const coachRes =
+          const aiText =
+            res.data.response
+              .replace(/\n{3,}/g, "\n\n")
+              .trim();
+
+          const aiMessage = {
+            role: "assistant",
+            content: aiText,
+          };
+
+          setMessages((prev) => [
+            ...prev,
+            aiMessage,
+          ]);
+
+          if (conversationId) {
+
             await API.post(
-              "/prompt-coach",
+              "/add-message",
               {
-                user_email: email,
-                prompt: prompt,
+                conversation_id:
+                  conversationId,
+                role: "assistant",
+                content: aiText,
               }
-            );
-
-          console.log(
-            "Coach Response:",
-            coachRes.data
-          );
-
-          if (coachRes.data.success) {
-        
-            setPromptAnalysis(
-              coachRes.data.evaluation
-            );
-        
-            setImprovedPrompt(
-              coachRes.data.improved_prompt
-            );
-
-            setPromptSuggestions(
-              coachRes.data.suggestions
             );
 
           }
 
-        } catch (error) {
+          // SAVE CHAT
 
-          console.log(
-            "Prompt Coach Error:",
-            error
+          const email =
+            localStorage.getItem(
+              "userEmail"
+            );
+
+          await API.post(
+            "/save-chat",
+            {
+              user_email: email,
+              prompt: prompt,
+              response: aiText
+            }
           );
 
+          await fetchHistory();
+
+          try {
+
+            const coachRes =
+              await API.post(
+                "/prompt-coach",
+                {
+                  user_email: email,
+                  prompt: prompt,
+                }
+              );
+
+            console.log(
+              "Coach Response:",
+              coachRes.data
+            );
+
+            if (coachRes.data.success) {
+          
+              setPromptAnalysis(coachRes.data.evaluation);
+          
+              setImprovedPrompt(coachRes.data.improved_prompt);
+
+              setPromptSuggestions(coachRes.data.suggestions);
+
+            }
+
+          } catch (error) {
+
+            console.log(
+              "Prompt Coach Error:",
+              error
+            );
+
+          }
+
+          setPrompt("");
+
+        } else {
+
+          alert("AI Generation Failed");
+
         }
 
-        setPrompt("");
+      } catch (error) {
 
-      } else {
+        console.log(error);
 
-        alert("AI Generation Failed");
+        alert("Something went wrong");
+
+      } finally {
+
+        setLoading(false);
 
       }
 
-    } catch (error) {
+    };
 
-      console.log(error);
+    const regenerateResponse = async () => {
 
-      alert("Something went wrong");
+      if (!lastPrompt) {
 
-    } finally {
+        alert("No previous prompt found");
 
-      setLoading(false);
+        return;
 
-    }
+      }
 
-  };
+      try {
 
-  const regenerateResponse = async () => {
+        setLoading(true);
 
-    if (!lastPrompt) {
+        const res = await API.post(
+          "/generate",
+          {
+            prompt: lastPrompt,
+          }
+        );
 
-      alert("No previous prompt found");
+        if (res.data.success) {
 
-      return;
+          const aiMessage = {
+            role: "assistant",
+            content: res.data.response
+              .replace(/\n{3,}/g, "\n\n")
+              .trim(),
+          };
+    
+          setMessages((prev) => [
+            ...prev,
+            aiMessage,
+          ]);
 
-    }
-
-    try {
-
-      setLoading(true);
-
-      const res = await API.post(
-        "/generate",
-        {
-          prompt: lastPrompt,
         }
+    
+      } catch (error) {
+
+        console.log(error);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+    
+
+    const exportChat = () => {
+
+      if (messages.length === 0) {
+
+        alert("No chat to export");
+
+        return;
+
+      }
+
+      let content = "";
+
+      messages.forEach((msg) => {
+
+        content +=
+          `${msg.role.toUpperCase()}:\n`;
+
+        content +=
+          `${msg.content}\n\n`;
+
+      });
+
+      const blob = new Blob(
+        [content],
+        { type: "text/plain" }
       );
 
-      if (res.data.success) {
+      const url =
+        URL.createObjectURL(blob);
 
-        const aiMessage = {
-          role: "assistant",
-          content: res.data.response
-            .replace(/\n{3,}/g, "\n\n")
-            .trim(),
-        };
-  
-        setMessages((prev) => [
-          ...prev,
-          aiMessage,
-        ]);
+      const a =
+        document.createElement("a");
 
-      }
-  
-    } catch (error) {
+      a.href = url;
 
-      console.log(error);
+      a.download =
+        "prompto-chat.txt";
 
-    } finally {
+      a.click();
 
-      setLoading(false);
+      URL.revokeObjectURL(url);
 
-    }
+    };
 
-  };
+    return (
 
-  
+      <main className="h-[calc(100vh-80px)] bg-slate-50 text-white flex overflow-hidden">
 
-  const exportChat = () => {
+        {/* SIDEBAR */}
 
-    if (messages.length === 0) {
-
-      alert("No chat to export");
-
-      return;
-
-    }
-
-    let content = "";
-
-    messages.forEach((msg) => {
-
-      content +=
-        `${msg.role.toUpperCase()}:\n`;
-
-      content +=
-        `${msg.content}\n\n`;
-
-    });
-
-    const blob = new Blob(
-      [content],
-      { type: "text/plain" }
-    );
-
-    const url =
-      URL.createObjectURL(blob);
-
-    const a =
-      document.createElement("a");
-
-    a.href = url;
-
-    a.download =
-      "prompto-chat.txt";
-
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-  };
-
-  return (
-
-    <main className="h-[calc(100vh-80px)] bg-slate-50 text-white flex overflow-hidden">
-
-      {/* SIDEBAR */}
-
-        <div
-        className="
-        w-72
-        bg-white
-        border-r
-        border-slate-200
-        flex
-        flex-col
-        "
-        >
-
-          <div className="p-4 border-b">
-
-            <button
-              onClick={() => {
-                setMessages([]);
-                setPrompt("");
-                setSelectedChatId(null);
-              }}
-              className="
-        w-full
-        flex
-        items-center
-        gap-3
-        px-4
-        py-3
-        rounded-xl
-        bg-orange-500
-        text-white
-        font-semibold
-        hover:bg-orange-600
+          <div
+          className="
+          w-72
+          bg-white
+          border-r
+          border-slate-200
+          flex
+          flex-col
           "
-            >
-              <span className="text-xl">+</span>
-              New Chat
-            </button>
+          >
 
-          </div>
+            <div className="p-4 border-b">
 
-          <div className="p-4">
+              <button
+                onClick={createNewConversation}
+                className="
+          w-full
+          flex
+          items-center
+          gap-3
+          px-4
+          py-3
+          rounded-xl
+          bg-orange-500
+          text-white
+          font-semibold
+          hover:bg-orange-600
+            "
+              >
+                <span className="text-xl">+</span>
+                New Chat
+              </button>
 
-            <input
-              type="text"
-              placeholder="Search chats..."
-              value={searchTerm}
-              onChange={(e) =>
-                setSearchTerm(
-                  e.target.value
-                )
-              }
-              className="
-      w-full
+            </div>
+
+            <div className="p-4">
+
+              <input
+                type="text"
+                placeholder="Search chats..."
+                value={searchTerm}
+                onChange={(e) =>
+                  setSearchTerm(
+                    e.target.value
+                  )
+                }
+                className="
+        w-full
+        px-3
+        py-2
+        border
+        border-slate-300
+        rounded-lg
+        text-sm
+        text-slate-700
+        outline-none
+        focus:ring-2
+        focus:ring-orange-500
+      "
+              />
+
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-3">
+
+              {filteredHistory.length === 0 ? ( 
+
+                <div className="p-4 text-slate-400 text-sm">
+
+                  No chats yet
+
+                </div>
+
+              ) : (
+
+                filteredHistory.map((chat, index) => (
+
+                    <div
+                      key={chat.id}
+                      className={`
+      
+      group
+      flex
+      items-center
+      justify-between                  
       px-3
-      py-2
-      border
-      border-slate-300
-      rounded-lg
+      py-3
+      rounded-xl
+      cursor-pointer
+      mb-1
       text-sm
-      text-slate-700
-      outline-none
-      focus:ring-2
-      focus:ring-orange-500
-    "
-            />
+      transition
 
+                        ${
+                          selectedChatId === chat.id
+                            ? "bg-orange-100 border border-orange-300 text-slate-900"
+                            : "hover:bg-slate-100 text-slate-700"
+                        }
+                      `}
+                    >
+
+                    <div
+                      onClick={() => {
+
+                        setSelectedChatId(chat.id);
+
+                        setMessages([
+                          {
+                            role: "user",
+                            content: chat.prompt,
+                          },
+                          {
+                            role: "assistant",
+                            content: chat.response,
+                          },
+                        ]);
+
+                        setTimeout(() => {
+
+                          const chatContainer =
+                            document.getElementById("chat-container");
+
+                          if (chatContainer) {
+                            chatContainer.scrollTo({
+                              top: 0,
+                              behavior: "smooth",
+                            });
+                          }
+
+                        }, 100);
+
+                      }}
+                      className="
+            flex-1
+            cursor-pointer
+            text-slate-700
+            text-sm
+            truncate
+          "
+                    >
+
+                      {
+                        (chat.title || chat.prompt).length > 30
+                          ? (chat.title || chat.prompt).slice(0, 30) + "..."
+                          : (chat.title || chat.prompt)
+                      }
+
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+
+                        e.stopPropagation();
+
+                        deleteChat(chat.id);
+
+                      }}
+                      className="
+    opacity-0
+    group-hover:opacity-100
+    text-red-500
+    hover:text-red-700
+    transition
+    ml-2
+    text-sm
+          "
+                    >
+
+                      🗑
+
+                    </button>
+
+                  </div>
+
+                ))
+
+              )}
+
+            </div>
+    
           </div>
 
-          <div className="flex-1 overflow-y-auto p-3">
+          <div className="flex-1 flex flex-col overflow-hidden">
 
-            {filteredHistory.length === 0 ? ( 
+          {/* CHAT AREA */}
 
-              <div className="p-4 text-slate-400 text-sm">
+          <div
+            id="chat-container"
+            ref={chatAreaRef}
+            className="
+      flex-1
+      overflow-y-auto
+      px-6
+      py-4
+      space-y-4
+    "
+          >
 
-                No chats yet
+            {messages.length === 0 ? (
+
+              <div className="flex h-full items-center justify-center">
+
+                <div className="text-center -mt-20">
+
+                  <h2 className="text-6xl font-bold text-slate-800">
+                    AI Playground 🚀
+                  </h2>
+
+                  <p className="text-slate-500 mt-4 text-xl">
+                    Ask anything and start learning.
+                  </p>
+
+                </div>
 
               </div>
 
             ) : (
 
-              filteredHistory.map((chat, index) => (
+              messages.map((message, index) => (
+
+                <div
+                  key={index}
+                  className={`flex ${
+                    message.role === "user"
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
+                >
 
                   <div
-                    key={chat.id}
                     className={`
-    
-    group
-    flex
-    items-center
-    justify-between                  
-    px-3
-    py-3
-    rounded-xl
-    cursor-pointer
-    mb-1
-    text-sm
-    transition
-
+                      group
+                      relative
+                      max-w-3xl
+                      px-5
+                      py-3
+                      rounded-2xl
+                      whitespace-pre-wrap
+                      leading-6
+                      shadow-sm
                       ${
-                        selectedChatId === chat.id
-                          ? "bg-orange-100 border border-orange-300 text-slate-900"
-                          : "hover:bg-slate-100 text-slate-700"
+                        message.role === "user"
+                          ? "bg-orange-500 text-white"
+                          : "bg-white text-slate-800 border border-slate-200"
                       }
                     `}
                   >
 
-                  <div
-                    onClick={() => {
+                    <div>
 
-                      setSelectedChatId(chat.id);
+                  
 
-                      setMessages([
-                        {
-                          role: "user",
-                          content: chat.prompt,
-                        },
-                        {
-                          role: "assistant",
-                          content: chat.response,
-                        },
-                      ]);
+                      <ReactMarkdown
+                        components={{
+                          br: () => <br />,
+                          p: ({ children }) => (
+                            <p className="leading-6">
+                              {children}
+                            </p>
+                          ),
 
-                      setTimeout(() => {
+                          h1: ({ children }) => (
+                            <h1 className="text-2xl font-bold mb-2">
+                              {children}
+                            </h1>
+                          ),
 
-                        const chatContainer =
-                          document.getElementById("chat-container");
+                          h2: ({ children }) => (
+                            <h2 className="text-xl font-semibold mb-2">
+                              {children}
+                            </h2>
+                          ),
 
-                        if (chatContainer) {
-                          chatContainer.scrollTo({
-                            top: 0,
-                            behavior: "smooth",
-                          });
-                        }
+                          h3: ({ children }) => (
+                            <h3 className="text-lg font-semibold mb-1">
+                              {children}
+                            </h3>
+                          ),
 
-                      }, 100);
+                          ol: ({ children }) => (
+                          <ol className="pl-5 my-1">
+                            {children}
+                          </ol>
+                          ),
 
-                    }}
-                    className="
-          flex-1
-          cursor-pointer
-          text-slate-700
-          text-sm
-          truncate
-        "
-                  >
+                          ul: ({ children }) => (
+                            <ul className="pl-5 my-1">
+                              {children}
+                            </ul>
+                          ),
 
-                    {
-                      (chat.title || chat.prompt).length > 30
-                        ? (chat.title || chat.prompt).slice(0, 30) + "..."
-                        : (chat.title || chat.prompt)
-                    }
+                          li: ({ children }) => (
+                            <li className="my-0">
+                              {children}
+                            </li>
+                          ),
+                          
+
+                          code({
+                            inline,
+                            className,
+                            children,
+                            ...props
+                          }: any) {
+                            const match =
+                              /language-(\w+)/.exec(
+                                className || ""
+                              );
+
+                            return !inline && match ? (
+                              <SyntaxHighlighter
+                                style={oneDark}
+                                language={match[1]}
+                                PreTag="div"
+                                {...props}
+                              >
+                                {String(children).replace(
+                                  /\n$/,
+                                  ""
+                                )}
+                              </SyntaxHighlighter>
+                            ) : (
+                              <code
+                                className="bg-slate-100 px-1 rounded"
+                                {...props}
+                              >
+                                {children}
+                              </code>
+                            );
+                          },
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+
+                      {message.role === "assistant" && (
+
+                        <button
+                          onClick={() =>
+                            navigator.clipboard.writeText(
+                              message.content
+                            )
+                          }
+                          className="
+    absolute
+    top-2
+    right-2
+    opacity-0
+    group-hover:opacity-100
+    transition
+    text-xs
+    bg-slate-100
+    px-2
+    py-1
+    rounded
+    text-slate-600
+    hover:text-orange-500
+  "
+                        >
+                          Copy
+                        </button>
+
+                      )}
+
+                    </div>
 
                   </div>
-
-                  <button
-                    onClick={(e) => {
-
-                      e.stopPropagation();
-
-                      deleteChat(chat.id);
-
-                    }}
-                    className="
-  opacity-0
-  group-hover:opacity-100
-  text-red-500
-  hover:text-red-700
-  transition
-  ml-2
-  text-sm
-        "
-                  >
-
-                    🗑
-
-                  </button>
 
                 </div>
 
@@ -633,313 +830,26 @@ export default function PlaygroundPage() {
 
             )}
 
-          </div>
-  
-        </div>
+            {loading && (
 
-        <div className="flex-1 flex flex-col overflow-hidden">
-
-        {/* CHAT AREA */}
-
-        <div
-          id="chat-container"
-          ref={chatAreaRef}
-          className="
-    flex-1
-    overflow-y-auto
-    px-6
-    py-4
-    space-y-4
-  "
-        >
-
-          {messages.length === 0 ? (
-
-            <div className="flex h-full items-center justify-center">
-
-              <div className="text-center -mt-20">
-
-                <h2 className="text-6xl font-bold text-slate-800">
-                  AI Playground 🚀
-                </h2>
-
-                <p className="text-slate-500 mt-4 text-xl">
-                  Ask anything and start learning.
-                </p>
-
-              </div>
-
-            </div>
-
-          ) : (
-
-            messages.map((message, index) => (
-
-              <div
-                key={index}
-                className={`flex ${
-                  message.role === "user"
-                    ? "justify-end"
-                    : "justify-start"
-                }`}
-              >
-
-                <div
-                  className={`
-                    group
-                    relative
-                    max-w-3xl
-                    px-5
-                    py-3
-                    rounded-2xl
-                    whitespace-pre-wrap
-                    leading-6
-                    shadow-sm
-                    ${
-                      message.role === "user"
-                        ? "bg-orange-500 text-white"
-                        : "bg-white text-slate-800 border border-slate-200"
-                    }
-                  `}
-                >
-
-                  <div>
-
-                
-
-                    <ReactMarkdown
-                      components={{
-                        br: () => <br />,
-                        p: ({ children }) => (
-                          <p className="leading-6">
-                            {children}
-                          </p>
-                        ),
-
-                        h1: ({ children }) => (
-                          <h1 className="text-2xl font-bold mb-2">
-                            {children}
-                          </h1>
-                        ),
-
-                        h2: ({ children }) => (
-                          <h2 className="text-xl font-semibold mb-2">
-                            {children}
-                          </h2>
-                        ),
-
-                        h3: ({ children }) => (
-                          <h3 className="text-lg font-semibold mb-1">
-                            {children}
-                          </h3>
-                        ),
-
-                        ol: ({ children }) => (
-                        <ol className="pl-5 my-1">
-                          {children}
-                        </ol>
-                        ),
-
-                        ul: ({ children }) => (
-                          <ul className="pl-5 my-1">
-                            {children}
-                          </ul>
-                        ),
-
-                        li: ({ children }) => (
-                          <li className="my-0">
-                            {children}
-                          </li>
-                        ),
-                        
-
-                        code({
-                          inline,
-                          className,
-                          children,
-                          ...props
-                        }: any) {
-                          const match =
-                            /language-(\w+)/.exec(
-                              className || ""
-                            );
-
-                          return !inline && match ? (
-                            <SyntaxHighlighter
-                              style={oneDark}
-                              language={match[1]}
-                              PreTag="div"
-                              {...props}
-                            >
-                              {String(children).replace(
-                                /\n$/,
-                                ""
-                              )}
-                            </SyntaxHighlighter>
-                          ) : (
-                            <code
-                              className="bg-slate-100 px-1 rounded"
-                              {...props}
-                            >
-                              {children}
-                            </code>
-                          );
-                        },
-                      }}
-                     >
-                      {message.content}
-                     </ReactMarkdown>
-
-                    {message.role === "assistant" && (
-
-                      <button
-                        onClick={() =>
-                          navigator.clipboard.writeText(
-                            message.content
-                          )
-                        }
-                        className="
-  absolute
-  top-2
-  right-2
-  opacity-0
-  group-hover:opacity-100
-  transition
-  text-xs
-  bg-slate-100
-  px-2
-  py-1
-  rounded
-  text-slate-600
-  hover:text-orange-500
-"
-                      >
-                        Copy
-                      </button>
-
-                    )}
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            ))
-
-          )}
-
-          {loading && (
-
-            <div className="flex justify-start">
-
-              <div
-                className="
-      bg-slate-100
-      px-5
-      py-4
-      rounded-2xl
-      flex
-      gap-1
-    "
-              >
-
-                <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
-
-                <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
-
-                <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
-
-              </div>
-
-            </div>
-
-          )}
-
-          <div ref={bottomRef}></div>
-            {promptAnalysis && (
-
-              <div
-                className="
-      mt-8
-      bg-white
-      border
-      border-slate-200
-      rounded-3xl
-      p-8
-      shadow-lg
-    "
-              >
-
-                <h3
-                  className="
-        text-2xl
-        font-bold
-        text-slate-800
-        mb-6
-      "
-                >
-                  📊 Prompt Analysis
-                </h3>
+              <div className="flex justify-start">
 
                 <div
                   className="
-        grid
-        grid-cols-2
-        md:grid-cols-5
-        gap-4
+        bg-slate-100
+        px-5
+        py-4
+        rounded-2xl
+        flex
+        gap-1
       "
                 >
 
-                  <div className="bg-blue-50 rounded-2xl p-4 text-center">
-                    <p className="text-slate-500 text-sm">
-                      Clarity
-                    </p>
+                  <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
 
-                    <p className="text-3xl font-bold text-blue-600">
-                      {promptAnalysis.clarity}
-                    </p>
-                  </div>
+                  <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
 
-                  <div className="bg-purple-50 rounded-2xl p-4 text-center">
-                    <p className="text-slate-500 text-sm">
-                      Specificity
-                    </p>
-
-                    <p className="text-3xl font-bold text-purple-600">
-                      {promptAnalysis.specificity}
-                    </p>
-                  </div>
-
-                  <div className="bg-orange-50 rounded-2xl p-4 text-center">
-                    <p className="text-slate-500 text-sm">
-                      Context
-                    </p>
-
-                    <p className="text-3xl font-bold text-orange-600">
-                      {promptAnalysis.context}
-                    </p>
-                  </div>
-
-                  <div className="bg-red-50 rounded-2xl p-4 text-center">
-                    <p className="text-slate-500 text-sm">
-                      Constraints
-                    </p>
-
-                    <p className="text-3xl font-bold text-red-600">
-                      {promptAnalysis.constraints}
-                    </p>
-                  </div>
-            
-                  <div className="bg-green-50 rounded-2xl p-4 text-center">
-                    <p className="text-slate-500 text-sm">
-                      Overall
-                    </p>
-
-                    <p className="text-3xl font-bold text-green-600">
-                      {promptAnalysis.overall}
-                    </p>
-                  </div>
+                  <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
 
                 </div>
 
@@ -947,300 +857,393 @@ export default function PlaygroundPage() {
 
             )}
 
-          {promptSuggestions.length > 0 && (
+            <div ref={bottomRef}></div>
+              {promptAnalysis && (
 
-            <div
-              className="
-      mt-6
-      bg-amber-50
-      border
-      border-yellow-200
-      rounded-3xl
-      p-6
-      shadow-sm
-    "
-            >
-
-              <h3
-                className="
-    text-xl
-    font-bold
-    text-yellow-800
-    mb-4
-  "
-              >
-                💡 Suggestions
-              </h3>
-
-              <ul
-                className="
-    list-disc
-    pl-5
-    space-y-3
-    text-slate-700
-    font-medium
+                <div
+                  className="
+        mt-8
+        bg-white
+        border
+        border-slate-200
+        rounded-3xl
+        p-8
+        shadow-lg
       "
-              >
+                >
 
-                {promptSuggestions.map(
-                  (
-                    suggestion,
-                    index
-                  ) => (
-          
-                    <li
-                      key={index}
-                      className="
-    text-slate-700
-    leading-relaxed
-  "
-                    >
-                      {suggestion}
-                    </li>
-          
-                  )
-                )}
-
-              </ul>
-
-            </div>
-
-          )}
-
-          {improvedPrompt && (
-
-            <div
-              className="
-      mt-6
-      bg-green-50
-      border
-      border-green-200
-      rounded-3xl
-      p-6
-    "
-            >
-
-              <h3
-                className="
-    text-xl
-    font-bold
-    text-green-800
-    mb-4
-  "
-              >
-                ✨ Improved Prompt
-              </h3>
-
-              <p
-                className="
-        whitespace-pre-wrap
-        text-slate-700
-        leading-relaxed
+                  <h3
+                    className="
+          text-2xl
+          font-bold
+          text-slate-800
+          mb-6
         "
-              >
-                {improvedPrompt}
-              </p>
+                  >
+                    📊 Prompt Analysis
+                  </h3>
 
-            </div>
+                  <div
+                    className="
+          grid
+          grid-cols-2
+          md:grid-cols-5
+          gap-4
+        "
+                  >
 
-          )}
+                    <div className="bg-blue-50 rounded-2xl p-4 text-center">
+                      <p className="text-slate-500 text-sm">
+                        Clarity
+                      </p>
 
-        </div>
+                      <p className="text-3xl font-bold text-blue-600">
+                        {promptAnalysis.clarity}
+                      </p>
+                    </div>
 
-      {/* INPUT AREA */}
+                    <div className="bg-purple-50 rounded-2xl p-4 text-center">
+                      <p className="text-slate-500 text-sm">
+                        Specificity
+                      </p>
 
-        <div
-          className="
-    shrink-0
-    border-t
-    border-slate-200
-    bg-slate-50
-    px-6
-    py-3
-  "
-        >
+                      <p className="text-3xl font-bold text-purple-600">
+                        {promptAnalysis.specificity}
+                      </p>
+                    </div>
 
-          <div
-            className="
-     relative
-    bg-white
-    border
-    border-slate-300
-    rounded-3xl
-    px-4
-    py-2
-    shadow-sm
-    "
-          >
+                    <div className="bg-orange-50 rounded-2xl p-4 text-center">
+                      <p className="text-slate-500 text-sm">
+                        Context
+                      </p>
 
-            <textarea
-              value={prompt}
-              onChange={(e) => {
+                      <p className="text-3xl font-bold text-orange-600">
+                        {promptAnalysis.context}
+                      </p>
+                    </div>
 
-                setPrompt(e.target.value);
+                    <div className="bg-red-50 rounded-2xl p-4 text-center">
+                      <p className="text-slate-500 text-sm">
+                        Constraints
+                      </p>
 
-                e.target.style.height = "20px";
+                      <p className="text-3xl font-bold text-red-600">
+                        {promptAnalysis.constraints}
+                      </p>
+                    </div>
+              
+                    <div className="bg-green-50 rounded-2xl p-4 text-center">
+                      <p className="text-slate-500 text-sm">
+                        Overall
+                      </p>
 
-                e.target.style.height =
-                  e.target.scrollHeight + "px";
+                      <p className="text-3xl font-bold text-green-600">
+                        {promptAnalysis.overall}
+                      </p>
+                    </div>
 
-              }}
+                  </div>
 
-              onKeyDown={(e) => {
+                </div>
 
-                if (
-                  e.key === "Enter" &&
-                  !e.shiftKey
-                ) {
+              )}
 
-                  e.preventDefault();
-
-                  generateAIResponse();
-
-                }
-
-             }}
-              placeholder="Ask anything..."
-              rows={1}
-              className="
-    w-full
-    resize-none
-    outline-none
-    text-slate-900
-    text-base
-    min-h-[20px]
-    max-h-[160px]
-    overflow-y-auto
-    leading-6
-  "
-            />
-
-            {showTemplates && (
+            {promptSuggestions.length > 0 && (
 
               <div
                 className="
-  absolute
-  bottom-16
-  left-0
-  bg-white
-  border
-  border-slate-200
-  rounded-2xl
-  shadow-xl
-  w-72
-  z-50
-  overflow-hidden
-"
+        mt-6
+        bg-amber-50
+        border
+        border-yellow-200
+        rounded-3xl
+        p-6
+        shadow-sm
+      "
               >
 
-              <button
-                onClick={() => {
-                  setPrompt("Summarize the following:");
-                  setShowTemplates(false);
-                }}
+                <h3
+                  className="
+      text-xl
+      font-bold
+      text-yellow-800
+      mb-4
+    "
+                >
+                  💡 Suggestions
+                </h3>
+
+                <ul
+                  className="
+      list-disc
+      pl-5
+      space-y-3
+      text-slate-700
+      font-medium
+        "
+                >
+
+                  {promptSuggestions.map(
+                    (
+                      suggestion,
+                      index
+                    ) => (
+            
+                      <li
+                        key={index}
+                        className="
+      text-slate-700
+      leading-relaxed
+    "
+                      >
+                        {suggestion}
+                      </li>
+            
+                    )
+                  )}
+
+                </ul>
+
+              </div>
+
+            )}
+
+            {improvedPrompt && (
+
+              <div
                 className="
-    w-full
-    text-left
-    px-4
-    py-3
-    hover:bg-slate-100
-    text-slate-800
-    font-medium
-              "
+        mt-6
+        bg-green-50
+        border
+        border-green-200
+        rounded-3xl
+        p-6
+      "
               >
-                📝 Summarize
-              </button>
 
-              <button
-                onClick={() => {
-                  setPrompt("Write a professional email:");
-                  setShowTemplates(false);
-                }}
-                className="
-    w-full
-    text-left
-    px-4
-    py-3
-    hover:bg-slate-100
-    text-slate-800
-    font-medium
-  "
-              >
-                📧 Email
-              </button>
+                <h3
+                  className="
+      text-xl
+      font-bold
+      text-green-800
+      mb-4
+    "
+                >
+                  ✨ Improved Prompt
+                </h3>
 
-              <button
-                onClick={() => {
-                  setPrompt("Explain this code:");
-                  setShowTemplates(false);
-                }}
-                className="
-    w-full
-    text-left
-    px-4
-    py-3
-    hover:bg-slate-100
-    text-slate-800
-    font-medium
-  "
-              >
-                💻 Explain Code
-              </button>
-  
-            </div>
-
-          )}
-
-          <div className="flex items-center justify-between mt-1">
-
-            <button
-              onClick={() =>
-                setShowTemplates(!showTemplates)
-              }
-              className="
-          w-10
-          h-10
-          rounded-full
-          bg-slate-100
-          hover:bg-slate-200
+                <p
+                  className="
+          whitespace-pre-wrap
           text-slate-700
-          text-xl
-          transition
-        "
-            >
-              +
-            </button>
+          leading-relaxed
+          "
+                >
+                  {improvedPrompt}
+                </p>
 
-            <button
-              onClick={generateAIResponse}
-              disabled={loading}
+              </div>
+
+            )}
+
+          </div>
+
+        {/* INPUT AREA */}
+
+          <div
+            className="
+      shrink-0
+      border-t
+      border-slate-200
+      bg-slate-50
+      px-6
+      py-3
+    "
+          >
+
+            <div
               className="
-          bg-orange-500
-          hover:bg-orange-600
-          text-white
-          px-4
-          py-1.5
-          rounded-xl
-          font-medium
-        "
+      relative
+      bg-white
+      border
+      border-slate-300
+      rounded-3xl
+      px-4
+      py-2
+      shadow-sm
+      "
             >
 
-              {loading ? "..." : "Send"}
-            </button>
+              <textarea
+                value={prompt}
+                onChange={(e) => {
 
-            <button
-              onClick={exportChat}
-              className="
-    px-3
-    py-1.5
-    bg-slate-200
-    text-slate-700
-    rounded-xl
-    hover:bg-slate-300
+                  setPrompt(e.target.value);
+
+                  e.target.style.height = "20px";
+
+                  e.target.style.height =
+                    e.target.scrollHeight + "px";
+
+                }}
+
+                onKeyDown={(e) => {
+
+                  if (
+                    e.key === "Enter" &&
+                    !e.shiftKey
+                  ) {
+
+                    e.preventDefault();
+
+                    generateAIResponse();
+
+                  }
+
+              }}
+                placeholder="Ask anything..."
+                rows={1}
+                className="
+      w-full
+      resize-none
+      outline-none
+      text-slate-900
+      text-base
+      min-h-[20px]
+      max-h-[160px]
+      overflow-y-auto
+      leading-6
+    "
+              />
+
+              {showTemplates && (
+
+                <div
+                  className="
+    absolute
+    bottom-16
+    left-0
+    bg-white
+    border
+    border-slate-200
+    rounded-2xl
+    shadow-xl
+    w-72
+    z-50
+    overflow-hidden
   "
-            >
-              Export
-            </button>
+                >
+
+                <button
+                  onClick={() => {
+                    setPrompt("Summarize the following:");
+                    setShowTemplates(false);
+                  }}
+                  className="
+      w-full
+      text-left
+      px-4
+      py-3
+      hover:bg-slate-100
+      text-slate-800
+      font-medium
+                "
+                >
+                  📝 Summarize
+                </button>
+
+                <button
+                  onClick={() => {
+                    setPrompt("Write a professional email:");
+                    setShowTemplates(false);
+                  }}
+                  className="
+      w-full
+      text-left
+      px-4
+      py-3
+      hover:bg-slate-100
+      text-slate-800
+      font-medium
+    "
+                >
+                  📧 Email
+                </button>
+
+                <button
+                  onClick={() => {
+                    setPrompt("Explain this code:");
+                    setShowTemplates(false);
+                  }}
+                  className="
+      w-full
+      text-left
+      px-4
+      py-3
+      hover:bg-slate-100
+      text-slate-800
+      font-medium
+    "
+                >
+                  💻 Explain Code
+                </button>
+    
+              </div>
+
+            )}
+
+            <div className="flex items-center justify-between mt-1">
+
+              <button
+                onClick={() =>
+                  setShowTemplates(!showTemplates)
+                }
+                className="
+            w-10
+            h-10
+            rounded-full
+            bg-slate-100
+            hover:bg-slate-200
+            text-slate-700
+            text-xl
+            transition
+          "
+              >
+                +
+              </button>
+
+              <button
+                onClick={generateAIResponse}
+                disabled={loading}
+                className="
+            bg-orange-500
+            hover:bg-orange-600
+            text-white
+            px-4
+            py-1.5
+            rounded-xl
+            font-medium
+          "
+              >
+
+                {loading ? "..." : "Send"}
+              </button>
+
+              <button
+                onClick={exportChat}
+                className="
+      px-3
+      py-1.5
+      bg-slate-200
+      text-slate-700
+      rounded-xl
+      hover:bg-slate-300
+    "
+              >
+                Export
+              </button>
+
+              </div>
 
             </div>
 
@@ -1248,10 +1251,8 @@ export default function PlaygroundPage() {
 
         </div>
 
-      </div>
+      </main>
 
-    </main>
+    );
 
-  );
-
-}
+  }
