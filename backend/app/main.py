@@ -14,11 +14,13 @@ from app.routes.prompt_improver import (router as improver_router)
 from app.routes.prompt_feedback import (router as feedback_router)
 from app.routes.prompt_coach import (router as coach_router)
 from app.routes.prompt_recommender import (router as recommender_router)
-from app.routes.challenge_validator import (router as challenge_router)
 from app.routes.dashboard import (router as dashboard_router)
 from app.routes import prompt_comparator
 from app.routes import prompt_templates
 from app.routes import prompt_mentor
+from app.routes import challenge_arena
+from app.routes.challenge import router as challenge_router
+from app.routes.challenge_validator import router as challenge_validator_router
 
 import requests
 import os
@@ -46,7 +48,6 @@ app.include_router(auth_router)
 app.include_router(lesson_router)
 app.include_router(playground_router)
 app.include_router(chat_router)
-app.include_router(challenge_router)
 app.include_router(conversation_router)
 app.include_router(evaluator_router)
 app.include_router(improver_router)
@@ -58,6 +59,8 @@ app.include_router(dashboard_router)
 app.include_router(prompt_comparator.router)
 app.include_router(prompt_templates.router)
 app.include_router(prompt_mentor.router)
+app.include_router(challenge_arena.router)
+app.include_router(challenge_validator_router)
 
 class PromptRequest(BaseModel):
     prompt: str

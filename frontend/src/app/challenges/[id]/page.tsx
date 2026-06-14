@@ -8,17 +8,17 @@ export default function ChallengeDetailPage() {
 
   const params = useParams();
 
-  const [challenge, setChallenge] =
-    useState<any>(null);
+  const [challenge, setChallenge] = useState<any>(null);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [answer, setAnswer] =
-    useState("");
+  const [answer, setAnswer] = useState("");
 
-  const [completed, setCompleted] =
-    useState(false);
+  const [result, setResult] = useState<any>(null);
+
+  const [completed, setCompleted] = useState(false);
+
+  const [evaluating, setEvaluating] = useState(false);
 
   useEffect(() => {
 
@@ -54,62 +54,77 @@ export default function ChallengeDetailPage() {
 
   };
 
+  
+  
   const submitChallenge = async () => {
 
-    const email =
-      localStorage.getItem(
-        "userEmail"
-      );
+  if (!answer.trim()) {
 
-    if (!email) {
+    alert("Enter a prompt");
 
-      alert("Please login");
+    return;
 
-      return;
+  }
 
-    }
+  try {
 
-    try {
+    setEvaluating(true);
 
-      const res = await API.post(
-        "/complete-challenge",
+    const res =
+      await API.post(
+        "/evaluate-challenge",
         {
-          user_email: email,
-          challenge_id: Number(
-            params.id
-          ),
-          xp_earned:
-            challenge.xp_reward,
+          prompt: answer,
+          target_score:
+            challenge.target_score
         }
       );
 
-      if (res.data.success) {
+    if (res.data.success) {
 
-        alert(
-          `🎉 Challenge Completed!\n+${res.data.xp_earned} XP`
+      setResult(
+        res.data.result
+      );
+
+      if (
+        res.data.result.passed
+      ) {
+
+        const email =
+          localStorage.getItem(
+            "userEmail"
+          );
+
+        await API.post(
+          "/complete-challenge",
+          {
+            user_email: email,
+            challenge_id:
+              Number(
+                params.id
+              ),
+            xp_earned:
+              challenge.xp_reward
+          }
         );
 
         setCompleted(true);
 
-      } else {
-
-        alert(
-          res.data.message
-        );
-
       }
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert(
-        "Failed to submit challenge"
-      );
 
     }
 
-  };
+  } catch (error) {
+
+    console.log(error);
+
+  } finally {
+
+    setEvaluating(false);
+
+  }
+
+};
 
   if (loading) {
 
@@ -123,6 +138,14 @@ export default function ChallengeDetailPage() {
 
     );
 
+  }
+
+  if (!challenge) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Challenge Not Found
+      </div>
+    );
   }
 
   return (
@@ -140,6 +163,12 @@ export default function ChallengeDetailPage() {
         <div className="bg-white border border-slate-200 shadow-lg rounded-3xl p-8">
 
           <div className="flex gap-4 mb-6">
+
+            <span
+              className=" bg-blue-100 text-blue-600 px-4 py-2 rounded-xl"
+            >
+              🎯 {challenge.target_score}
+            </span>
 
             <span className="bg-purple-100 text-purple-600 px-4 py-2 rounded-xl">
 
@@ -175,16 +204,199 @@ export default function ChallengeDetailPage() {
 
           {!completed ? (
 
-            <button
-              onClick={
-                submitChallenge
-              }
-              className="bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-2xl font-semibold"
-            >
-              Submit Answer
-            </button>
+            <>
+              <button
+                onClick={
+                  submitChallenge
+                }
+                className="bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-2xl font-semibold"
+              >
+                {evaluating
+                  ? "Evaluating..."
+                  : "Evaluate Prompt"}
+              </button>
 
-          ) : (
+              {result && (
+
+                <div
+                  className="
+    mt-8
+    border-t
+    pt-8
+  "
+                >
+
+                  <h2
+                    className="
+      text-2xl
+      font-bold
+      mb-4
+    "
+                  >
+                    🏆 Challenge Result
+                  </h2>
+
+                  <div
+      className="
+      grid
+      md:grid-cols-3
+      gap-4
+      mb-6
+    "
+                  >
+
+                    <div
+                      className="
+        bg-blue-50
+        rounded-2xl
+        p-4
+        text-center
+      "
+                    >
+                      <p>Score</p>
+
+                      <h3
+                        className="
+          text-3xl
+          font-bold
+        "
+                      >
+                        {result.score}/10
+                      </h3>
+
+                    </div>
+
+                  <div
+                    className="
+        bg-purple-50
+        rounded-2xl
+        p-4
+        text-center
+      "
+                  >
+                    <p>Target</p>
+
+                    <h3
+                      className="
+          text-3xl
+          font-bold
+        "
+                    >
+                      {result.target_score}
+                    </h3>
+
+                  </div>
+
+                  <div
+                    className={`
+                    rounded-2xl
+                    p-4
+                    text-center
+                    ${
+                      result.passed
+                      ? "bg-green-50"
+                      : "bg-red-50"
+                    }
+                  `}
+                  >
+
+                    <p>Status</p>
+
+                    <h3
+                      className="
+          text-2xl
+          font-bold
+        "
+                    >
+
+                      {result.passed
+                        ? "✅ PASS"
+                        : "❌ FAIL"}
+
+                    </h3>
+            
+                  </div>
+
+                </div>
+
+                <h3
+                  className="
+      text-xl
+      font-bold
+      mb-3
+    "
+                >
+                  Weaknesses
+                </h3>
+
+                <div className="mb-6">
+
+                  {result.weaknesses
+                    ?.length > 0 ? (
+
+                    result.weaknesses.map(
+                      (
+                        item: string,
+                        index: number
+                      ) => (
+
+                        <p
+                          key={index}
+                          className="
+              text-red-500
+              mb-2
+            "
+                        >
+                          ❌ {item}
+                        </p>
+
+                      )
+                    )
+
+                  ) : (
+
+                    <p
+                      className="
+          text-green-600
+        "
+                    >
+                      No weaknesses detected
+                    </p>
+
+                  )}
+
+                </div>
+
+                <h3
+                  className="
+      text-xl
+      font-bold
+      mb-3
+    "
+                >
+                  Professional Example
+                </h3>
+
+                <div
+                  className="
+      bg-slate-100
+      rounded-2xl
+      p-4
+      whitespace-pre-wrap
+    "
+                >
+                  {
+                    result.professional_prompt
+                  }
+                </div>
+
+              </div>
+
+            )}
+
+          </>
+
+        ) : (
 
             <div className="bg-green-600/20 border border-green-500 text-green-400 px-6 py-4 rounded-2xl">
 

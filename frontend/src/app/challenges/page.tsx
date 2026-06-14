@@ -11,23 +11,21 @@ interface Challenge {
   xp_reward: number;
 }
 
-export default function ChallengesPage() {
+export default function ChallengePage() {
 
   const router = useRouter();
   
-  const [challenges, setChallenges] =
-    useState<Challenge[]>([]);
+  const [challenges, setChallenge] = useState<Challenge[]>([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
-    fetchChallenges();
+    fetchChallenge();
 
   }, []);
 
-  const fetchChallenges = async () => {
+  const fetchChallenge = async () => {
 
     try {
 
@@ -37,7 +35,7 @@ export default function ChallengesPage() {
 
       if (res.data.success) {
 
-        setChallenges(
+        setChallenge(
           res.data.challenges
         );
 

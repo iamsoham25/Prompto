@@ -8,9 +8,7 @@ router = APIRouter()
 
 challenge_collection = db["challenges"]
 
-completion_collection = db[
-    "challenge_completions"
-]
+completion_collection = db["challenge_completions"]
 
 users_collection = db["users"]
 
@@ -22,28 +20,28 @@ async def get_challenges():
         {"_id": 0}
     )
 
-    challenges = await cursor.to_list(
+    challenge = await cursor.to_list(
         length=100
     )
 
     return {
         "success": True,
-        "challenges": challenges
+        "challenges": challenge
     }
 
 @router.get("/challenge/{index}")
-async def get_challenge(index: int):
+async def get_single_challenge(index: int):
 
     cursor = challenge_collection.find(
         {},
         {"_id": 0}
     )
 
-    challenges = await cursor.to_list(
+    challenge = await cursor.to_list(
         length=100
     )
 
-    if index >= len(challenges):
+    if index >= len(challenge):
 
         return {
             "success": False,
@@ -52,7 +50,7 @@ async def get_challenge(index: int):
 
     return {
         "success": True,
-        "challenge": challenges[index]
+        "challenge": challenge[index]
     }
 
 @router.post("/complete-challenge")
@@ -259,20 +257,20 @@ async def get_daily_challenge():
         {"_id": 0}
     )
 
-    challenges = await cursor.to_list(
+    challenge = await cursor.to_list(
         length=100
     )
 
-    if len(challenges) == 0:
+    if len(challenge) == 0:
 
         return {
             "success": False,
-            "message": "No challenges found"
+            "message": "No challenge found"
         }
 
     return {
         "success": True,
-        "challenge": challenges[0]
+        "challenges": challenge[0]
     }
 
 

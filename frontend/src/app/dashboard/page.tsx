@@ -18,7 +18,7 @@ export default function DashboardPage() {
 
   const [xp, setXp] = useState(0);
 
-  const [completedChallenges, setCompletedChallenges] = useState(0);
+  const [completedChallenge, setCompletedChallenge] = useState(0);
 
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
 
@@ -210,7 +210,7 @@ const fetchUserXP = async (email: string | null) => {
       
       setXp(res.data.xp);
 
-      setCompletedChallenges(
+      setCompletedChallenge(
         Math.floor(res.data.xp / 50)
       );
 
@@ -426,7 +426,7 @@ const fetchDailyChallenge =
     if (res.data.success) {
 
       setDailyChallenge(
-        res.data.challenge
+        res.data.challenges
       );
 
     }
@@ -439,9 +439,7 @@ const fetchDailyChallenge =
 
 };
 
-const fetchAchievements = async (
-  email: string | null
-) => {
+const fetchAchievements = async (email: string | null) => {
 
   if (!email) return;
 
@@ -454,7 +452,7 @@ const fetchAchievements = async (
     if (res.data.success) {
 
       setBadges(
-        res.data.achievements
+        res.data.badges
       );
 
     }
@@ -708,8 +706,8 @@ const progress = getProgressData();
         />
 
         <Card
-          title="Challenges Completed"
-          value={completedChallenges.toString()}
+          title="Challenge Completed"
+          value={completedChallenge.toString()}
           color="text-orange-400"
         />
 
@@ -1433,7 +1431,7 @@ gap-6
 
               <p className="text-3xl font-bold text-purple-400">
 
-                {completedChallenges}
+                {completedChallenge}
 
               </p>
 
@@ -1620,7 +1618,7 @@ gap-6
 
           <div className="grid md:grid-cols-2 gap-4">
 
-            {badges.length > 0 ? (
+            {(badges || []).length > 0 ? (
       
               badges.map((badge, index) => (
 

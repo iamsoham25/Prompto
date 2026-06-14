@@ -153,10 +153,6 @@ export default function Navbar() {
         ) : (
 
         <>
-          
-          <div className="text-slate-400 text-sm">
-            {userName}
-          </div>
       
           <button
             onClick={handleLogout}
