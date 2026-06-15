@@ -35,20 +35,20 @@ export default function LearnPage() {
 
   useEffect(() => {
 
-  const email =
-    localStorage.getItem("userEmail");
+    const email =
+      localStorage.getItem("userEmail");
 
-  fetchLessons();
+    fetchLessons();
 
-  if (email) {
+    if (email) {
 
-    fetchCompletedLessons(email);
+      fetchCompletedLessons(email);
 
-    fetchProgress(email);
+      fetchProgress(email);
 
-  }
+    }
 
-}, []);
+  }, []);
 
   const fetchLessons = async () => {
 
@@ -70,97 +70,80 @@ export default function LearnPage() {
     }
   };
 
-  const fetchCompletedLessons = async (
-  email: string
-) => {
+  const fetchCompletedLessons = async (email: string) => {
 
-  try {
+    try {
 
-    const response =
-      await API.get(
-        `/completed-lessons/${email}`
-      );
+      const response =
+        await API.get(
+          `/completed-lessons/${email}`
+        );
 
-    if (response.data.success) {
+      if (response.data.success) {
 
-      setCompletedLessons(
-        response.data.completed_lessons
-      );
-
-    }
-
-  } catch (error) {
-
-    console.log(error);
-
-  }
-
-};
-
-const fetchProgress = async (
-  email: string
-) => {
-
-  try {
-
-    const response =
-      await API.get(
-        `/lesson-progress/${email}`
-      );
-
-    console.log(response.data);
-
-    if (response.data.success) {
-
-      setProgress(
-        response.data.progress
-      );
-
-      setCompletedCount(
-        response.data.completed_lessons
-      );
-
-      setTotalLessons(
-        response.data.total_lessons
-      );
-
-      setIntermediateUnlocked(
-        response.data.intermediate_unlocked
-      );
-
-      setAdvancedUnlocked(
-        response.data.advanced_unlocked
-      );
-
-      if (
-        response.data.intermediate_unlocked ||
-        response.data.advanced_unlocked
-      ) {
-
-        setShowUnlock(true);
-
-        setTimeout(() => {
-
-          setShowUnlock(false);
-
-        }, 4000);
+        setCompletedLessons(
+          response.data.completed_lessons
+        );
 
       }
 
+    } catch (error) {
+
+      console.log(error);
+
     }
 
-  } catch (error) {
+  };
 
-    console.log(error);
+  const fetchProgress = async (email: string) => {
 
-  }
+    try {
 
-};
+      const response =
+        await API.get(
+          `/lesson-progress/${email}`
+        );
 
-  const getLessonStatus = (
-    lesson: any,
-    index: number
-  ) => {
+      console.log(response.data);
+
+      if (response.data.success) {
+
+        setProgress( response.data.progress );
+
+        setCompletedCount( response.data.completed_lessons );
+
+        setTotalLessons( response.data.total_lessons );
+
+        setIntermediateUnlocked( response.data.intermediate_unlocked );
+
+        setAdvancedUnlocked( response.data.advanced_unlocked );
+
+        if (
+          response.data.intermediate_unlocked ||
+          response.data.advanced_unlocked
+        ) {
+
+          setShowUnlock(true);
+
+          setTimeout(() => {
+
+            setShowUnlock(false);
+
+          }, 4000);
+
+        }
+
+      }
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+  const getLessonStatus = ( lesson: any, index: number ) => {
 
     if (
       completedLessons.includes(
@@ -376,5 +359,7 @@ const fetchProgress = async (
       </div>
 
     </main>
+
   );
+  
 }
