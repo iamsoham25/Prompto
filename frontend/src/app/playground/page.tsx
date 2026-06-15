@@ -433,11 +433,9 @@
         { type: "text/plain" }
       );
 
-      const url =
-        URL.createObjectURL(blob);
+      const url =URL.createObjectURL(blob);
 
-      const a =
-        document.createElement("a");
+      const a =document.createElement("a");
 
       a.href = url;
 
@@ -457,33 +455,14 @@
         {/* SIDEBAR */}
 
           <div
-          className="
-          w-72
-          bg-white
-          border-r
-          border-slate-200
-          flex
-          flex-col
-          "
+          className="w-72 bg-white border-r border-slate-200 flex flex-col "
           >
 
             <div className="p-4 border-b">
 
               <button
                 onClick={createNewConversation}
-                className="
-          w-full
-          flex
-          items-center
-          gap-3
-          px-4
-          py-3
-          rounded-xl
-          bg-orange-500
-          text-white
-          font-semibold
-          hover:bg-orange-600
-            "
+                className=" w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold hover:bg-orange-600 "
               >
                 <span className="text-xl">+</span>
                 New Chat
@@ -502,19 +481,7 @@
                     e.target.value
                   )
                 }
-                className="
-        w-full
-        px-3
-        py-2
-        border
-        border-slate-300
-        rounded-lg
-        text-sm
-        text-slate-700
-        outline-none
-        focus:ring-2
-        focus:ring-orange-500
-      "
+                className=" w-full px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-orange-500 "
               />
 
             </div>
@@ -535,19 +502,7 @@
 
                     <div
                       key={chat.id}
-                      className={`
-      
-      group
-      flex
-      items-center
-      justify-between                  
-      px-3
-      py-3
-      rounded-xl
-      cursor-pointer
-      mb-1
-      text-sm
-      transition
+                      className={` group flex items-center justify-between px-3 py-3 rounded-xl cursor-pointer mb-1 text-sm transition
 
                         ${
                           selectedChatId === chat.id
@@ -588,13 +543,7 @@
                         }, 100);
 
                       }}
-                      className="
-            flex-1
-            cursor-pointer
-            text-slate-700
-            text-sm
-            truncate
-          "
+                      className=" flex-1 cursor-pointer text-slate-700 text-sm truncate "
                     >
 
                       {
@@ -613,15 +562,7 @@
                         deleteChat(chat.id);
 
                       }}
-                      className="
-    opacity-0
-    group-hover:opacity-100
-    text-red-500
-    hover:text-red-700
-    transition
-    ml-2
-    text-sm
-          "
+                      className=" opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition ml-2 text-sm "
                     >
 
                       🗑
@@ -645,13 +586,7 @@
           <div
             id="chat-container"
             ref={chatAreaRef}
-            className="
-      flex-1
-      overflow-y-auto
-      px-6
-      py-4
-      space-y-4
-    "
+            className=" flex-1 overflow-y-auto px-6 py-4 space-y-4 "
           >
 
             {messages.length === 0 ? (
@@ -686,16 +621,7 @@
                 >
 
                   <div
-                    className={`
-                      group
-                      relative
-                      max-w-3xl
-                      px-5
-                      py-3
-                      rounded-2xl
-                      whitespace-pre-wrap
-                      leading-6
-                      shadow-sm
+                    className={` group relative max-w-3xl px-5 py-3 rounded-2xl whitespace-pre-wrap leading-6 shadow-sm
                       ${
                         message.role === "user"
                           ? "bg-orange-500 text-white"
@@ -799,21 +725,7 @@
                               message.content
                             )
                           }
-                          className="
-    absolute
-    top-2
-    right-2
-    opacity-0
-    group-hover:opacity-100
-    transition
-    text-xs
-    bg-slate-100
-    px-2
-    py-1
-    rounded
-    text-slate-600
-    hover:text-orange-500
-  "
+                          className=" absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition text-xs bg-slate-100 px-2 py-1 rounded text-slate-600 hover:text-orange-500 "
                         >
                           Copy
                         </button>
@@ -835,14 +747,7 @@
               <div className="flex justify-start">
 
                 <div
-                  className="
-        bg-slate-100
-        px-5
-        py-4
-        rounded-2xl
-        flex
-        gap-1
-      "
+                  className=" bg-slate-100 px-5 py-4 rounded-2xl flex gap-1 "
                 >
 
                   <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
@@ -861,35 +766,17 @@
               {promptAnalysis && (
 
                 <div
-                  className="
-        mt-8
-        bg-white
-        border
-        border-slate-200
-        rounded-3xl
-        p-8
-        shadow-lg
-      "
+                  className=" mt-8 bg-white border border-slate-200 rounded-3xl p-8 shadow-lg "
                 >
 
                   <h3
-                    className="
-          text-2xl
-          font-bold
-          text-slate-800
-          mb-6
-        "
+                    className=" text-2xl font-bold text-slate-800 mb-6 "
                   >
                     📊 Prompt Analysis
                   </h3>
 
                   <div
-                    className="
-          grid
-          grid-cols-2
-          md:grid-cols-5
-          gap-4
-        "
+                    className=" grid grid-cols-2 md:grid-cols-5 gap-4 "
                   >
 
                     <div className="bg-blue-50 rounded-2xl p-4 text-center">
@@ -951,36 +838,17 @@
             {promptSuggestions.length > 0 && (
 
               <div
-                className="
-        mt-6
-        bg-amber-50
-        border
-        border-yellow-200
-        rounded-3xl
-        p-6
-        shadow-sm
-      "
+                className=" mt-6 bg-amber-50 border border-yellow-200 rounded-3xl p-6 shadow-sm "
               >
 
                 <h3
-                  className="
-      text-xl
-      font-bold
-      text-yellow-800
-      mb-4
-    "
+                  className=" text-xl font-bold text-yellow-800 mb-4 "
                 >
                   💡 Suggestions
                 </h3>
 
                 <ul
-                  className="
-      list-disc
-      pl-5
-      space-y-3
-      text-slate-700
-      font-medium
-        "
+                  className=" list-disc pl-5 space-y-3 text-slate-700 font-medium "
                 >
 
                   {promptSuggestions.map(
@@ -991,12 +859,10 @@
             
                       <li
                         key={index}
-                        className="
-      text-slate-700
-      leading-relaxed
-    "
+                        className=" text-slate-700 leading-relaxed "
                       >
                         {suggestion}
+                        
                       </li>
             
                     )
@@ -1011,33 +877,17 @@
             {improvedPrompt && (
 
               <div
-                className="
-        mt-6
-        bg-green-50
-        border
-        border-green-200
-        rounded-3xl
-        p-6
-      "
+                className=" mt-6 bg-green-50 border border-green-200 rounded-3xl p-6 "
               >
 
                 <h3
-                  className="
-      text-xl
-      font-bold
-      text-green-800
-      mb-4
-    "
+                  className=" text-xl font-bold text-green-800 mb-4 "
                 >
                   ✨ Improved Prompt
                 </h3>
 
                 <p
-                  className="
-          whitespace-pre-wrap
-          text-slate-700
-          leading-relaxed
-          "
+                  className=" whitespace-pre-wrap text-slate-700 leading-relaxed "
                 >
                   {improvedPrompt}
                 </p>
@@ -1051,27 +901,11 @@
         {/* INPUT AREA */}
 
           <div
-            className="
-      shrink-0
-      border-t
-      border-slate-200
-      bg-slate-50
-      px-6
-      py-3
-    "
+            className=" shrink-0 border-t border-slate-200 bg-slate-50 px-6 py-3 "
           >
 
             <div
-              className="
-      relative
-      bg-white
-      border
-      border-slate-300
-      rounded-3xl
-      px-4
-      py-2
-      shadow-sm
-      "
+              className=" relative bg-white border border-slate-300 rounded-3xl px-4 py-2 shadow-sm "
             >
 
               <textarea
@@ -1103,35 +937,13 @@
               }}
                 placeholder="Ask anything..."
                 rows={1}
-                className="
-      w-full
-      resize-none
-      outline-none
-      text-slate-900
-      text-base
-      min-h-[20px]
-      max-h-[160px]
-      overflow-y-auto
-      leading-6
-    "
+                className=" w-full resize-none outline-none text-slate-900 text-base min-h-[20px] max-h-[160px] overflow-y-auto leading-6 "
               />
 
               {showTemplates && (
 
                 <div
-                  className="
-    absolute
-    bottom-16
-    left-0
-    bg-white
-    border
-    border-slate-200
-    rounded-2xl
-    shadow-xl
-    w-72
-    z-50
-    overflow-hidden
-  "
+                  className=" absolute bottom-16 left-0 bg-white border border-slate-200 rounded-2xl shadow-xl w-72 z-50 overflow-hidden "
                 >
 
                 <button
@@ -1139,15 +951,7 @@
                     setPrompt("Summarize the following:");
                     setShowTemplates(false);
                   }}
-                  className="
-      w-full
-      text-left
-      px-4
-      py-3
-      hover:bg-slate-100
-      text-slate-800
-      font-medium
-                "
+                  className=" w-full text-left px-4 py-3 hover:bg-slate-100 text-slate-800 font-medium "
                 >
                   📝 Summarize
                 </button>
@@ -1157,15 +961,7 @@
                     setPrompt("Write a professional email:");
                     setShowTemplates(false);
                   }}
-                  className="
-      w-full
-      text-left
-      px-4
-      py-3
-      hover:bg-slate-100
-      text-slate-800
-      font-medium
-    "
+                  className=" w-full text-left px-4 py-3 hover:bg-slate-100 text-slate-800 font-medium "
                 >
                   📧 Email
                 </button>
@@ -1175,15 +971,7 @@
                     setPrompt("Explain this code:");
                     setShowTemplates(false);
                   }}
-                  className="
-      w-full
-      text-left
-      px-4
-      py-3
-      hover:bg-slate-100
-      text-slate-800
-      font-medium
-    "
+                  className=" w-full text-left px-4 py-3 hover:bg-slate-100 text-slate-800 font-medium "
                 >
                   💻 Explain Code
                 </button>
@@ -1198,16 +986,7 @@
                 onClick={() =>
                   setShowTemplates(!showTemplates)
                 }
-                className="
-            w-10
-            h-10
-            rounded-full
-            bg-slate-100
-            hover:bg-slate-200
-            text-slate-700
-            text-xl
-            transition
-          "
+                className=" w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xl transition "
               >
                 +
               </button>
@@ -1215,15 +994,7 @@
               <button
                 onClick={generateAIResponse}
                 disabled={loading}
-                className="
-            bg-orange-500
-            hover:bg-orange-600
-            text-white
-            px-4
-            py-1.5
-            rounded-xl
-            font-medium
-          "
+                className=" bg-orange-500 hover:bg-orange-600 text-white px-4 py-1.5 rounded-xl font-medium "
               >
 
                 {loading ? "..." : "Send"}
@@ -1231,14 +1002,7 @@
 
               <button
                 onClick={exportChat}
-                className="
-      px-3
-      py-1.5
-      bg-slate-200
-      text-slate-700
-      rounded-xl
-      hover:bg-slate-300
-    "
+                className=" px-3 py-1.5 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 "
               >
                 Export
               </button>
