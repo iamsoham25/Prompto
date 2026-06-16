@@ -86,14 +86,7 @@ export default function MentorPage() {
         {/* Ask Question */}
 
         <div
-          className="
-          bg-white
-          rounded-3xl
-          p-8
-          shadow-lg
-          border
-          border-slate-200
-        "
+          className=" bg-white rounded-3xl p-8 shadow-lg border border-slate-200 "
         >
 
           <h2 className="text-2xl font-bold mb-4">
@@ -111,36 +104,19 @@ export default function MentorPage() {
               )
             }
             placeholder="
-What is role prompting?
+              What is role prompting?
 
-How do I improve context?
+              How do I improve context?
 
-Why is my prompt weak?
-"
-            className="
-            w-full
-            border
-            border-slate-300
-            rounded-2xl
-            p-4
-            outline-none
-            resize-none
-            mb-4
-          "
+              Why is my prompt weak?
+              "
+            className=" w-full border border-slate-300 rounded-2xl p-4 outline-none resize-none mb-4 "
           />
 
           <button
             onClick={askMentor}
             disabled={loading}
-            className="
-            bg-blue-600
-            hover:bg-blue-700
-            text-white
-            px-8
-            py-3
-            rounded-2xl
-            font-semibold
-          "
+            className=" bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-2xl font-semibold "
           >
 
             {loading
