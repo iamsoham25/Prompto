@@ -132,15 +132,7 @@ export default function MentorPage() {
         {response && (
 
           <div
-            className="
-            mt-8
-            bg-white
-            rounded-3xl
-            p-8
-            shadow-lg
-            border
-            border-slate-200
-          "
+            className=" mt-8 bg-white rounded-3xl p-8 shadow-lg border border-slate-200 "
           >
 
             <h2 className="text-2xl font-bold mb-4">
@@ -150,11 +142,7 @@ export default function MentorPage() {
             </h2>
 
             <div
-              className="
-              whitespace-pre-wrap
-              text-slate-700
-              leading-relaxed
-            "
+              className=" whitespace-pre-wrap text-slate-700 leading-relaxed "
             >
               {response}
             </div>
