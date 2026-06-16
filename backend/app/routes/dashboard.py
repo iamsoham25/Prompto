@@ -93,7 +93,7 @@ async def get_achievements(email: str):
         {"user_email": email}
     )
 
-    challenges_completed = await challenge_collection.count_documents(
+    challenge_completed = await challenge_collection.count_documents(
         {"user_email": email}
     )
 
@@ -107,10 +107,10 @@ async def get_achievements(email: str):
     if lessons_completed >= 10:
         achievements.append("Lesson Master")
 
-    if challenges_completed >= 1:
+    if challenge_completed >= 1:
         achievements.append("First Challenge Completed")
 
-    if challenges_completed >= 5:
+    if challenge_completed >= 5:
         achievements.append("Challenge Champion")
 
     if prompts_analyzed >= 5:

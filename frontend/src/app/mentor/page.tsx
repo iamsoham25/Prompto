@@ -5,14 +5,11 @@ import API from "@/services/api";
 
 export default function MentorPage() {
 
-  const [question, setQuestion] =
-    useState("");
+  const [question, setQuestion] = useState("");
 
-  const [response, setResponse] =
-    useState("");
+  const [response, setResponse] = useState("");
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const askMentor = async () => {
 
@@ -68,17 +65,7 @@ export default function MentorPage() {
         {/* Hero */}
 
         <section
-          className="
-          bg-gradient-to-r
-          from-blue-600
-          via-purple-600
-          to-pink-500
-          rounded-3xl
-          p-10
-          text-white
-          shadow-xl
-          mb-8
-        "
+          className=" bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 rounded-3xl p-10 text-white shadow-xl mb-8 "
         >
 
           <h1 className="text-5xl font-bold mb-4">

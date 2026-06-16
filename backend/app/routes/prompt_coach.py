@@ -5,17 +5,11 @@ from app.config.db import db
 
 analytics_collection = db["prompt_analytics"]
 
-from app.services.prompt_evaluator import (
-    evaluate_prompt
-)
+from app.services.prompt_evaluator import (evaluate_prompt)
 
-from app.services.prompt_improver import (
-    improve_prompt
-)
+from app.services.prompt_improver import (improve_prompt)
 
-from app.services.prompt_feedback import (
-    generate_feedback
-)
+from app.services.prompt_feedback import (generate_feedback)
 
 router = APIRouter()
 
@@ -43,26 +37,19 @@ async def prompt_coach_api(
 
     await analytics_collection.insert_one({
 
-        "user_email":
-            data.get("user_email"),
+        "user_email": data.get("user_email"),
 
-        "clarity":
-            evaluation["clarity"],
+        "clarity": evaluation["clarity"],
 
-        "specificity":
-            evaluation["specificity"],
+        "specificity": evaluation["specificity"],
 
-        "context":
-            evaluation["context"],
+        "context": evaluation["context"],
 
-        "constraints":
-            evaluation["constraints"],
+        "constraints": evaluation["constraints"],
 
-        "overall":
-            evaluation["overall"],
+        "overall": evaluation["overall"],
 
-        "created_at":
-            datetime.utcnow()
+        "created_at": datetime.utcnow()
 
     })
 
@@ -70,17 +57,13 @@ async def prompt_coach_api(
 
         "success": True,
 
-        "evaluation":
-            evaluation,
+        "evaluation": evaluation,
 
-        "feedback":
-            feedback["feedback"],
+        "feedback": feedback["feedback"],
 
-        "suggestions":
-            feedback["suggestions"],
+        "suggestions": feedback["suggestions"],
 
-        "improved_prompt":
-            improvement["improved_prompt"]
+        "improved_prompt": improvement["improved_prompt"]
 
     }
 
@@ -144,9 +127,7 @@ async def get_prompt_mastery(
 
     last_score = records[-1]["overall"]
 
-    improvement = (
-        last_score - first_score
-    )
+    improvement = ( last_score - first_score )
 
     # Mastery Level
 
@@ -169,32 +150,23 @@ async def get_prompt_mastery(
 
     "success": True,
 
-    "total_prompts":
-        len(records),
+    "total_prompts": len(records),
 
-    "average_clarity":
-        round(avg_clarity, 2),
+    "average_clarity": round(avg_clarity, 2),
 
-    "average_specificity":
-        round(avg_specificity, 2),
+    "average_specificity": round(avg_specificity, 2),
 
-    "average_context":
-        round(avg_context, 2),
+    "average_context": round(avg_context, 2),
 
-    "average_constraints":
-        round(avg_constraints, 2),
+    "average_constraints": round(avg_constraints, 2),
 
-    "average_overall":
-        round(avg_overall, 2),
+    "average_overall": round(avg_overall, 2),
 
-    "best_score":
-        round(best_score, 2),
+    "best_score": round(best_score, 2),
 
-    "improvement":
-        round(improvement, 2),
+    "improvement": round(improvement, 2),
 
-    "mastery_level":
-        level
+    "mastery_level": level
 
 }
 
