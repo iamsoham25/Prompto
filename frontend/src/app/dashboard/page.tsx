@@ -9,8 +9,9 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 
 import CountUp from "react-countup";
+import {Area,AreaChart} from "recharts";
 
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid} from "recharts";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine} from "recharts";
 
 export default function DashboardPage() {
 
@@ -809,11 +810,11 @@ const progress = getProgressData();
               width="100%"
               height="100%"
               >
-
+              
               <LineChart
                 data={trendData}
                 >
-
+                
                 <CartesianGrid strokeDasharray="3 3" />
 
                   <XAxis
@@ -831,13 +832,73 @@ const progress = getProgressData();
                 dataKey="score"
                 stroke="#7c3aed"
                 strokeWidth={4}
+                animationDuration={2000}
+                animationEasing="ease-in-out"
                 dot={{ r: 6 }}
                 activeDot={{ r: 10 }}
                 />
 
+                <defs>
+                  <linearGradient
+                    id="colorScore"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="5%"
+                      stopColor="#7c3aed"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="#7c3aed"
+                       stopOpacity={0}
+                     />
+                   </linearGradient>
+                </defs>
+
+                <ReferenceLine
+                  y={4.8}
+                  stroke="red"
+                  strokeDasharray="5 5"
+                  label="Best Score"
+                 />
+
+                <Area
+                  type="monotone"
+                  dataKey="score"
+                  stroke="#7c3aed"
+                  fill="url(#colorScore)"
+                />
+
+                <div
+className="
+mt-6
+p-5
+rounded-2xl
+bg-gradient-to-r
+from-purple-100
+to-blue-100
+"
+>
+<h3 className="font-bold">
+AI Insight
+</h3>
+
+<p>
+Your strongest prompt scored 4.8.
+Focus on adding more context and
+constraints to improve future scores.
+</p>
+</div>
+
               </LineChart>
 
             </ResponsiveContainer>
+
+            
 
           </div>
 
@@ -1285,5 +1346,5 @@ const progress = getProgressData();
     </main>
 
   );
-  
+
 }
