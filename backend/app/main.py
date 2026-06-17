@@ -22,6 +22,7 @@ from app.routes import challenge_arena
 from app.routes.challenge import router as challenge_router
 from app.routes.challenge_validator import router as challenge_validator_router
 from app.routes.prompt_submission import (router as prompt_submission_router)
+from app.routes.dashboard_v2 import router as dashboard_v2_router
 
 import requests
 import os
@@ -63,6 +64,7 @@ app.include_router(prompt_mentor.router)
 app.include_router(challenge_arena.router)
 app.include_router(challenge_validator_router)
 app.include_router(prompt_submission_router)
+app.include_router(dashboard_v2_router, prefix="/dashboard", tags=["Dashboard"])
 
 class PromptRequest(BaseModel):
     prompt: str
