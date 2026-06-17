@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 
+import CountUp from "react-countup";
+
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip} from "recharts";
 
 export default function DashboardPage() {
@@ -138,6 +140,8 @@ const fetchPromptMastery = async () => {
       const email =localStorage.getItem("userEmail");
 
       const res =await API.get(`/prompt-mastery/${email}`);
+
+      console.log("PROMPT MASTERY DATA", res.data);
 
       console.log("PROMPT MASTERY:", res.data);
 
@@ -727,497 +731,84 @@ const progress = getProgressData();
     
       </section>
 
-      {promptMastery && (
+    {promptMastery && (
 
-        
-        
-        <div
-          className="
-      mt-8
-      bg-white
-      rounded-3xl
-      p-8
-      shadow-lg
-      border
-      border-slate-200
-    "
-        >
+      <div className="mt-8 bg-white rounded-3xl p-8 shadow-lg">
 
-          <h2
-            className="
-        text-3xl
-        font-bold
-        text-slate-800
-        mb-6
-      "
-          >
-            🎯 Prompt Mastery
-          </h2>
+        <h2 className="text-3xl font-bold mb-6">
+        🎯 Prompt Mastery
+        </h2>
 
-          <div
-            className="
-grid
-grid-cols-1
-sm:grid-cols-2
-lg:grid-cols-3
-gap-6
-      "
-          >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-           {/* ADD THIS CARD */}
-
-
-
-            <div
-              className="
-    bg-gradient-to-r
-    from-blue-500
-    to-cyan-500
-    text-white
-    rounded-3xl
-    p-6
-    shadow-lg
-    hover:scale-105
-    transition-all
-    duration-300
-        "
-            >
-              <p className="text-white/80 text-sm text-center">
-                Total Prompts
-              </p>
-      
-              <h3
-                className="
-    text-5xl
-    font-bold
-    mt-3
-    text-center
-          "
-              >
+          <div className="p-6 rounded-xl bg-blue-500 text-white">
+            <h3>Total Prompts</h3>
+              <p className="text-4xl font-bold">
                 {promptMastery.total_prompts}
-              </h3>
-
-              <p className="mt-3 text-white/80 text-sm text-center">
-                Prompts analyzed
               </p>
+          </div>
 
-            </div>
-
-            <div
-              className="
-  bg-gradient-to-r
-  from-green-500
-  to-emerald-600
-  text-white
-  rounded-3xl
-  p-6
-  shadow-lg
-  hover:scale-105
-  transition-all
-  duration-300
-  text-center
-  "
-            >
-
-              <p className="text-white/80">
-                Clarity
+          <div className="p-6 rounded-xl bg-green-500 text-white">
+            <h3>Clarity</h3>
+              <p className="text-4xl font-bold">
+                {promptMastery.average_clarity}
               </p>
+          </div>
 
-              <h3
-                className="
-      text-5xl
-      font-bold
-      text-white-600
-      mb-2
-      text-center
-    "
-              >
-                {promptMastery.average_clarity}/10
-              </h3>
-
-              <div
-                className="
-      w-full
-      bg-white/30
-      rounded-full
-      h-3
-    "
-              >
-
-                <div
-                  className="
-  bg-white
-  h-3
-  rounded-full
-  transition-all
-  duration-700
-      "
-                  style={{
-                    width: `${
-                      promptMastery.average_clarity * 10
-                    }%`
-                  }}
-                />
-
-              </div>
-
-            </div>
-
-            <div
-              className="
-  bg-gradient-to-r
-  from-purple-500
-  to-violet-600
-  text-white
-  rounded-3xl
-  p-6
-  shadow-lg
-  hover:scale-105
-  transition-all
-  duration-300
-  text-center
-  "
-            >
-
-              <p className="text-white/80">
-                Specificity
+          <div className="p-6 rounded-xl bg-purple-500 text-white">
+            <h3>Specificity</h3>
+              <p className="text-4xl font-bold">
+                {promptMastery.average_specificity}
               </p>
+          </div>
 
-              <h3
-                className="
-      text-5xl
-      font-bold
-      text-white-600
-      mb-2
-      text-center
-    "
-              >
-                {promptMastery.average_specificity}/10
-              </h3>
-
-              <div
-                className="
-      w-full
-      bg-slate-200
-      rounded-full
-      h-3
-    "
-              >
-
-                <div
-                  className="
-  bg-green-500
-  h-3
-  rounded-full
-  transition-all
-  duration-700
-      "
-                  style={{
-                    width: `${
-                      promptMastery.average_specificity * 10
-                    }%`
-                  }}
-                />
-
-              </div>
-
-            </div>
-
-            <div
-              className="
-  bg-gradient-to-r
-  from-yellow-500
-  to-orange-500
-  text-white
-  rounded-3xl
-  p-6
-  shadow-lg
-  hover:scale-105
-  transition-all
-  duration-300
-  text-center
-  "
-            >
-
-              <p className="text-white/80">
-                Context
+          <div className="p-6 rounded-xl bg-yellow-500 text-white">
+            <h3>Context</h3>
+              <p className="text-4xl font-bold">
+                {promptMastery.average_context}
               </p>
+          </div>
 
-              <h3
-                className="
-      text-5xl
-      font-bold
-      text-white-600
-      mb-2
-      text-center
-    "
-              >
-                {promptMastery.average_context}/10
-              </h3>
-
-              <div
-                className="
-      w-full
-      bg-slate-200
-      rounded-full
-      h-3
-    "
-              >
-
-                <div
-                  className="
-  bg-green-500
-  h-3
-  rounded-full
-  transition-all
-  duration-700
-      "
-                  style={{
-                    width: `${
-                      promptMastery.average_context * 10
-                    }%`
-                  }}
-                />
-
-              </div>
-
-            </div>
-
-            <div
-              className="
-  bg-gradient-to-r
-  from-red-500
-  to-pink-600
-  text-white
-  rounded-3xl
-  p-6
-  shadow-lg
-  hover:scale-105
-  transition-all
-  duration-300
-  text-center
-  "
-            >
-
-              <p className="text-white/80">
-                Constraints
+          <div className="p-6 rounded-xl bg-red-500 text-white">
+            <h3>Constraints</h3>
+              <p className="text-4xl font-bold">
+                {promptMastery.average_constraints}
               </p>
+          </div>
 
-              <h3
-                className="
-      text-5xl
-      font-bold
-      text-white-600
-      mb-2
-      text-center 
-    "
-              >
-                {promptMastery.average_constraints}/10
-              </h3>
-
-              <div
-                className="
-      w-full
-      bg-white/30
-      rounded-full
-      h-3
-    "
-              >
-
-                <div
-                  className="
-  bg-green-500
-  h-3
-  rounded-full
-  transition-all
-  duration-700
-      "
-                  style={{
-                    width: `${
-                      promptMastery.average_constraints * 10
-                    }%`
-                  }}
-                />
-
-              </div>
-
-            </div>
-
-            <div
-              className="
-  bg-gradient-to-r
-  from-indigo-600
-  via-purple-600
-  to-pink-600
-  text-white
-  rounded-3xl
-  p-6
-  shadow-xl
-  hover:scale-105
-  transition-all
-  duration-300
-  text-center
-  "
-            >
-
-              <p className="text-white/80">
-                Overall
+          <div className="p-6 rounded-xl bg-indigo-500 text-white">
+            <h3>Overall</h3>
+              <p className="text-4xl font-bold">
+                {promptMastery.average_overall}
               </p>
+          </div>
 
-              <h3
-                className="
-      text-5xl
-      font-bold
-      text-white-600
-      mb-2
-      text-center 
-    "
-              >
-                {promptMastery.average_overall}/10
-              </h3>
-
-              <div
-                className="
-  bg-gradient-to-r
-  from-cyan-500
-  to-blue-600
-  text-white
-  rounded-3xl
-  p-6
-  shadow-lg
-  hover:scale-105
-  transition-all
-  duration-300
-  text-center
-"
-              >
-                <p className="text-white/80">
-                  Best Score
-                </p>
-
-                <div
-                  className="
-  bg-gradient-to-r
-  from-orange-500
-  to-red-500
-  text-white
-  rounded-3xl
-  p-6
-  shadow-lg
-  hover:scale-105
-  transition-all
-  duration-300
-  text-center
-"
-                >
-                  <p className="text-white/80">
-                    Improvement
-                  </p>
-
-                  <h3 className="text-5xl font-bold mt-2">
-                    {promptMastery.improvement > 0
-                      ? `+${promptMastery.improvement}`
-                      : promptMastery.improvement}
-                  </h3>
-
-                  <p className="mt-3 text-white/80">
-                    Growth Since First Prompt
-                  </p>
-                </div>
-
-                <h3 className="text-5xl font-bold mt-2">
-                  {promptMastery.best_score}
-                </h3>
-
-                <p className="mt-3 text-white/80">
-                  Highest Prompt Score
-                </p>
-              </div>
-
-              <div
-                className="
-  bg-gradient-to-r
-  from-orange-500
-  to-red-500
-  text-white
-  rounded-3xl
-  p-6
-  shadow-lg
-  hover:scale-105
-  transition-all
-  duration-300
-  text-center
-"
-               >
-                <p className="text-white/80">
-                  Improvement
-                </p>
-
-                <h3 className="text-5xl font-bold mt-2">
-                  {promptMastery.improvement > 0
-                    ? `+${promptMastery.improvement}`
-                    : promptMastery.improvement}
-                </h3>
-
-                <p className="mt-3 text-white/80">
-                  Growth Since First Prompt
-                </p>
-              </div>
-
-              <div
-                className="
-  bg-gradient-to-r
-  from-purple-600
-  to-pink-600
-  text-white
-  rounded-3xl
-  p-6
-  shadow-lg
-  hover:scale-105
-  transition-all
-  duration-300
-  text-center
-"
-              >
-                <p className="text-white/80">
-                  Mastery Level
-                </p>
-
-                <h3 className="text-3xl font-bold mt-4">
-                  {promptMastery.mastery_level}
-                </h3>
-
-                <p className="mt-3 text-white/80">
-                  Current Prompt Skill
-                </p>
-              </div>
-
-              <p className="mt-3 text-white/80">
-                Prompt Quality Index
+          <div className="p-6 rounded-xl bg-cyan-500 text-white">
+            <h3>Best Score</h3>
+              <p className="text-4xl font-bold">
+                {promptMastery.best_score}
               </p>
+          </div>
 
-              <div
-                className=" w-full bg-slate-200 rounded-full h-3 "
-              >
+          <div className="p-6 rounded-xl bg-orange-500 text-white">
+            <h3>Improvement</h3>
+              <p className="text-4xl font-bold">
+                {promptMastery.improvement}
+              </p>
+          </div>
 
-                <div
-                  className=" bg-green-500 h-3 rounded-full transition-all duration-700 "
-                  style={{
-                    width: `${
-                      promptMastery.average_overall * 10
-                    }%`
-                  }}
-                />
-
-              </div>
-
-            </div>
-
+          <div className="p-6 rounded-xl bg-pink-500 text-white">
+            <h3>Mastery Level</h3>
+              <p className="text-4xl font-bold">
+                {promptMastery.mastery_level}
+              </p>
           </div>
 
         </div>
 
-      )}
+      </div>
+
+    )}
 
       <section className="mt-8">
 
