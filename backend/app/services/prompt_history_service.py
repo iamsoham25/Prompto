@@ -1,7 +1,16 @@
 from app.config.db import db
 
-collection = db["prompt_submissions"]
+prompt_submission_collection = db[
+    "prompt_submissions"
+]
 
-async def save_prompt_submission(data):
 
-    return await collection.insert_one(data)
+async def save_prompt_submission(
+    data: dict
+):
+
+    await prompt_submission_collection.insert_one(
+        data
+    )
+
+    return True

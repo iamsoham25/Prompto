@@ -20,10 +20,6 @@ class PromptSubmission(BaseModel):
 
     specificity_score: float
 
-    role_score: float
-
-    output_format_score: float
-
     weaknesses: List[str]
 
     suggestions: List[str]
