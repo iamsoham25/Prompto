@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 
 import CountUp from "react-countup";
 
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip} from "recharts";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid} from "recharts";
 
 export default function DashboardPage() {
 
@@ -57,6 +57,13 @@ export default function DashboardPage() {
     intermediate_unlocked: false,
     advanced_unlocked: false,
   });
+
+  const trendData = promptTrend.map(
+    (score, index) => ({
+      prompt: index + 1,
+      score: score,
+    })
+  );
 
   // Protect Dashboard Route
 useEffect(() => {
@@ -741,66 +748,102 @@ const progress = getProgressData();
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          <div className="p-6 rounded-xl bg-blue-500 text-white">
+          <div className="p-6 rounded-xl bg-blue-500 text-white hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl">
             <h3>Total Prompts</h3>
               <p className="text-4xl font-bold">
-                {promptMastery.total_prompts}
+                <CountUp
+                  end={promptMastery.total_prompts}
+                  decimals={2}
+                  duration={2}
+                />
               </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-green-500 text-white">
+          <div className="p-6 rounded-xl bg-green-500 text-white hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl">
             <h3>Clarity</h3>
               <p className="text-4xl font-bold">
-                {promptMastery.average_clarity}
+                <CountUp
+                  end={promptMastery.average_clarity}
+                  decimals={2}
+                  duration={2}
+                />
               </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-purple-500 text-white">
+          <div className="p-6 rounded-xl bg-purple-500 text-white hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl">
             <h3>Specificity</h3>
               <p className="text-4xl font-bold">
-                {promptMastery.average_specificity}
+                <CountUp
+                  end={promptMastery.average_specificity}
+                  decimals={2}
+                  duration={2}
+                />
               </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-yellow-500 text-white">
+          <div className="p-6 rounded-xl bg-yellow-500 text-white hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl">
             <h3>Context</h3>
               <p className="text-4xl font-bold">
-                {promptMastery.average_context}
+                <CountUp
+                  end={promptMastery.average_context}
+                  decimals={2}
+                  duration={2}
+                />
               </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-red-500 text-white">
+          <div className="p-6 rounded-xl bg-red-500 text-white hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl">
             <h3>Constraints</h3>
               <p className="text-4xl font-bold">
-                {promptMastery.average_constraints}
+                <CountUp
+                  end={promptMastery.average_constraints}
+                  decimals={2}
+                  duration={2}
+                />
               </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-indigo-500 text-white">
+          <div className="p-6 rounded-xl bg-indigo-500 text-white hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl">
             <h3>Overall</h3>
               <p className="text-4xl font-bold">
-                {promptMastery.average_overall}
+                <CountUp
+                  end={promptMastery.average_overall}
+                  decimals={2}
+                  duration={2}
+                />
               </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-500 text-white">
+          <div className="p-6 rounded-xl bg-cyan-500 text-white hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl">
             <h3>Best Score</h3>
               <p className="text-4xl font-bold">
-                {promptMastery.best_score}
+                <CountUp
+                  end={promptMastery.average_best_score}
+                  decimals={2}
+                  duration={2}
+                />
               </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-orange-500 text-white">
+          <div className="p-6 rounded-xl bg-orange-500 text-white hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl">
             <h3>Improvement</h3>
               <p className="text-4xl font-bold">
-                {promptMastery.improvement}
+                <CountUp
+                  end={promptMastery.average_improvement}
+                  decimals={2}
+                  duration={2}
+                />
               </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-pink-500 text-white">
+          <div className="p-6 rounded-xl bg-pink-500 text-white hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl">
             <h3>Mastery Level</h3>
               <p className="text-4xl font-bold">
-                {promptMastery.mastery_level}
+                <CountUp
+                  end={promptMastery.average_mastery_level}
+                  decimals={2}
+                  duration={2}
+                />
               </p>
           </div>
 
@@ -812,61 +855,51 @@ const progress = getProgressData();
 
       <section className="mt-8">
 
-        <div className="bg-white rounded-3xl p-8 shadow-lg">
-      
-          <h2 className="text-3xl font-bold mb-6">
-      
-            📈 Prompt Growth Trend
+        <div className=" mt-8 bg-white rounded-3xl p-8 shadow-lg " >
 
+          <h2 className=" text-3xl font-bold mb-6 " >
+            📈 Prompt Growth Trend
           </h2>
 
-          <ResponsiveContainer
-            width="100%"
-            height={300}
-          >
+          <div className="h-[400px] w-full min-w-[300px]">
 
-            {promptTrend.length === 0 ? (
-              <div className="text-center py-20 text-slate-500">
-                No prompt history yet.
-              </div>
-            ) : (
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+              >
 
               <LineChart
-                data={promptTrend.map((score, index) => ({
-                  prompt: `Prompt ${index + 1}`,
-                  score: score
-                }))}
-              >
-  
-                <XAxis dataKey="prompt" />
+                data={trendData}
+                >
 
-                <YAxis domain={[0, 10]} />
+                <CartesianGrid strokeDasharray="3 3" />
 
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: "16px",
-                    border: "none"
-                  }}
-                />
+                  <XAxis
+                    dataKey="prompt"
+                  />
+
+                  <YAxis
+                    domain={[0, 10]}
+                  />
+
+                <Tooltip />
 
                 <Line
-                  type="monotone"
-                  dataKey="score"
-                  stroke="#8b5cf6"
-                  strokeWidth={4}
-                  dot={{ r: 6 }}
-                  activeDot={{ r: 8 }}
+                type="monotone"
+                dataKey="score"
+                stroke="#7c3aed"
+                strokeWidth={4}
+                dot={{ r: 6 }}
+                activeDot={{ r: 10 }}
                 />
 
               </LineChart>
 
-            )}
+            </ResponsiveContainer>
 
-          </ResponsiveContainer>
+          </div>
 
         </div>
-
-
 
       </section>
 
