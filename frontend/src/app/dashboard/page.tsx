@@ -65,6 +65,13 @@ export default function DashboardPage() {
     })
   );
 
+
+  useEffect(() => {
+
+    fetchPromptTrend();
+
+  }, []);
+
   // Protect Dashboard Route
 useEffect(() => {
 
@@ -168,41 +175,33 @@ const fetchPromptMastery = async () => {
 
   const fetchPromptTrend = async () => {
 
-  try {
+    try {
 
-    const email =
-      localStorage.getItem(
-        "userEmail"
-      );
+      const email =
+        localStorage.getItem(
+          "userEmail"
+        );
 
-    const res =
-      await API.get(
-        `/prompt-trend/${email}`
-      );
+      const res =
+        await API.get(
+          `/prompt-trend/${email}`
+        );
 
-    console.log(
-      "PROMPT TREND:",
-      res.data
-    );
+      if (res.data.success) {
 
-    if (res.data.success) {
+        setPromptTrend(
+          res.data.scores
+       );
 
-      setPromptTrend(
-        res.data.scores
-      );
+      }
+
+    } catch (error) {
+
+      console.log(error);
 
     }
 
-  } catch (error) {
-
-    console.log(
-      "Prompt Trend Error:",
-      error
-    );
-
-  }
-
-};
+  };
 
 
 const fetchUserXP = async (email: string | null) => {
@@ -554,6 +553,11 @@ const progress = getProgressData();
     ) {
       promptLevel = "🟣 Prompt Engineer";
     }
+
+  console.log(
+  "TREND DATA",
+  trendData
+);
 
   return (
 
