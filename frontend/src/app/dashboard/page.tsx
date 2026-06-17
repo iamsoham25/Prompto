@@ -554,36 +554,18 @@ const progress = getProgressData();
       promptLevel = "🟣 Prompt Engineer";
     }
 
-  console.log(
-  "TREND DATA",
-  trendData
-);
+  console.log("TREND DATA", trendData );
 
   return (
 
     <main className="min-h-screen bg-slate-50 text-slate-900 p-8">
 
       <section
-        className="
-    bg-gradient-to-r
-    from-blue-600
-    via-purple-600
-    to-pink-500
-    rounded-3xl
-    p-8
-    text-white
-    mb-8
-    shadow-xl
-  "
+        className=" bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 rounded-3xl p-8 text-white mb-8 shadow-xl "
       >
 
         <div
-          className="
-      flex
-      justify-between
-      items-start
-      gap-10
-    "
+          className=" flex justify-between items-start gap-10 "
         >
       
           {/* LEFT SIDE */}
@@ -606,36 +588,19 @@ const progress = getProgressData();
             <div className="flex gap-4 mt-8 flex-wrap">
 
               <span
-                className="
-            bg-white/20
-            backdrop-blur-md
-            px-5
-            py-3
-            rounded-2xl
-          "
+                className=" bg-white/20 backdrop-blur-md px-5 py-3 rounded-2xl "
               >
                 🎯 XP: {xp}
               </span>
 
               <span
-                className="
-            bg-white/20
-            backdrop-blur-md
-            px-5
-            py-3
-            rounded-2xl
-          "
+                className=" bg-white/20 backdrop-blur-md px-5 py-3 rounded-2xl "
               >
                 🏆 Rank #{rank ?? "-"}
               </span>
 
               <span
-                className="
-            bg-white/20
-            backdrop-blur-md
-            px-5
-            py-3
-            rounded-2xl
+                className=" bg-white/20 backdrop-blur-md px-5 py-3 rounded-2xl
           "
               >
                 🚀 {stats.skill_level}
@@ -648,43 +613,21 @@ const progress = getProgressData();
           {/* RIGHT SIDE */}
 
           <div
-            className="
-        bg-gradient-to-br
-        from-emerald-500
-        to-green-700
-        rounded-3xl
-        px-8
-        py-6
-        shadow-2xl
-        min-w-[320px]
-      "
+            className=" bg-gradient-to-br from-emerald-500 to-green-700 rounded-3xl px-8 py-6 shadow-2xl min-w-[320px] "
           >
 
             <p
-              className="
-          text-sm
-          text-center
-          opacity-90
-        "
+              className=" text-sm text-center opacity-90 "
             >
               Prompt Level
             </p>
 
             <div
-              className="
-          flex
-          items-center
-          justify-center
-          gap-4
-          mt-4
-        "
+              className=" flex items-center justify-center gap-4 mt-4 "
             >
 
               <h3
-                className="
-            text-4xl
-            font-extrabold
-          "
+                className=" text-4xl font-extrabold "
               >
                 {promptLevel}
               </h3>
@@ -692,12 +635,7 @@ const progress = getProgressData();
             </div>
 
             <p
-              className="
-          text-sm
-          text-center
-          mt-4
-          opacity-90
-        "
+              className=" text-sm text-center mt-4 opacity-90 "
             >
               Your current prompt engineering level
             </p>
@@ -1266,15 +1204,7 @@ const progress = getProgressData();
 
                 <div
                   key={index}
-                  className="
-            p-4
-            rounded-xl
-            bg-green-50
-            border
-            border-green-300
-            text-green-700
-            font-semibold
-          "
+                  className=" p-4 rounded-xl bg-green-50 border border-green-300 text-green-700 font-semibold "
                 >
                   🏅 {badge}
                 </div>
@@ -1353,5 +1283,7 @@ const progress = getProgressData();
       </section>
 
     </main>
+
   );
+  
 }
