@@ -40,6 +40,10 @@ export default function DashboardPage() {
   const [promptTrend, setPromptTrend] = useState<number[]>([]);
 
   const [promptMastery, setPromptMastery] = useState<any>(null);
+
+  const [xpData, setXpData] = useState<any>(null);
+
+  const [xpLoading, setXpLoading] = useState(false);
   
   const [stats, setStats] = useState({
     username: "",
@@ -69,7 +73,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
 
+    fetchPromptMastery();
+    
     fetchPromptTrend();
+
+    fetchXP();
 
   }, []);
 
@@ -91,8 +99,6 @@ useEffect(() => {
     console.log("Dashboard Email:",localStorage.getItem("userEmail"));
 
     console.log("Dashboard Username:",localStorage.getItem("userName"));
-
-  
 
     if (!token) {
 
@@ -178,21 +184,13 @@ const fetchPromptMastery = async () => {
 
     try {
 
-      const email =
-        localStorage.getItem(
-          "userEmail"
-        );
+      const email = localStorage.getItem( "userEmail" );
 
-      const res =
-        await API.get(
-          `/prompt-trend/${email}`
-        );
+      const res = await API.get( `/prompt-trend/${email}` );
 
       if (res.data.success) {
 
-        setPromptTrend(
-          res.data.scores
-       );
+        setPromptTrend( res.data.scores );
 
       }
 
@@ -221,9 +219,7 @@ const fetchUserXP = async (email: string | null) => {
       
       setXp(res.data.xp);
 
-      setCompletedChallenge(
-        Math.floor(res.data.xp / 50)
-      );
+      setCompletedChallenge( Math.floor(res.data.xp / 50) );
 
     }
 
@@ -233,6 +229,57 @@ const fetchUserXP = async (email: string | null) => {
 
   }
 
+};
+
+const fetchXP = async () => {
+
+  try {
+
+    setXpLoading(true);
+
+    const email =
+      localStorage.getItem("userEmail");
+
+    const res =
+      await API.get(`/xp/${email}`);
+
+    console.log("XP DATA:", res.data);
+
+    setXpData(res.data);
+
+  } catch (err) {
+
+    console.log(
+      "XP Error:",
+      err
+    );
+
+  } finally {
+
+    setXpLoading(false);
+
+  }
+};
+
+const getProgress = () => {
+
+ if (!xpData) return 0;
+
+ const xp = xpData.xp;
+
+ if (xp < 200)
+   return (xp / 200) * 100;
+
+ if (xp < 500)
+   return ((xp - 200) / 300) * 100;
+
+ if (xp < 1000)
+   return ((xp - 500) / 500) * 100;
+
+ if (xp < 2000)
+   return ((xp - 1000) / 1000) * 100;
+
+ return 100;
 };
 
 
@@ -262,17 +309,9 @@ const fetchLessonProgress = async (email: string | null) => {
 
 const getLevel = () => {
 
-  if (xp >= 300) {
+  if (xp >= 300) { return "Advanced"; }
 
-    return "Advanced";
-
-  }
-
-  if (xp >= 100) {
-
-    return "Intermediate";
-
-  }
+  if (xp >= 100) { return "Intermediate"; }
 
   return "Beginner";
 
@@ -296,24 +335,18 @@ const getProgressData = () => {
   if (xp < 300) {
 
     return {
-      currentLevel:
-        "Intermediate",
-      nextLevel:
-        "Advanced",
-      currentXP:
-        xp - 100,
+      currentLevel: "Intermediate",
+      nextLevel: "Advanced",
+      currentXP: xp - 100,
       targetXP: 200,
-      percentage:
-        ((xp - 100) / 200) * 100
+      percentage: ((xp - 100) / 200) * 100
     };
 
   }
 
   return {
-    currentLevel:
-      "Advanced",
-    nextLevel:
-      "Master",
+    currentLevel: "Advanced",
+    nextLevel: "Master",
     currentXP: 300,
     targetXP: 300,
     percentage: 100
@@ -329,9 +362,7 @@ const fetchRecentChats = async (
 
   try {
 
-    const res = await API.get(
-      `/recent-chats/${email}`
-    );
+    const res = await API.get( `/recent-chats/${email}` );
 
     if (res.data.success) {
 
@@ -347,17 +378,13 @@ const fetchRecentChats = async (
 
 };
 
-const fetchDashboardStats = async (
-  email: string | null
-) => {
+const fetchDashboardStats = async ( email: string | null ) => {
 
   if (!email) return;
 
   try {
 
-    const res = await API.get(
-      `/dashboard-stats/${email}`
-    );
+    const res = await API.get( `/dashboard-stats/${email}` );
 
     if (res.data.success) {
 
@@ -383,9 +410,7 @@ const fetchLeaderboard = async () => {
 
     if (res.data.success) {
 
-      setLeaderboard(
-        res.data.leaderboard
-      );
+      setLeaderboard( res.data.leaderboard );
 
     }
 
@@ -397,23 +422,17 @@ const fetchLeaderboard = async () => {
 
 };
 
-const fetchUserRank = async (
-  email: string | null
-) => {
+const fetchUserRank = async ( email: string | null ) => {
 
   if (!email) return;
 
   try {
 
-    const res = await API.get(
-      `/user-rank/${email}`
-    );
+    const res = await API.get( `/user-rank/${email}` );
 
     if (res.data.success) {
 
-      setRank(
-        res.data.rank
-      );
+      setRank( res.data.rank );
 
     }
 
@@ -425,14 +444,11 @@ const fetchUserRank = async (
 
 };
 
-const fetchDailyChallenge =
-  async () => {
+const fetchDailyChallenge = async () => {
 
   try {
 
-    const res = await API.get(
-      "/daily-challenge"
-    );
+    const res = await API.get( "/daily-challenge" );
 
     if (res.data.success) {
 
@@ -456,9 +472,7 @@ const fetchAchievements = async (email: string | null) => {
 
   try {
 
-    const res = await API.get(
-      `/achievements/${email}`
-    );
+    const res = await API.get( `/achievements/${email}` );
 
     console.log(
       "ACHIEVEMENTS RESPONSE:",
@@ -681,6 +695,87 @@ const progress = getProgressData();
     
       </section>
 
+    {
+      
+      xpData && (
+          
+        <div
+          className=" mt-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-3xl p-8 shadow-2xl text-white "
+          >
+
+          <h2
+            className=" text-3xl font-bold mb-6 "
+          >
+            🏆 Prompt Engineer Profile
+          </h2>
+
+          <div
+            className=" grid grid-cols-1 md:grid-cols-3 gap-6 "
+            >
+
+            <div>
+
+              <p className="text-white/70">
+                Current XP
+              </p>
+
+              <h3 className="text-6xl font-bold">
+                {xpData.xp}
+              </h3>
+
+            </div>
+
+            <div>
+
+              <p className="text-white/70">
+                Level
+              </p>
+
+              <h3 className="text-6xl font-bold">
+                {xpData.level}
+              </h3>
+
+            </div>
+
+            <div>
+
+              <p className="text-white/70">
+                Rank
+              </p>
+
+              <h3 className="text-4xl font-bold">
+                {xpData.rank}
+              </h3>
+
+            </div>
+
+            <div className="mt-8">
+
+              <p className="mb-2">
+                Progress To Next Level
+              </p>
+
+              <div
+                className=" w-full h-5 bg-white/20 rounded-full overflow-hidden "
+                >
+
+                <div
+                  className=" h-5 bg-yellow-400 transition-all duration-1000 "
+                  style={{ width: `${getProgress()}%` }}
+                />
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )
+
+    }
+
     {promptMastery && (
 
       <div className="mt-8 bg-white rounded-3xl p-8 shadow-lg">
@@ -804,12 +899,43 @@ const progress = getProgressData();
             📈 Prompt Growth Trend
           </h2>
 
+          <div
+            className=" flex gap-4 mb-6 flex-wrap " 
+              >
+
+              <div
+              className=" bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold "
+              >
+              🚀 {promptTrend.length} Prompts
+              </div>
+
+              <div
+              className=" bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-semibold "
+              >
+              📈 Growth Tracking
+              </div>
+
+              <div
+              className=" bg-purple-100 text-purple-700 px-4 py-2 rounded-full font-semibold "
+              >
+              🎯 AI Analytics
+              </div>
+
+            </div>
+
           <div className="h-[400px] w-full min-w-[300px]">
 
             <ResponsiveContainer
               width="100%"
               height="100%"
               >
+
+              <Area
+                type="monotone"
+                dataKey="score"
+                stroke="none"
+                fill="url(#colorScore)"
+              />
               
               <LineChart
                 data={trendData}
@@ -832,10 +958,10 @@ const progress = getProgressData();
                 dataKey="score"
                 stroke="#7c3aed"
                 strokeWidth={4}
-                animationDuration={2000}
-                animationEasing="ease-in-out"
                 dot={{ r: 6 }}
                 activeDot={{ r: 10 }}
+                animationDuration={2500}
+                animationEasing="ease-in-out"
                 />
 
                 <defs>
@@ -872,27 +998,6 @@ const progress = getProgressData();
                   stroke="#7c3aed"
                   fill="url(#colorScore)"
                 />
-
-                <div
-className="
-mt-6
-p-5
-rounded-2xl
-bg-gradient-to-r
-from-purple-100
-to-blue-100
-"
->
-<h3 className="font-bold">
-AI Insight
-</h3>
-
-<p>
-Your strongest prompt scored 4.8.
-Focus on adding more context and
-constraints to improve future scores.
-</p>
-</div>
 
               </LineChart>
 
