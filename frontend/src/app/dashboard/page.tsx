@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button";
 
 import CountUp from "react-countup";
 import {Area,AreaChart} from "recharts";
+import { motion } from "framer-motion";
 
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine} from "recharts";
 
@@ -803,6 +804,77 @@ const progress = getProgressData();
             </div>
 
           </div>
+
+        </div>
+
+      )
+
+    }
+
+    {
+      
+      streakData && (
+
+        <div
+          className=" mt-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl p-8 shadow-xl text-white "
+          >
+
+          <h2
+            className=" text-3xl font-bold mb-6 "
+          >
+            🔥 Learning Streak
+          </h2>
+
+          <div
+            className=" grid grid-cols-2 gap-6 "
+            >
+
+            <div>
+
+              <p className="text-white/80">
+                Current Streak
+              </p>
+
+                <h3 className="text-6xl font-bold">
+                  {streakData.current_streak}
+                </h3>
+
+              <p>Days</p>
+
+            </div>
+
+            <div>
+
+              <p className="text-white/80">
+                Best Streak
+                </p>
+
+                <h3 className="text-6xl font-bold">
+                  {streakData.best_streak}
+                </h3>
+
+              <p>Days</p>
+
+            </div>
+
+          </div>
+
+          <p className="mt-6 text-white/80 text-lg">
+            ⭐ Keep learning daily to build your streak!
+          </p>
+
+          <motion.div
+
+          animate={{
+            scale:[1,1.03,1]
+          }}
+
+          transition={{
+            repeat:Infinity,
+            duration:2
+          }}
+
+          ></motion.div>
 
         </div>
 
