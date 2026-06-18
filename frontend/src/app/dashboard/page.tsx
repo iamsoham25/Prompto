@@ -12,6 +12,7 @@ import CountUp from "react-countup";
 import {Area,AreaChart} from "recharts";
 import { motion } from "framer-motion";
 
+
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine} from "recharts";
 
 export default function DashboardPage() {
@@ -47,6 +48,8 @@ export default function DashboardPage() {
   const [xpLoading, setXpLoading] = useState(false);
 
   const [streakData, setStreakData] = useState<any>(null);
+
+  const [achievements, setAchievements] = useState<any[]>([]);
   
   const [stats, setStats] = useState({
     username: "",
@@ -66,6 +69,17 @@ export default function DashboardPage() {
     advanced_unlocked: false,
   });
 
+  const achievementIcons: Record<string, string> = {
+    "Beginner Explorer": "🧭",
+    "First Lesson": "📚",
+    "Learning Streak": "🔥",
+    "AI Explorer": "🤖",
+    "Prompt Engineer": "🚀",
+    "Prompt Master": "👑",
+    "Challenge Champion": "🏆",
+    "XP Hunter": "⚡"
+  };
+
   const trendData = promptTrend.map(
     (score, index) => ({
       prompt: index + 1,
@@ -83,6 +97,8 @@ export default function DashboardPage() {
     fetchXP();
 
     fetchStreak();
+
+    fetchAchievements();
 
   }, []);
 
@@ -125,8 +141,6 @@ useEffect(() => {
 
       await fetchLeaderboard();
 
-      await fetchAchievements(email);
-
       await fetchDailyChallenge();
 
       await fetchUserRank(email);
@@ -136,6 +150,8 @@ useEffect(() => {
       await fetchPromptTrend();
 
       setGreeting(getGreeting());
+
+      await fetchAchievements();
       
 
     } catch (error) {
@@ -457,6 +473,50 @@ const fetchLeaderboard = async () => {
 
 };
 
+const fetchAchievements = async () => {
+
+  try {
+
+    const email =
+      localStorage.getItem("userEmail");
+
+    await API.post(
+      `/achievements/check/${email}`
+    );
+
+    const res = await API.get(
+      `/achievements/${email}`
+    );
+
+    console.log(
+      "ACHIEVEMENTS:",
+      res.data
+    );
+
+    console.log(
+      "ACHIEVEMENTS ARRAY:",
+      res.data.badges
+    );
+
+    if (res.data.success) {
+
+      setAchievements(
+        res.data.badges || []
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(
+      "Achievement Error:",
+      error
+    );
+
+  }
+
+};
+
 const fetchUserRank = async ( email: string | null ) => {
 
   if (!email) return;
@@ -501,36 +561,6 @@ const fetchDailyChallenge = async () => {
 
 };
 
-const fetchAchievements = async (email: string | null) => {
-
-  if (!email) return;
-
-  try {
-
-    const res = await API.get( `/achievements/${email}` );
-
-    console.log(
-      "ACHIEVEMENTS RESPONSE:",
-      res.data
-    );
-
-    if (res.data.success) {
-
-      setBadges(
-        res.data.badges || []
-      );
-
-    }
-
-  } catch (error) {
-
-    console.log(error);
-
-    setBadges([]);
-
-  }
-
-};
 
 
 const getGreeting = () => {
@@ -877,6 +907,81 @@ const progress = getProgressData();
           ></motion.div>
 
         </div>
+
+      )
+
+    }
+
+    {
+
+      Array.isArray(achievements) && achievements.length > 0 && (
+
+        <motion.div
+          initial={{
+            opacity:0,
+            y:50
+          }}
+
+          animate={{
+            opacity:1,
+            y:0
+          }}
+
+          transition={{
+            duration : 0.6
+          }}
+          className=" mt-10 bg-white rounded-3xl p-8 shadow-xl border border-slate-200 "
+          >
+
+          <h2
+            className=" text-4xl font-bold text-slate-800 mb-8 "
+            >
+            🏆 Achievements
+          </h2>
+
+          <div
+            className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 "
+            >
+
+            {
+              achievements.map(
+                (achievement,index)=>(
+
+                  <div
+                    key={index}
+                    className=" bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-3xl p-6 shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 "
+                    >
+
+                    <div className="text-6xl text-center">
+                      {
+                        achievementIcons[
+                          achievement
+                        ] || "🏆"
+                      }
+
+                    </div>
+
+                    <h3 className="text-xl font-bold mt-4 text-center">
+                      {achievement}
+                    </h3>
+
+                    <p
+                      className=" mt-2 text-center text-white/80 "
+                    >
+
+                    Achievement Unlocked
+
+                  </p>
+
+                </div>
+
+              ))
+
+            }
+
+          </div>
+
+        </motion.div>
 
       )
 
