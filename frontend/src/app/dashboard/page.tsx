@@ -44,6 +44,8 @@ export default function DashboardPage() {
   const [xpData, setXpData] = useState<any>(null);
 
   const [xpLoading, setXpLoading] = useState(false);
+
+  const [streakData, setStreakData] = useState<any>(null);
   
   const [stats, setStats] = useState({
     username: "",
@@ -78,6 +80,8 @@ export default function DashboardPage() {
     fetchPromptTrend();
 
     fetchXP();
+
+    fetchStreak();
 
   }, []);
 
@@ -201,6 +205,36 @@ const fetchPromptMastery = async () => {
     }
 
   };
+
+  const fetchStreak = async () => {
+
+  try {
+
+    const email =
+      localStorage.getItem(
+        "userEmail"
+      );
+
+    const res =
+      await API.get(
+        `/streak/${email}`
+      );
+
+    console.log(
+      "STREAK:",
+      res.data
+    );
+
+    setStreakData(
+      res.data
+    );
+
+  } catch(err) {
+
+    console.log(err);
+
+  }
+};
 
 
 const fetchUserXP = async (email: string | null) => {
@@ -696,7 +730,7 @@ const progress = getProgressData();
       </section>
 
     {
-      
+
       xpData && (
           
         <div

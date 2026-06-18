@@ -66,6 +66,12 @@ async def submit_prompt(
 
     await update_user_analytics(email)
 
+    from app.config.db import db
+
+    streak_collection = db[
+        "user_learning_streak"
+    ]
+
     return {
 
         "success": True,
