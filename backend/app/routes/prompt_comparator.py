@@ -1,28 +1,66 @@
 from fastapi import APIRouter
 
-from app.services.prompt_comparator import (
-    compare_prompts
-)
+router = APIRouter(tags=["Prompt Comparator"])
 
-router = APIRouter()
+def score_prompt(prompt: str):
+
+    words = len(prompt.split())
+
+    clarity = min(words / 5, 10)
+
+    specificity = 0
+
+    keywords = [
+        "example",
+        "step",
+        "format",
+        "beginner",
+        "professional",
+        "table"
+    ]
+
+    for keyword in keywords:
+
+        if keyword.lower() in prompt.lower():
+
+            specificity += 1
+
+    specificity *= 2
+
+    score = round(
+        (clarity + specificity) / 2,
+        2
+    )
+
+    return score
 
 @router.post("/compare-prompts")
-async def compare_prompts_api(
-    data: dict
-):
+async def compare_prompts(data: dict):
 
-    result = compare_prompts(
+    prompt_a = data["prompt_a"]
 
-        data["prompt_a"],
+    prompt_b = data["prompt_b"]
 
-        data["prompt_b"]
+    score_a = score_prompt(prompt_a)
 
+    score_b = score_prompt(prompt_b)
+
+    winner = (
+        "Prompt A"
+        if score_a > score_b
+        else "Prompt B"
     )
 
     return {
 
-        "success": True,
+        "score_a": score_a,
 
-        "comparison": result
+        "score_b": score_b,
 
+        "winner": winner,
+
+        "difference": round(
+            abs(score_a - score_b),
+            2
+        )
     }

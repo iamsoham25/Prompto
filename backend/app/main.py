@@ -28,6 +28,7 @@ from app.routes import streak
 from app.routes.achievements import (router as achievements_router)
 from app.routes.ai_coach import router as coach_router
 from app.routes.prompt_trend import router as prompt_trend_router
+from app.routes.prompt_comparator import router as comparator_router
 
 import requests
 import os
@@ -75,6 +76,7 @@ app.include_router(streak.router)
 app.include_router(achievements_router)
 app.include_router(coach_router)
 app.include_router(prompt_trend_router)
+app.include_router(comparator_router)
 
 class PromptRequest(BaseModel):
     prompt: str
