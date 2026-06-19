@@ -68,39 +68,53 @@ export default function ComparatorPage() {
         Compare
       </button>
 
-      {
+      {result && (
 
-        result && (
+        <div className="mt-10 bg-white p-8 rounded-3xl shadow-xl">
 
-          <div className="mt-10 bg-white p-8 rounded-3xl shadow">
+          <h2 className="text-3xl font-bold mb-6">
+            🏆 Comparison Result
+          </h2>
 
-            <h2 className="text-2xl font-bold">
+          <div className="grid md:grid-cols-2 gap-6">
 
-              Results
-            </h2>
+            <div className="bg-red-50 p-6 rounded-2xl">
+              <h3 className="text-xl font-bold mb-2">
+                🅰 Prompt A
+              </h3>
 
-            <p className="mt-4">
-              Prompt A Score:
-              {result.score_a}
-            </p>
+              <p className="text-4xl font-bold text-red-600">
+                {result.score_a}
+              </p>
+            </div>
 
-            <p>
-              Prompt B Score:
+            <div className="bg-green-50 p-6 rounded-2xl">
+              <h3 className="text-xl font-bold mb-2">
+                🅱 Prompt B
+              </h3>
+
+              <p className="text-4xl font-bold text-green-600">
               {result.score_b}
-            </p>
+              </p>
+            </div>
 
-            <p className="text-green-600 font-bold mt-4">
+          </div>
 
-              Winner:
+          <div className="mt-8 text-center">
+
+            <h3 className="text-2xl font-bold">
+              🥇 Winner
+            </h3>
+
+            <p className="text-4xl font-bold text-purple-600 mt-3">
               {result.winner}
-
             </p>
 
           </div>
 
-        )
+        </div>
 
-      }
+      )}
 
     </div>
 

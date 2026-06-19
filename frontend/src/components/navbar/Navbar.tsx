@@ -97,6 +97,10 @@ export default function Navbar() {
           Playground
         </Link>
 
+        <Link href="/comparator">
+          Comparator
+        </Link>
+
         <Link
           href="/templates"
           className="hover:text-orange-500 transition "
