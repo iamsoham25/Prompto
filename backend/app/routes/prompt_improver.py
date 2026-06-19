@@ -1,27 +1,29 @@
 from fastapi import APIRouter
-
-from app.services.prompt_improver import (
-    improve_prompt
-)
+from pydantic import BaseModel
 
 router = APIRouter()
 
+class PromptRequest(BaseModel):
+    prompt: str
 
 @router.post("/improve-prompt")
-async def improve_prompt_api(
-    data: dict
-):
+async def improve_prompt(data: PromptRequest):
 
-    prompt = data.get(
-        "prompt",
-        ""
-    )
+    improved = f"""
+Act as an expert professional.
 
-    result = improve_prompt(
-        prompt
-    )
+Task:
+{data.prompt}
+
+Requirements:
+- Give detailed explanation
+- Use examples
+- Use clear structure
+- Add bullet points
+- Add real-world applications
+"""
 
     return {
         "success": True,
-        **result
+        "improved_prompt": improved
     }

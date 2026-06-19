@@ -51,6 +51,10 @@ export default function DashboardPage() {
   const [achievements, setAchievements] = useState<any[]>([]);
 
   const [coach,setCoach] = useState<any>({});
+
+  const [prompt, setPrompt] = useState("");
+
+  const [improvedPrompt, setImprovedPrompt] = useState("");
   
   const [stats, setStats] = useState({
     username: "",
@@ -84,6 +88,12 @@ export default function DashboardPage() {
   const trendData = Array.isArray(promptTrend)
   ? promptTrend
   : [];
+
+  const copyPrompt = () => {
+    navigator.clipboard.writeText(
+      improvedPrompt
+    );
+  };
 
   const lessonMap:any = {
 
@@ -279,6 +289,20 @@ const fetchPromptMastery = async () => {
     );
 
   }
+};
+
+const improvePrompt = async () => {
+
+  const res = await API.post(
+    "/improve-prompt",
+    {
+      prompt
+    }
+  );
+
+  setImprovedPrompt(
+    res.data.improved_prompt
+  );
 };
 
   const fetchStreak = async () => {

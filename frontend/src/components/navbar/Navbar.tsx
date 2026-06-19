@@ -109,10 +109,10 @@ export default function Navbar() {
         </Link>
 
         <Link
-          href="/mentor"
+          href="/improver"
           className=" hover:text-orange-500 transition "
         >
-           Mentor
+          Improver
         </Link>
 
         <Link
