@@ -26,6 +26,8 @@ from app.routes.dashboard_v2 import router as dashboard_v2_router
 from app.routes import xp
 from app.routes import streak
 from app.routes.achievements import (router as achievements_router)
+from app.routes.ai_coach import router as coach_router
+from app.routes.prompt_trend import router as prompt_trend_router
 
 import requests
 import os
@@ -71,6 +73,8 @@ app.include_router(dashboard_v2_router, prefix="/dashboard", tags=["Dashboard"])
 app.include_router(xp.router)
 app.include_router(streak.router)
 app.include_router(achievements_router)
+app.include_router(coach_router)
+app.include_router(prompt_trend_router)
 
 class PromptRequest(BaseModel):
     prompt: str

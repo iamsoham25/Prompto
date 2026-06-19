@@ -9,11 +9,10 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 
 import CountUp from "react-countup";
-import {Area,AreaChart} from "recharts";
 import { motion } from "framer-motion";
 
 
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine} from "recharts";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine, Area } from "recharts";
 
 export default function DashboardPage() {
 
@@ -39,7 +38,7 @@ export default function DashboardPage() {
 
   const [masteryLoading, setMasteryLoading] = useState(false);
 
-  const [promptTrend, setPromptTrend] = useState<number[]>([]);
+  const [promptTrend, setPromptTrend] = useState<any[]>([]);
 
   const [promptMastery, setPromptMastery] = useState<any>(null);
 
@@ -50,6 +49,8 @@ export default function DashboardPage() {
   const [streakData, setStreakData] = useState<any>(null);
 
   const [achievements, setAchievements] = useState<any[]>([]);
+
+  const [coach,setCoach] = useState<any>({});
   
   const [stats, setStats] = useState({
     username: "",
@@ -80,25 +81,52 @@ export default function DashboardPage() {
     "XP Hunter": "⚡"
   };
 
-  const trendData = promptTrend.map(
-    (score, index) => ({
-      prompt: index + 1,
-      score: score,
-    })
-  );
+  const trendData = Array.isArray(promptTrend)
+  ? promptTrend
+  : [];
 
+  const lessonMap:any = {
+
+    Clarity:
+      "Prompt Clarity Masterclass",
+
+    Context:
+      "Context Engineering",
+
+    Constraints:
+      "Constraint Engineering",
+
+    Specificity:
+      "Specific Prompting"
+
+  };
 
   useEffect(() => {
 
-    fetchPromptMastery();
-    
-    fetchPromptTrend();
+    console.log(
+      "CURRENT COACH:",
+      coach
+    );
 
-    fetchXP();
+  }, [coach]);
 
-    fetchStreak();
 
-    fetchAchievements();
+  useEffect(() => {
+    const initDashboard = async () => {
+      fetchPromptMastery();
+      
+      fetchPromptTrend();
+
+      fetchXP();
+
+      fetchStreak();
+
+      fetchAchievements();
+
+      await fetchCoach();
+    };
+
+    initDashboard();
 
   }, []);
 
@@ -201,27 +229,57 @@ const fetchPromptMastery = async () => {
     }
   };
 
+  const fetchCoach = async () => {
+
+  try {
+
+    const email =
+      localStorage.getItem("userEmail");
+
+    const res =
+      await API.get(`/coach/${email}`);
+
+    console.log(
+      "COACH DATA",
+      res.data
+    );
+
+    setCoach(res.data);
+
+  } catch(err){
+
+    console.log(err);
+
+  }
+
+};
+
   const fetchPromptTrend = async () => {
+  try {
 
-    try {
+    const email = localStorage.getItem("userEmail");
 
-      const email = localStorage.getItem( "userEmail" );
+    const res = await API.get(
+      `/prompt-trend/${email}`
+    );
 
-      const res = await API.get( `/prompt-trend/${email}` );
+    console.log("TREND RESPONSE:", res.data);
 
-      if (res.data.success) {
+    if (res.data.success) {
 
-        setPromptTrend( res.data.scores );
-
-      }
-
-    } catch (error) {
-
-      console.log(error);
+      setPromptTrend( res.data.trend || [] );
 
     }
 
-  };
+  } catch (error) {
+
+    console.log(
+      "Trend Error:",
+      error
+    );
+
+  }
+};
 
   const fetchStreak = async () => {
 
@@ -987,6 +1045,196 @@ const progress = getProgressData();
 
     }
 
+    {
+
+      coach && (
+
+        <div className=" mt-10 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-3xl p-8 shadow-xl" >
+
+          <h2 className=" text-4xl font-bold mb-8 " >
+            🤖 AI Coach
+          </h2>
+
+          <div className=" grid grid-cols-1 md:grid-cols-2 gap-8 " >
+
+            <div>
+
+              <h3 className="text-2xl font-bold">
+                💪 Strongest Skill
+              </h3>
+
+              <p className="text-3xl font-bold mt-3">
+                {coach?.strength || "Loading..."}
+              </p>
+
+            </div>
+
+            <div>
+
+              <h3 className="text-2xl font-bold">
+                🎯 Weakest Skill
+              </h3>
+
+              <p className="text-3xl font-bold mt-3">
+
+              {
+              lessonMap[
+               coach?.weakness
+              ] || "Prompt Fundamentals"
+              }
+
+              </p>
+
+            </div>
+
+            <div>
+
+              <h3 className="text-2xl font-bold">
+                📚 Recommended Lesson
+              </h3>
+
+              <p className="text-3xl font-bold mt-3">
+                {coach?.recommendation || "Loading..."}
+              </p>
+
+            </div>
+
+            <div>
+
+              <h3 className="text-2xl font-bold">
+                🚀 Recommendation
+              </h3>
+
+              <p className="text-3xl font-bold mt-3">
+                {coach?.recommendation}
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )
+
+    }
+
+    <section className="mt-8">
+
+      <div className=" mt-8 bg-white rounded-3xl p-8 shadow-lg " >
+
+        <h2 className=" text-3xl font-bold mb-6 " >
+          📈 Prompt Growth Trend
+        </h2>
+
+        <div className=" flex gap-4 mb-6 flex-wrap "  >
+
+          <div className=" bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold " >
+            🚀 {trendData.length} Prompts
+          </div>
+
+          <div className=" bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-semibold " >
+            📈 Growth Tracking
+          </div>
+
+          <div className=" bg-purple-100 text-purple-700 px-4 py-2 rounded-full font-semibold " >
+            🎯 AI Analytics
+          </div>
+
+        </div>
+
+        <div className="w-full"
+          style={{
+          height: "450px",
+          minHeight: "450px",
+          }}
+          >
+
+          <p className="mb-4 text-red-500">
+            Trend Count: {trendData.length}
+          </p>
+
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+          >
+
+            <LineChart
+              data={trendData}
+              >
+
+              <defs>
+
+                <linearGradient
+                  id="colorScore"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+
+                  <stop
+                    offset="5%"
+                    stopColor="#7c3aed"
+                    stopOpacity={0.8}
+                  />
+
+                  <stop
+                    offset="95%"
+                    stopColor="#7c3aed"
+                    stopOpacity={0}
+                  />
+
+                </linearGradient>
+
+              </defs>
+
+              <CartesianGrid strokeDasharray="3 3" />
+
+              <XAxis
+                dataKey="prompt"
+              />
+
+              <YAxis
+                domain={[0,10]}
+              />
+
+              <Tooltip />
+
+              <ReferenceLine
+                y={4.8}
+                stroke="red"
+                strokeDasharray="5 5"
+                label="Best Score"
+              />
+
+              <Area
+                type="monotone"
+                dataKey="score"
+                stroke="none"
+                fill="url(#colorScore)"
+              />
+
+              <Line
+                type="monotone"
+                dataKey="score"
+                stroke="#7c3aed"
+                strokeWidth={4}
+                dot={{ r: 6 }}
+                activeDot={{ r: 10 }}
+                animationDuration={2500}
+              />
+
+            </LineChart>
+
+          </ResponsiveContainer>
+
+        </div>
+
+      </div>
+
+    </section>
+
     {promptMastery && (
 
       <div className="mt-8 bg-white rounded-3xl p-8 shadow-lg">
@@ -1102,125 +1350,7 @@ const progress = getProgressData();
 
     )}
 
-      <section className="mt-8">
 
-        <div className=" mt-8 bg-white rounded-3xl p-8 shadow-lg " >
-
-          <h2 className=" text-3xl font-bold mb-6 " >
-            📈 Prompt Growth Trend
-          </h2>
-
-          <div
-            className=" flex gap-4 mb-6 flex-wrap " 
-              >
-
-              <div
-              className=" bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold "
-              >
-              🚀 {promptTrend.length} Prompts
-              </div>
-
-              <div
-              className=" bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-semibold "
-              >
-              📈 Growth Tracking
-              </div>
-
-              <div
-              className=" bg-purple-100 text-purple-700 px-4 py-2 rounded-full font-semibold "
-              >
-              🎯 AI Analytics
-              </div>
-
-            </div>
-
-          <div className="h-[400px] w-full min-w-[300px]">
-
-            <ResponsiveContainer
-              width="100%"
-              height="100%"
-              >
-
-              <Area
-                type="monotone"
-                dataKey="score"
-                stroke="none"
-                fill="url(#colorScore)"
-              />
-              
-              <LineChart
-                data={trendData}
-                >
-                
-                <CartesianGrid strokeDasharray="3 3" />
-
-                  <XAxis
-                    dataKey="prompt"
-                  />
-
-                  <YAxis
-                    domain={[0, 10]}
-                  />
-
-                <Tooltip />
-
-                <Line
-                type="monotone"
-                dataKey="score"
-                stroke="#7c3aed"
-                strokeWidth={4}
-                dot={{ r: 6 }}
-                activeDot={{ r: 10 }}
-                animationDuration={2500}
-                animationEasing="ease-in-out"
-                />
-
-                <defs>
-                  <linearGradient
-                    id="colorScore"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor="#7c3aed"
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="#7c3aed"
-                       stopOpacity={0}
-                     />
-                   </linearGradient>
-                </defs>
-
-                <ReferenceLine
-                  y={4.8}
-                  stroke="red"
-                  strokeDasharray="5 5"
-                  label="Best Score"
-                 />
-
-                <Area
-                  type="monotone"
-                  dataKey="score"
-                  stroke="#7c3aed"
-                  fill="url(#colorScore)"
-                />
-
-              </LineChart>
-
-            </ResponsiveContainer>
-
-            
-
-          </div>
-
-        </div>
-
-      </section>
 
       {/* stats cards section */}
 

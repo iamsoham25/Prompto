@@ -195,17 +195,18 @@ async def get_prompt_trend(
         1
     )
 
-    prompts = await cursor.to_list(
-        length=None
-    )
+    prompts = await cursor.to_list(length=None)
+
+    for p in prompts:
+        print(p)
+
+    print(prompts)
 
     scores = [
-
         p.get(
-            "overall_score",
+            "score",
             0
         )
-
         for p in prompts
     ]
 
