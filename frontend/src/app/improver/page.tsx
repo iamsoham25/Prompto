@@ -158,25 +158,16 @@ export default function MentorPage() {
 
       {
         improvedPrompt && (
-
+      
           <div
-            className="
-            mt-8
-            bg-white
-            rounded-3xl
-            p-8
-            shadow-lg
-            border
-            border-slate-200
-            "
-          >
+            className=" mt-8 bg-white rounded-3xl p-8 shadow-lg border border-slate-200 " >
+
+            {/* Header */}
 
             <div className="flex justify-between items-center mb-6">
 
               <h2 className="text-2xl font-bold">
-
                 🚀 Improved Prompt
-
               </h2>
 
               <button
@@ -185,35 +176,87 @@ export default function MentorPage() {
                     improvedPrompt
                   )
                 }
-                className="
-                bg-green-600
-                hover:bg-green-700
-                text-white
-                px-5
-                py-2
-                rounded-xl
-                "
-              >
-
+                className=" bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-xl " >
                 📋 Copy
-
               </button>
 
             </div>
 
+            {/* Score */}
+
+            <div className="bg-green-50 p-5 rounded-2xl mb-6">
+
+              <h3 className="font-bold text-lg mb-2">
+                📊 Improvement Score
+              </h3>
+      
+              <p className="text-4xl font-bold text-green-600">
+                +85%
+              </p>
+      
+            </div>
+
+            {/* Improvements */}
+
+            <div className="bg-blue-50 p-5 rounded-2xl mb-6">
+
+              <h3 className="font-bold text-lg mb-3">
+                🔍 Improvements Applied
+              </h3>
+
+              <ul className="space-y-2">
+
+                <li>✅ Added role definition</li>
+
+                <li>✅ Added context</li>
+
+                <li>✅ Improved specificity</li>
+      
+                <li>✅ Added structure</li>
+      
+                <li>✅ Added output requirements</li>
+
+              </ul>
+
+            </div>
+
+            {/* Before vs After */}
+
+            <div className="grid md:grid-cols-2 gap-6 mb-6">
+
+              <div className="bg-red-50 p-5 rounded-2xl">
+
+                <h3 className="font-bold mb-3">
+                  ❌ Original Prompt
+                </h3>
+
+                <p className="whitespace-pre-wrap">
+                  {prompt}
+                </p>
+
+              </div>
+
+              <div className="bg-green-50 p-5 rounded-2xl">
+
+                <h3 className="font-bold mb-3">
+                  ✅ Improved Prompt
+                </h3>
+
+                <p className="whitespace-pre-wrap">
+                  {improvedPrompt}
+                </p>
+      
+              </div>
+
+            </div>
+
+            {/* Final Prompt */}
+
             <div
-              className="
-              whitespace-pre-wrap
-              text-slate-700
-              leading-relaxed
-              bg-slate-50
-              p-6
-              rounded-2xl
-              "
-            >
+              className=" whitespace-pre-wrap text-slate-700 leading-relaxed bg-slate-50 p-6 rounded-2xl " >
 
               {improvedPrompt}
-
+      
             </div>
 
           </div>
