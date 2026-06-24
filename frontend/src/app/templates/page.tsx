@@ -189,16 +189,7 @@ export default function TemplatesPage() {
                       template.prompt
                     )
                   }
-                  className="
-                  mt-4
-                  w-full
-                  bg-blue-600
-                  hover:bg-blue-700
-                  text-white
-                  py-3
-                  rounded-xl
-                  font-semibold
-                "
+                  className=" mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold "
                 >
                   Copy Prompt
                 </button>
