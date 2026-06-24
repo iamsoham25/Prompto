@@ -42,41 +42,20 @@ export default function LoginPage() {
     if (response.data.success) {
 
       // Save everything
-      localStorage.setItem(
-        "token",
-        response.data.token || ""
-      );
+      localStorage.setItem( "token", response.data.token || "" );
 
-      localStorage.setItem(
-        "userEmail",
-        response.data.email || ""
-      );
+      localStorage.setItem( "userEmail", response.data.email || "" );
 
-      localStorage.setItem(
-        "userName",
-        response.data.username || ""
-      );
+      localStorage.setItem( "userName", response.data.username || "" );
 
-      localStorage.setItem(
-        "isLoggedIn",
-        "true"
-      );
+      localStorage.setItem( "isLoggedIn", "true" );
 
       // Verify immediately
-      console.log(
-        "Stored Email:",
-        localStorage.getItem("userEmail")
-      );
+      console.log( "Stored Email:", localStorage.getItem("userEmail") );
 
-      console.log(
-        "Stored Username:",
-        localStorage.getItem("userName")
-      );
+      console.log( "Stored Username:", localStorage.getItem("userName") );
 
-      console.log(
-        "Stored Token:",
-        localStorage.getItem("token")
-      );
+      console.log( "Stored Token:", localStorage.getItem("token") );
 
       alert("Login Successful");
 
