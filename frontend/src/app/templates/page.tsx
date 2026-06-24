@@ -127,12 +127,7 @@ export default function TemplatesPage() {
         {/* TEMPLATE CARDS */}
 
         <div
-          className="
-          grid
-          md:grid-cols-2
-          lg:grid-cols-3
-          gap-6
-        "
+          className=" grid md:grid-cols-2 lg:grid-cols-3 gap-6 "
         >
 
           {filteredTemplates.map(
@@ -142,33 +137,16 @@ export default function TemplatesPage() {
 
               <div
                 key={template._id}
-                className="
-                bg-white
-                rounded-3xl
-                p-6
-                shadow-md
-                border
-                border-slate-200
-              "
+                className=" bg-white rounded-3xl p-6 shadow-md border border-slate-200 "
               >
 
                 <div
-                  className="
-                  flex
-                  justify-between
-                  mb-4
+                  className=" flex justify-between mb-4
                 "
                 >
 
                   <span
-                    className="
-                    text-xs
-                    bg-blue-100
-                    text-blue-700
-                    px-3
-                    py-1
-                    rounded-full
-                  "
+                    className=" text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full "
                   >
                     {
                       template.category
@@ -176,14 +154,7 @@ export default function TemplatesPage() {
                   </span>
 
                   <span
-                    className="
-                    text-xs
-                    bg-green-100
-                    text-green-700
-                    px-3
-                    py-1
-                    rounded-full
-                  "
+                    className=" text-xs bg-green-100 text-green-700 py-1 rounded-full "
                   >
                     {
                       template.difficulty
