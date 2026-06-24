@@ -164,20 +164,13 @@ export default function TemplatesPage() {
                 </div>
 
                 <h2
-                  className="
-                  text-xl
-                  font-bold
-                  mb-2
-                "
+                  className=" text-xl font-bold mb-2 "
                 >
                   {template.title}
                 </h2>
 
                 <p
-                  className="
-                  text-slate-600
-                  mb-4
-                "
+                  className=" text-slate-600 mb-4 "
                 >
                   {
                     template.description
@@ -185,14 +178,7 @@ export default function TemplatesPage() {
                 </p>
 
                 <div
-                  className="
-                  bg-slate-100
-                  p-4
-                  rounded-xl
-                  text-sm
-                  line-clamp-6
-                  whitespace-pre-wrap
-                "
+                  className=" bg-slate-100 p-4 rounded-xl text-sm line-clamp-6 whitespace-pre-wrap "
                 >
                   {template.prompt}
                 </div>
