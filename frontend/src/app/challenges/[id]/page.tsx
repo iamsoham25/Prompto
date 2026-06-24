@@ -219,47 +219,25 @@ export default function ChallengeDetailPage() {
               {result && (
 
                 <div
-                  className="
-    mt-8
-    border-t
-    pt-8
-  "
+                  className=" mt-8 border-t pt-8 "
                 >
 
                   <h2
-                    className="
-      text-2xl
-      font-bold
-      mb-4
-    "
+                    className=" text-2xl font-bold mb-4 "
                   >
                     🏆 Challenge Result
                   </h2>
 
-                  <div
-      className="
-      grid
-      md:grid-cols-3
-      gap-4
-      mb-6
-    "
+                  <div className=" grid md:grid-cols-3 gap-4 mb-6 "
                   >
 
                     <div
-                      className="
-        bg-blue-50
-        rounded-2xl
-        p-4
-        text-center
-      "
+                      className=" bg-blue-50 rounded-2xl p-4 text-center "
                     >
                       <p>Score</p>
 
                       <h3
-                        className="
-          text-3xl
-          font-bold
-        "
+                        className=" text-3xl font-bold "
                       >
                         {result.score}/10
                       </h3>
@@ -267,20 +245,12 @@ export default function ChallengeDetailPage() {
                     </div>
 
                   <div
-                    className="
-        bg-purple-50
-        rounded-2xl
-        p-4
-        text-center
-      "
+                    className=" bg-purple-50 rounded-2xl p-4 text-center "
                   >
                     <p>Target</p>
 
                     <h3
-                      className="
-          text-3xl
-          font-bold
-        "
+                      className=" text-3xl font-bold "
                     >
                       {result.target_score}
                     </h3>
@@ -303,10 +273,7 @@ export default function ChallengeDetailPage() {
                     <p>Status</p>
 
                     <h3
-                      className="
-          text-2xl
-          font-bold
-        "
+                      className=" text-2xl font-bold "
                     >
 
                       {result.passed
@@ -320,11 +287,7 @@ export default function ChallengeDetailPage() {
                 </div>
 
                 <h3
-                  className="
-      text-xl
-      font-bold
-      mb-3
-    "
+                  className=" text-xl font-bold mb-3 "
                 >
                   Weaknesses
                 </h3>
@@ -342,9 +305,7 @@ export default function ChallengeDetailPage() {
 
                         <p
                           key={index}
-                          className="
-              text-red-500
-              mb-2
+                          className=" text-red-500 mb-2
             "
                         >
                           ❌ {item}
@@ -356,9 +317,7 @@ export default function ChallengeDetailPage() {
                   ) : (
 
                     <p
-                      className="
-          text-green-600
-        "
+                      className=" text-green-600 "
                     >
                       No weaknesses detected
                     </p>
@@ -368,22 +327,13 @@ export default function ChallengeDetailPage() {
                 </div>
 
                 <h3
-                  className="
-      text-xl
-      font-bold
-      mb-3
-    "
+                  className=" text-xl font-bold mb-3 "
                 >
                   Professional Example
                 </h3>
 
                 <div
-                  className="
-      bg-slate-100
-      rounded-2xl
-      p-4
-      whitespace-pre-wrap
-    "
+                  className=" bg-slate-100 rounded-2xl p-4 whitespace-pre-wrap "
                 >
                   {
                     result.professional_prompt
