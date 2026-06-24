@@ -86,12 +86,7 @@ export default function TemplatesPage() {
         {/* CATEGORY FILTER */}
 
         <div
-          className="
-          flex
-          flex-wrap
-          gap-3
-          mb-8
-        "
+          className=" flex flex-wrap gap-3 mb-8 "
         >
 
           {[
