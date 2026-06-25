@@ -133,15 +133,7 @@ export default function MentorPage() {
         <button
           onClick={improvePrompt}
           disabled={loading}
-          className="
-          bg-purple-600
-          hover:bg-purple-700
-          text-white
-          px-8
-          py-3
-          rounded-2xl
-          font-semibold
-          "
+          className=" bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl font-semibold "
         >
 
           {
