@@ -230,7 +230,7 @@ const fetchPromptMastery = async () => {
     }
   };
 
-  const fetchCoach = async () => {
+const fetchCoach = async () => {
 
   try {
 
@@ -255,7 +255,8 @@ const fetchPromptMastery = async () => {
 
 };
 
-  const fetchPromptTrend = async () => {
+const fetchPromptTrend = async () => {
+
   try {
 
     const email = localStorage.getItem("userEmail");
@@ -296,7 +297,7 @@ const improvePrompt = async () => {
   );
 };
 
-  const fetchStreak = async () => {
+const fetchStreak = async () => {
 
   try {
 
@@ -374,23 +375,23 @@ const fetchXP = async () => {
 
 const getProgress = () => {
 
- if (!xpData) return 0;
+  if (!xpData) return 0;
 
- const xp = xpData.xp;
+  const xp = xpData.xp;
 
- if (xp < 200)
-   return (xp / 200) * 100;
+  if (xp < 200)
+    return (xp / 200) * 100;
 
- if (xp < 500)
-   return ((xp - 200) / 300) * 100;
+  if (xp < 500)
+    return ((xp - 200) / 300) * 100;
 
- if (xp < 1000)
-   return ((xp - 500) / 500) * 100;
+  if (xp < 1000)
+    return ((xp - 500) / 500) * 100;
 
- if (xp < 2000)
-   return ((xp - 1000) / 1000) * 100;
+  if (xp < 2000)
+    return ((xp - 1000) / 1000) * 100;
 
- return 100;
+  return 100;
 };
 
 
@@ -544,10 +545,7 @@ const fetchAchievements = async () => {
 
     console.log( "ACHIEVEMENTS:", res.data );
 
-    console.log(
-      "ACHIEVEMENTS ARRAY:",
-      res.data.badges
-    );
+    console.log( "ACHIEVEMENTS ARRAY:", res.data.badges );
 
     if (res.data.success) {
 
@@ -559,10 +557,7 @@ const fetchAchievements = async () => {
 
   } catch (error) {
 
-    console.log(
-      "Achievement Error:",
-      error
-    );
+    console.log( "Achievement Error:", error );
 
   }
 
@@ -598,9 +593,7 @@ const fetchDailyChallenge = async () => {
 
     if (res.data.success) {
 
-      setDailyChallenge(
-        res.data.challenges
-      );
+      setDailyChallenge( res.data.challenges );
 
     }
 
