@@ -118,16 +118,7 @@ export default function MentorPage() {
             )
           }
           placeholder="Explain Machine Learning"
-          className="
-          w-full
-          border
-          border-slate-300
-          rounded-2xl
-          p-4
-          outline-none
-          resize-none
-          mb-4
-          "
+          className=" w-full border border-slate-300 rounded-2xl p-4 outline-none resize-none mb-4 "
         />
 
         <button
