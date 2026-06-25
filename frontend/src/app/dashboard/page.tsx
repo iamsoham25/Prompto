@@ -466,9 +466,7 @@ const getProgressData = () => {
 
 };
 
-const fetchRecentChats = async (
-  email: string | null
-) => {
+const fetchRecentChats = async ( email: string | null ) => {
 
   if (!email) return;
 
@@ -606,7 +604,6 @@ const fetchDailyChallenge = async () => {
 };
 
 
-
 const getGreeting = () => {
 
   const hour = new Date().getHours();
@@ -628,7 +625,7 @@ const getGreeting = () => {
 };
 
   // Logout Function
-  const handleLogout = () => {
+const handleLogout = () => {
 
   localStorage.clear();
 
@@ -646,7 +643,6 @@ const getGreeting = () => {
       })
     );
   
-
     return (
 
       <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white text-3xl font-bold">
