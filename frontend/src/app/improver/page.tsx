@@ -31,9 +31,7 @@ export default function MentorPage() {
 
     if (res.data.success) {
 
-      setImprovedPrompt(
-        res.data.improved_prompt
-      );
+      setImprovedPrompt( res.data.improved_prompt );
 
     }
 
@@ -62,17 +60,7 @@ export default function MentorPage() {
       {/* Hero */}
 
       <section
-        className="
-        bg-gradient-to-r
-        from-violet-600
-        via-purple-600
-        to-pink-500
-        rounded-3xl
-        p-10
-        text-white
-        shadow-xl
-        mb-8
-        "
+        className=" bg-gradient-to-r from-violet-600 via-purple-600 to-pink-500 rounded-3xl p-10 text-white shadow-xl mb-8 "
       >
 
         <h1 className="text-5xl font-bold mb-4">
