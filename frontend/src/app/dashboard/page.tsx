@@ -111,15 +111,6 @@ export default function DashboardPage() {
 
   };
 
-  useEffect(() => {
-
-    console.log(
-      "CURRENT COACH:",
-      coach
-    );
-
-  }, [coach]);
-
 
   useEffect(() => {
     const initDashboard = async () => {
@@ -309,24 +300,13 @@ const improvePrompt = async () => {
 
   try {
 
-    const email =
-      localStorage.getItem(
-        "userEmail"
-      );
+    const email = localStorage.getItem( "userEmail" );
 
-    const res =
-      await API.get(
-        `/streak/${email}`
-      );
+    const res = await API.get( `/streak/${email}` );
 
-    console.log(
-      "STREAK:",
-      res.data
-    );
+    console.log( "STREAK:", res.data );
 
-    setStreakData(
-      res.data
-    );
+    setStreakData( res.data );
 
   } catch(err) {
 
@@ -370,11 +350,9 @@ const fetchXP = async () => {
 
     setXpLoading(true);
 
-    const email =
-      localStorage.getItem("userEmail");
+    const email = localStorage.getItem("userEmail");
 
-    const res =
-      await API.get(`/xp/${email}`);
+    const res = await API.get(`/xp/${email}`);
 
     console.log("XP DATA:", res.data);
 
@@ -1068,6 +1046,7 @@ const progress = getProgressData();
       )
 
     }
+
 
     {
 
