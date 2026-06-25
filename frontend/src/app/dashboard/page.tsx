@@ -515,9 +515,7 @@ const fetchLeaderboard = async () => {
 
   try {
 
-    const res = await API.get(
-      "/leaderboard"
-    );
+    const res = await API.get( "/leaderboard" );
 
     if (res.data.success) {
 
@@ -537,21 +535,14 @@ const fetchAchievements = async () => {
 
   try {
 
-    const email =
-      localStorage.getItem("userEmail");
+    const email = localStorage.getItem("userEmail");
 
-    await API.post(
-      `/achievements/check/${email}`
+    await API.post( `/achievements/check/${email}`
     );
 
-    const res = await API.get(
-      `/achievements/${email}`
-    );
+    const res = await API.get( `/achievements/${email}` );
 
-    console.log(
-      "ACHIEVEMENTS:",
-      res.data
-    );
+    console.log( "ACHIEVEMENTS:", res.data );
 
     console.log(
       "ACHIEVEMENTS ARRAY:",
