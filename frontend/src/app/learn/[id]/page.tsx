@@ -519,27 +519,14 @@ export default function LessonPage() {
 
                   <button
                     onClick={goToNextLesson}
-                    className="
-          bg-white
-          text-green-600
-          px-6
-          py-3
-          rounded-xl
-          font-semibold
-        "
+                    className=" bg-white text-green-600 px-6 py-3 rounded-xl font-semibold "
                   >
                     Next Lesson →
                   </button>
 
                   <button
                     onClick={() => router.push("/learn")}
-                    className="
-          bg-green-700
-          px-6
-          py-3
-          rounded-xl
-          font-semibold
-        "
+                    className=" bg-green-700 px-6 py-3 rounded-xl font-semibold "
                   >
                     Back to Learn
                   </button>
