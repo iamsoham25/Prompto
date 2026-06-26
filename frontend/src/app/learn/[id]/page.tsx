@@ -419,13 +419,7 @@ export default function LessonPage() {
         {quizSubmitted && (
 
           <div
-            className="
-      mt-6
-      text-center
-      bg-slate-100
-      p-4
-      rounded-xl
-    "
+            className=" mt-6 text-center bg-slate-100 p-4 rounded-xl "
           >
 
             <p
