@@ -455,17 +455,7 @@ export default function LessonPage() {
             {showSuccess && (
 
               <div
-                className="
-      bg-gradient-to-r
-      from-green-500
-      to-emerald-600
-      text-white
-      rounded-3xl
-      p-8
-      shadow-xl
-      text-center
-      w-full
-                "
+                className=" bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl p-8 shadow-xl text-center w-full "
               >
 
                 <div className="text-5xl mb-4">
