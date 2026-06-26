@@ -467,13 +467,7 @@ export default function LessonPage() {
                 </h2>
 
                 <div
-                  className="
-        mt-6
-        bg-white
-        text-slate-800
-        rounded-2xl
-        p-6
-      "
+                  className=" mt-6 bg-white text-slate-800 rounded-2xl p-6 "
                 >
 
                   <div className="grid grid-cols-3 gap-4">
