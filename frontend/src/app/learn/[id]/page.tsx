@@ -544,20 +544,7 @@ export default function LessonPage() {
                 <button
                   onClick={completeLesson}
                   disabled={submitting || !passedQuiz}
-                  className="
-        bg-orange-500
-        hover:bg-orange-600
-        text-white
-        px-8
-        py-4
-        rounded-2xl
-        font-semibold
-        shadow-lg
-        transition
-        disabled:bg-gray-300
-        disabled:text-gray-500
-        disabled:cursor-not-allowed
-      "
+                  className=" bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed "
                 >
 
                   {submitting
