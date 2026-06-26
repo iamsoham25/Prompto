@@ -107,14 +107,9 @@ export default function LessonPage() {
     );
   }
 
-  const wordCount =
-    lesson?.content?.split(" ").length || 0;
+  const wordCount = lesson?.content?.split(" ").length || 0;
 
-  const readingTime =
-    Math.max(
-      1,
-      Math.ceil(wordCount / 200)
-    );
+  const readingTime = Math.max( 1, Math.ceil(wordCount / 200) );
 
   const quizzes: any[] = [];
 
@@ -181,8 +176,7 @@ export default function LessonPage() {
 
   const completeLesson = async () => {
 
-    const email =
-      localStorage.getItem("userEmail");
+    const email = localStorage.getItem("userEmail");
 
     if (!email) {
 
@@ -310,15 +304,7 @@ export default function LessonPage() {
         <div className="mt-3">
 
           <span
-            className="
-      bg-blue-100
-      text-blue-700
-      px-3
-      py-1
-      rounded-full
-      text-sm
-      font-medium
-    "
+            className=" bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium "
           >
             ⏱ {readingTime} min read
           </span>
@@ -423,15 +409,7 @@ export default function LessonPage() {
 
             <button
               onClick={submitQuiz}
-              className="
-      bg-blue-600
-      hover:bg-blue-700
-      text-white
-      px-8
-      py-3
-      rounded-xl
-      font-semibold
-    "
+              className=" bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold "
             >
               Submit Quiz
             </button>
