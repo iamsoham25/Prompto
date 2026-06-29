@@ -21,6 +21,8 @@ export default function LearnPage() {
 
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
 
+  const [dashboard, setDashboard] = useState<any>(null);
+
   const [progress, setProgress] = useState(0);
 
   const [completedCount, setCompletedCount] = useState(0);

@@ -387,3 +387,286 @@ async def get_learning_streak(email: str):
         "best_streak":
             streak["best_streak"]
     }
+
+
+@router.get("/learning-dashboard/{email}")
+async def get_learning_dashboard(email: str):
+
+    # -----------------------------
+    # Total Lessons
+    # -----------------------------
+
+    total_lessons = await lessons_collection.count_documents({})
+
+    # -----------------------------
+    # Completed Lesson IDs
+    # -----------------------------
+
+    completed_ids = []
+
+    async for lesson in lesson_completion_collection.find(
+        {
+            "user_email": email
+        }
+    ):
+
+        completed_ids.append(
+            ObjectId(
+                lesson["lesson_id"]
+            )
+        )
+
+    completed_lessons = len(completed_ids)
+
+    remaining_lessons = (
+        total_lessons -
+        completed_lessons
+    )
+
+    overall_progress = 0
+
+    if total_lessons > 0:
+
+        overall_progress = int(
+            (completed_lessons / total_lessons) * 100
+        )
+
+    # -----------------------------
+    # Beginner
+    # -----------------------------
+
+    beginner_total = await lessons_collection.count_documents(
+        {
+            "level": "Beginner"
+        }
+    )
+
+    beginner_completed = await lessons_collection.count_documents(
+        {
+            "_id": {
+                "$in": completed_ids
+            },
+            "level": "Beginner"
+        }
+    )
+
+    # -----------------------------
+    # Intermediate
+    # -----------------------------
+
+    intermediate_total = await lessons_collection.count_documents(
+        {
+            "level": "Intermediate"
+        }
+    )
+
+    intermediate_completed = await lessons_collection.count_documents(
+        {
+            "_id": {
+                "$in": completed_ids
+            },
+            "level": "Intermediate"
+        }
+    )
+
+    # -----------------------------
+    # Advanced
+    # -----------------------------
+
+    advanced_total = await lessons_collection.count_documents(
+        {
+            "level": "Advanced"
+        }
+    )
+
+    advanced_completed = await lessons_collection.count_documents(
+        {
+            "_id": {
+                "$in": completed_ids
+            },
+            "level": "Advanced"
+        }
+    )
+
+    # -----------------------------
+    # XP
+    # -----------------------------
+
+    xp_doc = await user_xp_collection.find_one(
+        {
+            "user_email": email
+        }
+    )
+
+    xp = 0
+
+    if xp_doc:
+
+        xp = xp_doc.get(
+            "xp",
+            0
+        )
+
+    # -----------------------------
+    # Level
+    # -----------------------------
+
+    if xp >= 3000:
+
+        level = "Master"
+
+    elif xp >= 2000:
+
+        level = "Expert"
+
+    elif xp >= 1000:
+
+        level = "Advanced"
+
+    elif xp >= 500:
+
+        level = "Intermediate"
+
+    else:
+
+        level = "Beginner"
+
+    # -----------------------------
+    # Streak
+    # -----------------------------
+
+    streak_doc = await streak_collection.find_one(
+        {
+            "user_email": email
+        }
+    )
+
+    streak = 0
+
+    if streak_doc:
+
+        streak = streak_doc.get(
+            "current_streak",
+            0
+        )
+
+    # -----------------------------
+    # Next Lesson
+    # -----------------------------
+
+    next_lesson = await lessons_collection.find_one(
+        {
+            "_id": {
+                "$nin": completed_ids
+            }
+        },
+        sort=[
+            (
+                "order",
+                1
+            )
+        ]
+    )
+
+    next_data = None
+
+    if next_lesson:
+
+        next_data = {
+
+            "id": str(
+                next_lesson["_id"]
+            ),
+
+            "title":
+                next_lesson["title"],
+
+            "level":
+                next_lesson["level"]
+
+        }
+
+    # -----------------------------
+    # Response
+    # -----------------------------
+
+    return {
+
+        "success": True,
+
+        "overall_progress":
+            overall_progress,
+
+        "completed_lessons":
+            completed_lessons,
+
+        "remaining_lessons":
+            remaining_lessons,
+
+        "total_lessons":
+            total_lessons,
+
+        "xp":
+            xp,
+
+        "level":
+            level,
+
+        "streak":
+            streak,
+
+        "next_lesson":
+            next_data,
+
+        "beginner": {
+
+            "completed":
+                beginner_completed,
+
+            "total":
+                beginner_total,
+
+            "progress":
+                int(
+                    beginner_completed /
+                    beginner_total *
+                    100
+                ) if beginner_total else 0
+
+        },
+
+        "intermediate": {
+
+            "completed":
+                intermediate_completed,
+
+            "total":
+                intermediate_total,
+
+            "progress":
+                int(
+                    intermediate_completed /
+                    intermediate_total *
+                    100
+                ) if intermediate_total else 0
+
+        },
+
+        "advanced": {
+
+            "completed":
+                advanced_completed,
+
+            "total":
+                advanced_total,
+
+            "progress":
+                int(
+                    advanced_completed /
+                    advanced_total *
+                    100
+                ) if advanced_total else 0
+
+        }
+
+    }
