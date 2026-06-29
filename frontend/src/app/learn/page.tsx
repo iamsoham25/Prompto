@@ -44,9 +44,7 @@ export default function LearnPage() {
 
     if (email) {
 
-      fetchCompletedLessons(email);
-
-      fetchProgress(email);
+      fetchDashboard(email);
 
     }
 
@@ -72,78 +70,62 @@ export default function LearnPage() {
     }
   };
 
-  const fetchCompletedLessons = async (email: string) => {
+  const fetchDashboard = async (email: string) => {
 
     try {
 
-      const response =
-        await API.get(
-          `/completed-lessons/${email}`
-        );
+        const dashboardResponse =
+            await API.get(`/learning-dashboard/${email}`);
 
-      if (response.data.success) {
+        const completedResponse =
+            await API.get(`/completed-lessons/${email}`);
 
-        setCompletedLessons(
-          response.data.completed_lessons
-        );
+        if (dashboardResponse.data.success) {
 
-      }
+            const data = dashboardResponse.data;
 
-    } catch (error) {
+            setDashboard(data);
 
-      console.log(error);
+            setCompletedLessons(
+                completedResponse.data.completed_lessons
+            );
 
-    }
+            setProgress(
+                data.overall_progress
+            );
 
-  };
+            setCompletedCount(
+                data.completed_lessons
+            );
 
-  const fetchProgress = async (email: string) => {
+            setTotalLessons(
+                data.total_lessons
+            );
 
-    try {
+            // Unlock logic
+            setIntermediateUnlocked(
+                data.beginner.completed ===
+                data.beginner.total
+            );
 
-      const response =
-        await API.get(
-          `/lesson-progress/${email}`
-        );
-
-      console.log(response.data);
-
-      if (response.data.success) {
-
-        setProgress( response.data.progress );
-
-        setCompletedCount( response.data.completed_lessons );
-
-        setTotalLessons( response.data.total_lessons );
-
-        setIntermediateUnlocked( response.data.intermediate_unlocked );
-
-        setAdvancedUnlocked( response.data.advanced_unlocked );
-
-        if (
-          response.data.intermediate_unlocked ||
-          response.data.advanced_unlocked
-        ) {
-
-          setShowUnlock(true);
-
-          setTimeout(() => {
-
-            setShowUnlock(false);
-
-          }, 4000);
+            setAdvancedUnlocked(
+                data.intermediate.completed ===
+                data.intermediate.total
+            );
 
         }
 
-      }
+    }
 
-    } catch (error) {
+    catch (error) {
 
-      console.log(error);
+        console.log(error);
 
     }
 
   };
+
+
 
   const getLessonStatus = ( lesson: any, index: number ) => {
 
