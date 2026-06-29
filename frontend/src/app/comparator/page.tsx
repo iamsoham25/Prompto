@@ -11,12 +11,6 @@ export default function ComparatorPage() {
 
   const [result,setResult] = useState<any>(null);
 
-  const copyPrompt = () => {
-    navigator.clipboard.writeText(
-      improvedPrompt
-    );
-  };
-
   const comparePrompts = async () => {
 
     try {
