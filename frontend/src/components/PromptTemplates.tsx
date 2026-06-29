@@ -54,15 +54,7 @@ export default function PromptTemplates({
             onClick={() =>
               onSelect(template.prompt)
             }
-            className="
-              px-4
-              py-2
-              rounded-xl
-              bg-orange-100
-              text-orange-600
-              hover:bg-orange-200
-              transition
-            "
+            className=" px-4 py-2 rounded-xl bg-orange-100 text-orange-600 hover:bg-orange-200 transition "
           >
             {template.title}
           </button>
