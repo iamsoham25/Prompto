@@ -44,6 +44,10 @@ export default function LessonPage() {
   
   const [nextLessonId, setNextLessonId] = useState<string | null>(null);
 
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+
+  const [quizResult, setQuizResult] = useState<any>(null);
+
   const [showXpPopup, setShowXpPopup] = useState(false);
 
   useEffect(() => {
@@ -68,11 +72,9 @@ export default function LessonPage() {
     setLesson(response.data.lesson);
 
     // Fetch all lessons
-    const allLessons =
-      await API.get("/lessons");
+    const allLessons = await API.get("/lessons");
 
-    const lessons =
-      allLessons.data.lessons;
+    const lessons = allLessons.data.lessons;
 
     // Find current lesson index
     const currentIndex =
@@ -340,9 +342,9 @@ export default function LessonPage() {
             "
           >
 
-            <div className="whitespace-pre-wrap">
+            <ReactMarkdown>
               {lesson.content}
-            </div>
+            </ReactMarkdown>
 
           </article>
 

@@ -8,6 +8,10 @@ from app.models.lesson_completion import LessonCompletion
 
 from datetime import datetime, timedelta
 
+from app.schemas.quiz_schema import QuizSubmission
+
+from app.models.quiz_result import QuizResult
+
 from bson import ObjectId
 
 router = APIRouter()
@@ -19,6 +23,8 @@ lesson_completion_collection = db["lesson_completions"]
 user_xp_collection = db["user_xp"]
 
 streak_collection = db["user_learning_streak"]
+
+quiz_result_collection = db["quiz_results"]
 
 # Create Lesson
 @router.post("/lessons")
@@ -668,5 +674,69 @@ async def get_learning_dashboard(email: str):
                 ) if advanced_total else 0
 
         }
+
+    }
+
+
+@router.post("/submit-quiz")
+async def submit_quiz(submission: QuizSubmission):
+
+    percentage = round(
+        (submission.score / submission.total) * 100,
+        2
+    )
+
+    # XP Calculation
+    if percentage == 100:
+        xp = 50
+
+    elif percentage >= 80:
+        xp = 40
+
+    elif percentage >= 60:
+        xp = 20
+
+    else:
+        xp = 0
+
+    quiz = QuizResult(
+        user_email=submission.user_email,
+        lesson_id=submission.lesson_id,
+        score=submission.score,
+        total=submission.total,
+        percentage=percentage,
+        xp_earned=xp
+    )
+
+    await quiz_result_collection.insert_one(
+        quiz.dict()
+    )
+
+    # Add XP to user
+    await user_xp_collection.update_one(
+
+        {
+            "user_email": submission.user_email
+        },
+
+        {
+            "$inc": {
+                "xp": xp
+            }
+        },
+
+        upsert=True
+
+    )
+
+    return {
+
+        "success": True,
+
+        "score": submission.score,
+
+        "percentage": percentage,
+
+        "xp_earned": xp
 
     }

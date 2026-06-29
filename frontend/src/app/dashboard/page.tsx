@@ -54,6 +54,8 @@ export default function DashboardPage() {
 
   const [prompt, setPrompt] = useState("");
 
+  const [lessonAnalytics, setLessonAnalytics] = useState<any>(null);
+
   const [improvedPrompt, setImprovedPrompt] = useState("");
   
   const [stats, setStats] = useState({
@@ -181,6 +183,8 @@ useEffect(() => {
       setGreeting(getGreeting());
 
       await fetchAchievements();
+
+      await fetchLessonAnalytics(email);
       
 
     } catch (error) {
@@ -344,6 +348,30 @@ const fetchUserXP = async (email: string | null) => {
   }
 
 };
+
+const fetchLessonAnalytics = async (email: string | null) => {
+
+    if (!email) return;
+
+    try {
+
+        const res = await API.get(
+            `/lesson-analytics/${email}`
+        );
+
+        if(res.data.success){
+
+            setLessonAnalytics(res.data);
+
+        }
+
+    } catch(err){
+
+        console.log(err);
+
+    }
+
+}
 
 const fetchXP = async () => {
 
