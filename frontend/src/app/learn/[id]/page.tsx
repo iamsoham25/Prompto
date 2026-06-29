@@ -1,19 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import toast from "react-hot-toast";
-
 import Confetti from "react-confetti";
-
 import ReactMarkdown from "react-markdown";
-
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-
 import { useParams, useRouter } from "next/navigation";
-
 import API from "@/services/api";
 
 export default function LessonPage() {
@@ -50,19 +43,39 @@ export default function LessonPage() {
 
   const [showXpPopup, setShowXpPopup] = useState(false);
 
+  const [readingProgress, setReadingProgress] = useState(0);
+
   useEffect(() => {
     fetchLesson();
-
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   }, [params.id]);
 
+  useEffect(() => {
+
+  const updateReadingProgress = () => {
+
+    const scrollTop = window.scrollY;
+
+    const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+    const progress = (scrollTop / documentHeight) * 100;
+
+    setReadingProgress(progress);
+
+  };
+
+  window.addEventListener("scroll", updateReadingProgress);
+
+  return () =>
+    window.removeEventListener("scroll", updateReadingProgress);
+
+}, []);
+
   const fetchLesson = async () => {
-
     try {
-
       const response = await API.get(
       `/lessons/${params.id}`
     );
@@ -73,15 +86,10 @@ export default function LessonPage() {
 
     // Fetch all lessons
     const allLessons = await API.get("/lessons");
-
     const lessons = allLessons.data.lessons;
 
     // Find current lesson index
-    const currentIndex =
-      lessons.findIndex(
-        (item: any) =>
-          item.id === params.id
-      );
+    const currentIndex = lessons.findIndex( (item: any) => item.id === params.id );
 
     // Set next lesson
     if (
@@ -110,9 +118,7 @@ export default function LessonPage() {
   }
 
   const wordCount = lesson?.content?.split(" ").length || 0;
-
   const readingTime = Math.max( 1, Math.ceil(wordCount / 200) );
-
   const quizzes: any[] = [];
 
   // Beginner Lessons
@@ -151,46 +157,30 @@ export default function LessonPage() {
 
 
   const submitQuiz = () => {
-
     let score = 0;
-
     quizzes.forEach(
       (quiz, index) => {
-
         const selected =
           selectedAnswers[index];
-
         if (
-          selected ===
-          quiz.answer
+          selected === quiz.answer
         ) {
           score++;
         }
-
       }
     );
-
     setQuizScore(score);
-
     setQuizSubmitted(true);
-
   };
 
   const completeLesson = async () => {
-
     const email = localStorage.getItem("userEmail");
-
     if (!email) {
-
       alert("Please login first");
-
       return;
     }
-
     try {
- 
       setSubmitting(true);
-
       const response = await API.post(
         "/complete-lesson",
         {
@@ -201,90 +191,60 @@ export default function LessonPage() {
       );
 
       if (response.data.success) {
-
         toast.success(
           "🎉 Lesson Completed! +25 XP"
         );
-      
         setShowConfetti(true);
-
         setShowXpPopup(true);
-
         setTimeout(() => {
-
           setShowXpPopup(false);
-
         }, 2500);
 
-        setTimeout(() => {
-
-          setShowConfetti(false);
-
-        }, 5000);
-
+        setTimeout(() => { setShowConfetti(false); }, 5000);
         setCompleted(true);
-
         setShowSuccess(true);
 
       } else {
-
         alert(response.data.message);
-
         setCompleted(true);
-
       }
 
     } catch (error) {
-
       console.log(error);
-
       alert("Failed to complete lesson");
-
     } finally {
-
       setSubmitting(false);
-
     }
-
   };
 
   const goToNextLesson = async () => {
-
   try {
-
     const res = await API.get(
       `/next-lesson/${id}`
     );
-
     if (res.data.success) {
-
       router.push(
         `/learn/${res.data.next_lesson_id}`
       );
-
     }
-
   } catch (error) {
-
     console.log(error);
-
   }
-
 };
 
-  return (
 
+  return (
+    
     <main className="min-h-screen bg-[#F8FAFC] text-slate-900 py-12">
       {
         showXpPopup && (
-
         <div
           className=" fixed top-24 right-10 z-50 bg-yellow-400 text-white font-bold text-2xl px-6 py-3 rounded-2xl shadow-xl animate-bounce "
         >
           +25 XP 🚀
         </div>
 
-        )}
+      )}
       
       {showConfetti && (
         <Confetti
@@ -293,31 +253,139 @@ export default function LessonPage() {
         />
       )}
 
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-5xl mx-auto">
 
-        <span className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl text-sm">
-          {lesson.level}
-        </span>
+        {/* Hero Card */}
 
-        <h1 className="text-4xl font-bold mt-6 mb-6">
-          {lesson.title}
-        </h1>
+        <div className="bg-white rounded-[32px] border border-slate-200 shadow-xl p-10 mb-10">
 
-        <div className="mt-3">
+            {/* Top Row */}
 
-          <span
-            className=" bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium "
-          >
-            ⏱ {readingTime} min read
-          </span>
+            <div className="flex flex-wrap items-center justify-between gap-4">
 
-        </div>
+              <div>
 
-        <p className="text-slate-600 text-xl mb-12">
-          {lesson.description}
-        </p>
+                <span
+                  className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold
 
-        <div className="bg-white border border-slate-200 rounded-3xl p-10 shadow-lg">
+                    ${
+                      lesson.level === "Beginner"
+                      ? "bg-green-100 text-green-700"
+
+                      : lesson.level === "Intermediate"
+                      ? "bg-blue-100 text-blue-700"
+
+                      : "bg-orange-100 text-orange-700"
+                      }
+                  `}
+                  >
+
+                    🚀 {lesson.level}
+   
+                </span>
+
+              </div>
+
+              <div className="flex gap-3">
+
+                <div className="bg-slate-100 px-4 py-2 rounded-xl">
+
+                  ⏱ {readingTime} min
+   
+                </div>
+
+                <div className="bg-slate-100 px-4 py-2 rounded-xl">
+
+                  🧠 {quizzes.length} Quiz
+
+                </div>
+   
+                <div className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl font-semibold">
+   
+                  ⭐ +25 XP
+   
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* Title */}
+
+            <h1 className="text-5xl font-extrabold text-slate-900 mt-8 leading-tight">
+   
+              {lesson.title}
+
+            </h1>
+
+            {/* Description */}
+
+            <p className="mt-6 text-xl leading-9 text-slate-600">
+
+              {lesson.description}
+
+            </p>
+
+            {/* Lesson Stats */}
+   
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+
+              <div className="bg-slate-50 rounded-2xl p-5">
+
+                <p className="text-sm text-slate-500">
+                  Difficulty
+                </p>
+   
+                <h3 className="text-xl font-bold mt-1">
+                  {lesson.level}
+                </h3>
+
+              </div>
+
+              <div className="bg-slate-50 rounded-2xl p-5">
+   
+                <p className="text-sm text-slate-500">
+                  Reading Time
+                </p>
+
+                <h3 className="text-xl font-bold mt-1">
+
+                  {readingTime} min
+
+                </h3>
+
+              </div>
+
+              <div className="bg-slate-50 rounded-2xl p-5">
+
+                <p className="text-sm text-slate-500">
+                  Questions
+                </p>
+
+                <h3 className="text-xl font-bold mt-1">
+                  {quizzes.length}
+                </h3>
+
+              </div>
+
+              <div className="bg-slate-50 rounded-2xl p-5">
+
+                <p className="text-sm text-slate-500">
+                  Reward
+                </p>
+
+                <h3 className="text-xl font-bold text-yellow-600 mt-1">
+                  +25 XP
+                </h3>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+        <div className="bg-white border border-slate-200 rounded-[32px] p-12 shadow-xl">
 
           <article
             className="
@@ -342,13 +410,69 @@ export default function LessonPage() {
             "
           >
 
-            <ReactMarkdown>
+            <ReactMarkdown
+              components={{
+                code({
+                  inline,
+                  className,
+                  children,
+                  ...props
+                  }: any)
+                  {
+
+                    const match = /language-(\w+)/.exec(className || "");
+
+                    if(!inline && match){
+
+                      return(
+
+                        <div className="relative">
+
+                          <button
+                            className="absolute right-4 top-4 bg-slate-700 text-white text-xs px-3 py-1 rounded-lg"
+                            onClick={()=> navigator.clipboard.writeText( String(children) )
+                            }
+                          >
+                          Copy
+ 
+                          </button>
+
+                          <SyntaxHighlighter
+                            style={oneDark}
+                            language={match[1]}
+                            PreTag="div"
+                            >
+
+                            {String(children).replace(/\n$/, "")}
+ 
+                          </SyntaxHighlighter>
+ 
+                        </div>
+
+                      );
+
+                    }
+                  
+                    return(
+
+                      <code className={className} {...props}>
+
+                        {children}
+ 
+                      </code>
+
+                    );
+
+                  }
+
+                }}
+              >
               {lesson.content}
             </ReactMarkdown>
 
           </article>
 
-          <div className="mt-12">
+          <div className="mt-12 bg-white rounded-3xl shadow-xl border border-slate-200 p-10">
 
             <h2 className="text-2xl font-bold mb-6">
             🧠 Quick Quiz
@@ -358,7 +482,7 @@ export default function LessonPage() {
 
             <div
               key={index}
-              className="mb-10 border rounded-xl p-6"
+              className="mb-10 rounded-2xl border-slate-200 shadow-sm hover:shadow-md transition p-6"
             >
 
               <p className="font-semibold mb-4">
@@ -397,21 +521,16 @@ export default function LessonPage() {
                     </label>
 
                   )
-
-                
                 )}
-
               </div>
-
             </div>
-
           ))}
 
           <div className="text-center mt-8">
 
             <button
               onClick={submitQuiz}
-              className=" bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold "
+              className=" bg-gradient-to-r from-orange-500 to-pink-500 hover:scale-105 transition hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold "
             >
               Submit Quiz
             </button>
@@ -423,7 +542,6 @@ export default function LessonPage() {
           <div
             className=" mt-6 text-center bg-slate-100 p-4 rounded-xl "
           >
-
             <p
               className={
                 passedQuiz
@@ -431,17 +549,12 @@ export default function LessonPage() {
                   : "text-red-600"
               }
             >
-
               {passedQuiz
                 ? "✅ Passed"
                 : "❌ Failed"}
-
             </p>
-
           </div>
-
         )}
-
           </div>
 
             {allQuestionsCorrect && (
@@ -451,86 +564,120 @@ export default function LessonPage() {
               >
                 ✅ All Questions Completed Successfully!
               </div>
-
             )}
+
+            
 
             {showSuccess && (
 
-              <div
-                className=" bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl p-8 shadow-xl text-center w-full "
-              >
+              <div className="mt-10 bg-gradient-to-br from-green-500 via-emerald-500 to-green-600 rounded-[32px] p-10 text-white shadow-2xl text-center animate-fade-in">
 
-                <div className="text-5xl mb-4">
+                <div className="text-6xl">
+                  ⭐⭐⭐⭐⭐
+                </div>
+
+                <div className="text-7xl mt-4">
                   🎉
                 </div>
 
-                <h2 className="text-4xl font-bold">
-                  Lesson Completed
+                <h2 className="text-5xl font-extrabold mt-6">
+                  Congratulations!
                 </h2>
 
-                <div
-                  className=" mt-6 bg-white text-slate-800 rounded-2xl p-6 "
-                >
+                <p className="text-xl mt-4 opacity-90">
+                  You successfully completed
+                </p>
 
-                  <div className="grid grid-cols-3 gap-4">
+                <h3 className="text-3xl font-bold mt-3">
+                  {lesson.title}
+                </h3>
 
+                <div className="bg-white text-slate-800 rounded-3xl p-8 mt-10">
+
+                  <div className="grid md:grid-cols-3 gap-6">
+              
                     <div>
-                      <p className="text-sm text-slate-500">
-                        Score
+
+                      <p className="text-slate-500">
+                        🏆 Score
                       </p>
 
-                      <p className="text-2xl font-bold">
+                      <h2 className="text-4xl font-bold">
                         {quizScore}/{quizzes.length}
-                      </p>
+                      </h2>
+
                     </div>
 
                     <div>
-                      <p className="text-sm text-slate-500">
-                        Accuracy
+
+                      <p className="text-slate-500">
+                        📈 Accuracy
                       </p>
 
-                      <p className="text-2xl font-bold">
-                        {Math.round(
-                          (quizScore / quizzes.length) * 100
-                        )}%
-                      </p>
+                      <h2 className="text-4xl font-bold">
+                        {Math.round((quizScore / quizzes.length) * 100)}%
+                      </h2>
+
                     </div>
 
                     <div>
-                      <p className="text-sm text-slate-500">
-                        XP Earned
+
+                      <p className="text-slate-500">
+                        ⭐ XP Earned
                       </p>
 
-                      <p className="text-2xl font-bold text-yellow-500">
+                      <h2 className="text-4xl font-bold text-yellow-500">
                         +25
-                      </p>
-                    </div>
+                      </h2>
 
+                    </div>
+              
                   </div>
 
                 </div>
 
-                <p className="mt-6 text-lg">
-                  🚀 Complete all lessons in this level
-                  to unlock the next stage.
-                </p>
-            
-                <div
-                  className=" flex justify-center gap-4 mt-8 "
-                >
+                  <div className="mt-10 bg-white/20 rounded-2xl p-6">
+
+                      <h3 className="text-2xl font-bold">
+
+                          🚀 Great Progress!
+
+                    </h3>
+
+                  <p className="mt-3 text-lg">
+
+                    You are one lesson closer to becoming an
+
+                    <strong> Expert Prompt Engineer.</strong>
+
+                  </p>
+
+                </div>
+
+                <div className="flex justify-center gap-6 mt-10">
 
                   <button
+
                     onClick={goToNextLesson}
-                    className=" bg-white text-green-600 px-6 py-3 rounded-xl font-semibold "
-                  >
+              
+                    className="bg-white text-green-600 font-bold px-8 py-4 rounded-2xl shadow hover:scale-105 transition"
+
+                    >
+
                     Next Lesson →
+
                   </button>
 
                   <button
+
                     onClick={() => router.push("/learn")}
-                    className=" bg-green-700 px-6 py-3 rounded-xl font-semibold "
-                  >
+              
+                    className="bg-green-700 hover:bg-green-800 px-8 py-4 rounded-2xl font-bold"
+
+                    >
+
                     Back to Learn
+
                   </button>
 
                 </div>
@@ -540,31 +687,21 @@ export default function LessonPage() {
             )}
 
             {!showSuccess && (
-
               <div className="flex justify-center mt-6">
-
                 <button
                   onClick={completeLesson}
                   disabled={submitting || !passedQuiz}
                   className=" bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed "
                 >
-
                   {submitting
                     ? "Completing..."
                     : "Complete Lesson (+25 XP)"}
 
                 </button>
-
               </div>
-
             )}
-
         </div>
-
       </div>
-
     </main>
-
   );
-
 }
