@@ -369,21 +369,11 @@
 
         setLoading(true);
 
-        const res = await API.post(
-          "/generate",
-          {
-            prompt: lastPrompt,
-          }
-        );
+        const res = await API.post( "/generate", { prompt: lastPrompt, } );
 
         if (res.data.success) {
 
-          const aiMessage = {
-            role: "assistant",
-            content: res.data.response
-              .replace(/\n{3,}/g, "\n\n")
-              .trim(),
-          };
+          const aiMessage = { role: "assistant", content: res.data.response .replace(/\n{3,}/g, "\n\n") .trim() };
     
           setMessages((prev) => [
             ...prev,
