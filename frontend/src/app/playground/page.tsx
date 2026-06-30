@@ -753,70 +753,174 @@
             )}
 
             <div ref={bottomRef}></div>
+
               {promptAnalysis && (
 
-                <div
-                  className=" mt-8 bg-white border border-slate-200 rounded-3xl p-8 shadow-lg "
-                >
+                <div className="mt-8 bg-white rounded-3xl p-8 shadow-xl border border-slate-200">
 
-                  <h3
-                    className=" text-2xl font-bold text-slate-800 mb-6 "
-                  >
-                    📊 Prompt Analysis
-                  </h3>
+                  <div className="flex items-center justify-between mb-8">
 
-                  <div
-                    className=" grid grid-cols-2 md:grid-cols-5 gap-4 "
-                  >
+                    <div>
+                
+                      <h2 className="text-3xl font-bold text-slate-800">
+                        📊 Prompt Analysis
+                      </h2>
 
-                    <div className="bg-blue-50 rounded-2xl p-4 text-center">
-                      <p className="text-slate-500 text-sm">
-                        Clarity
+                      <p className="text-slate-500 mt-2">
+                        AI evaluated your prompt quality.
                       </p>
 
-                      <p className="text-3xl font-bold text-blue-600">
-                        {promptAnalysis.clarity}
-                      </p>
                     </div>
 
-                    <div className="bg-purple-50 rounded-2xl p-4 text-center">
-                      <p className="text-slate-500 text-sm">
-                        Specificity
+                    <div className="text-center">
+
+                      <p className="text-sm text-slate-500">
+                        Overall Score
                       </p>
 
-                      <p className="text-3xl font-bold text-purple-600">
-                        {promptAnalysis.specificity}
+                      <div className="text-6xl font-extrabold text-orange-500">
+                        {promptAnalysis.overall_score}
+                      </div>
+
+                      <p className="text-slate-500">
+                        /100
                       </p>
+
                     </div>
 
-                    <div className="bg-orange-50 rounded-2xl p-4 text-center">
-                      <p className="text-slate-500 text-sm">
-                        Context
-                      </p>
+                  </div>
 
-                      <p className="text-3xl font-bold text-orange-600">
-                        {promptAnalysis.context}
-                      </p>
+                  <div className="grid md:grid-cols-2 gap-8">
+
+                  {/* LEFT */}
+
+                    <div className="space-y-6">
+
+                      {[
+                        ["Clarity", promptAnalysis.clarity],
+                        ["Specificity", promptAnalysis.specificity],
+                        ["Context", promptAnalysis.context],
+                        ["Constraints", promptAnalysis.constraints],
+                        ["Role", promptAnalysis.role],
+                        ["Output Format", promptAnalysis.output_format],
+                        ["Examples", promptAnalysis.examples]
+                        ].map(([label, value]) => (
+                
+                        <div key={label}>
+
+                          <div className="flex justify-between mb-2">
+
+                            <span className="font-semibold text-slate-700">
+                              {label}
+                            </span>
+
+                            <span className="font-bold text-orange-600">
+                              {value}%
+                            </span>
+
+                          </div>
+
+                          <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+                
+                            <div className="h-full bg-gradient-to-r from-orange-400 to-pink-500 transition-all duration-700"
+
+                              style={{ width: `${value}%` }}
+
+                              />
+                
+                            </div>
+                
+                          </div>
+
+                      ))}
+
                     </div>
 
-                    <div className="bg-red-50 rounded-2xl p-4 text-center">
-                      <p className="text-slate-500 text-sm">
-                        Constraints
-                      </p>
+                  {/* RIGHT */}
 
-                      <p className="text-3xl font-bold text-red-600">
-                        {promptAnalysis.constraints}
-                      </p>
-                    </div>
-              
-                    <div className="bg-green-50 rounded-2xl p-4 text-center">
-                      <p className="text-slate-500 text-sm">
-                        Overall
-                      </p>
+                    <div className="space-y-8">
 
-                      <p className="text-3xl font-bold text-green-600">
-                        {promptAnalysis.overall}
-                      </p>
+                      <div className="bg-green-50 rounded-2xl p-6 border border-green-200">
+                
+                        <h3 className="text-xl font-bold text-green-700 mb-4">
+                          ✅ Strengths
+                        </h3>
+
+                        <ul className="space-y-3">
+                
+                          {promptAnalysis.strengths.length > 0 ? (
+                
+                            promptAnalysis.strengths.map(
+                              (item: string, index: number) => (
+                
+                                <li
+                                  key={index}
+                                  className="text-slate-700"
+                                  >
+
+                                  ✔ {item}
+
+                                </li>
+
+                              )
+                              )
+
+                            ) : (
+
+                            <li className="text-slate-500">
+                              No major strengths detected.
+                            </li>
+
+                          )}
+
+                        </ul>
+
+                      </div>
+
+                      <div className="bg-red-50 rounded-2xl p-6 border border-red-200">
+                
+                        <h3 className="text-xl font-bold text-red-700 mb-4">
+                          🚀 Improvements
+                        </h3>
+
+                        <ul className="space-y-3">
+
+                          {promptAnalysis.improvements.length > 0 ? (
+                
+                            promptAnalysis.improvements.map(
+                              (item: string, index: number) => (
+                
+                                <li key={index} className="text-slate-700" >
+                                  • {item}
+                                </li>
+
+                              )
+                              )
+
+                            ) : (
+
+                            <li className="text-slate-500">
+                              Excellent prompt!
+                            </li>
+
+                          )}
+
+                        </ul>
+
+                      </div>
+
+                      <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200">
+
+                        <h3 className="text-xl font-bold text-blue-700 mb-2">
+                          🎯 Difficulty
+                        </h3>
+
+                        <p className="text-2xl font-bold text-slate-800">
+                          {promptAnalysis.difficulty}
+                        </p>
+
+                      </div>
+
                     </div>
 
                   </div>
