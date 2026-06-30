@@ -4,27 +4,24 @@ def evaluate_prompt(prompt: str):
 
     prompt_lower = prompt.lower()
 
-    # ==========================
-    # CLARITY
-    # ==========================
+    # -------------------------
+    # Clarity
+    # -------------------------
 
     word_count = len(prompt.split())
 
     if word_count >= 30:
-        clarity = 10
-
+        clarity = 100
     elif word_count >= 20:
-        clarity = 8
-
+        clarity = 80
     elif word_count >= 10:
-        clarity = 6
-
+        clarity = 60
     else:
-        clarity = 3
+        clarity = 30
 
-    # ==========================
-    # SPECIFICITY
-    # ==========================
+    # -------------------------
+    # Specificity
+    # -------------------------
 
     specificity_keywords = [
         "summarize",
@@ -45,14 +42,11 @@ def evaluate_prompt(prompt: str):
         for keyword in specificity_keywords
     )
 
-    specificity = min(
-        10,
-        specificity_matches * 2
-    )
+    specificity = min(100, specificity_matches * 20)
 
-    # ==========================
-    # CONTEXT
-    # ==========================
+    # -------------------------
+    # Context
+    # -------------------------
 
     context_keywords = [
         "for",
@@ -68,14 +62,11 @@ def evaluate_prompt(prompt: str):
         for keyword in context_keywords
     )
 
-    context = min(
-        10,
-        context_matches * 2
-    )
+    context = min(100, context_matches * 20)
 
-    # ==========================
-    # CONSTRAINTS
-    # ==========================
+    # -------------------------
+    # Constraints
+    # -------------------------
 
     constraint_keywords = [
         "bullet points",
@@ -85,7 +76,10 @@ def evaluate_prompt(prompt: str):
         "within",
         "maximum",
         "minimum",
-        "step by step"
+        "step by step",
+        "must",
+        "only",
+        "avoid"
     ]
 
     constraint_matches = sum(
@@ -93,19 +87,17 @@ def evaluate_prompt(prompt: str):
         for keyword in constraint_keywords
     )
 
-    constraints = min(
-        10,
-        constraint_matches * 2
-    )
+    constraints = min(100, constraint_matches * 15)
 
-    # ==========================
-    # ROLE DEFINITION
-    # ==========================
+    # -------------------------
+    # Role
+    # -------------------------
 
     role_keywords = [
         "act as",
         "you are",
         "behave as",
+        "pretend to be",
         "role"
     ]
 
@@ -114,14 +106,11 @@ def evaluate_prompt(prompt: str):
         for keyword in role_keywords
     )
 
-    role_definition = min(
-        10,
-        role_matches * 4
-    )
+    role = min(100, role_matches * 25)
 
-    # ==========================
-    # OUTPUT FORMAT
-    # ==========================
+    # -------------------------
+    # Output Format
+    # -------------------------
 
     output_keywords = [
         "json",
@@ -129,7 +118,9 @@ def evaluate_prompt(prompt: str):
         "bullet points",
         "markdown",
         "csv",
-        "list format"
+        "list",
+        "xml",
+        "yaml"
     ]
 
     output_matches = sum(
@@ -137,19 +128,18 @@ def evaluate_prompt(prompt: str):
         for keyword in output_keywords
     )
 
-    output_format = min(
-        10,
-        output_matches * 3
-    )
+    output_format = min(100, output_matches * 15)
 
-    # ==========================
-    # EXAMPLES
-    # ==========================
+    # -------------------------
+    # Examples
+    # -------------------------
 
     example_keywords = [
         "example",
         "for example",
-        "sample"
+        "sample",
+        "input",
+        "output"
     ]
 
     example_matches = sum(
@@ -157,89 +147,110 @@ def evaluate_prompt(prompt: str):
         for keyword in example_keywords
     )
 
-    examples = min(
-        10,
-        example_matches * 5
-    )
+    examples = min(100, example_matches * 20)
 
-    # ==========================
-    # OVERALL
-    # ==========================
+    # -------------------------
+    # Overall Score
+    # -------------------------
 
-    overall = round(
+    overall_score = round(
+
         (
             clarity +
             specificity +
             context +
             constraints +
-            role_definition +
+            role +
             output_format +
             examples
-        ) / 7,
-        1
+
+        ) / 7
+
     )
 
-    # ==========================
-    # STRENGTHS
-    # ==========================
+    # -------------------------
+    # Difficulty
+    # -------------------------
+
+    if overall_score >= 85:
+        difficulty = "Advanced"
+
+    elif overall_score >= 60:
+        difficulty = "Intermediate"
+
+    else:
+        difficulty = "Beginner"
+
+    # -------------------------
+    # Strengths
+    # -------------------------
 
     strengths = []
 
-    if clarity >= 8:
-        strengths.append(
-            "Prompt is detailed and clear"
-        )
+    if clarity >= 80:
+        strengths.append("Prompt is clear and detailed")
 
-    if role_definition >= 6:
-        strengths.append(
-            "Strong role definition"
-        )
+    if specificity >= 60:
+        strengths.append("Specific instructions are provided")
 
-    if output_format >= 6:
-        strengths.append(
-            "Good output formatting instructions"
-        )
+    if role >= 60:
+        strengths.append("Strong role definition")
 
-    if context >= 6:
-        strengths.append(
-            "Provides useful context"
-        )
+    if context >= 60:
+        strengths.append("Useful context is included")
 
-    # ==========================
-    # WEAKNESSES
-    # ==========================
+    if output_format >= 60:
+        strengths.append("Output format is well defined")
 
-    weaknesses = []
+    if examples >= 60:
+        strengths.append("Examples improve prompt quality")
 
-    if context < 4:
-        weaknesses.append(
-            "Add more context"
-        )
+    # -------------------------
+    # Improvements
+    # -------------------------
 
-    if constraints < 4:
-        weaknesses.append(
-            "Add constraints or requirements"
-        )
+    improvements = []
 
-    if output_format < 4:
-        weaknesses.append(
-            "Specify desired output format"
-        )
+    if context < 60:
+        improvements.append("Add more context")
 
-    if role_definition < 4:
-        weaknesses.append(
-            "Define a role for the AI"
-        )
+    if constraints < 60:
+        improvements.append("Specify constraints")
+
+    if role < 60:
+        improvements.append("Assign a clear AI role")
+
+    if output_format < 60:
+        improvements.append("Specify the desired output format")
+
+    if examples < 60:
+        improvements.append("Include an example input/output")
+
+    if specificity < 60:
+        improvements.append("Use more specific instructions")
 
     return {
+
+        "overall_score": overall_score,
+
         "clarity": clarity,
+
         "specificity": specificity,
+
         "context": context,
+
         "constraints": constraints,
-        "role_definition": role_definition,
+
+        "role": role,
+
         "output_format": output_format,
+
         "examples": examples,
-        "overall": overall,
+
+        "difficulty": difficulty,
+
         "strengths": strengths,
-        "weaknesses": weaknesses
+
+        "improvements": improvements
+
     }
