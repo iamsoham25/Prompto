@@ -478,6 +478,76 @@ export default function LessonPage() {
             🧠 Quick Quiz
           </h2>
 
+          <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 rounded-[32px] p-8 text-white mb-10">
+
+            <h2 className="text-4xl font-bold">
+
+              🧠 Knowledge Check
+
+            </h2>
+
+            <p className="mt-4 text-lg opacity-90">
+
+              Test your understanding before unlocking the next lesson.
+
+            </p>
+
+            <div className="grid md:grid-cols-4 gap-6 mt-8">
+
+              <div className="bg-white/20 rounded-2xl p-5">
+
+                <p className="text-sm">
+                  Questions
+                </p>
+
+                <h2 className="text-3xl font-bold">
+                  {quizzes.length}
+                </h2>
+
+              </div>
+
+              <div className="bg-white/20 rounded-2xl p-5">
+
+                <p className="text-sm">
+                  Passing Score
+                </p>
+
+                <h2 className="text-3xl font-bold">
+                  80%
+                </h2>
+
+              </div>
+
+              <div className="bg-white/20 rounded-2xl p-5">
+
+                <p className="text-sm">
+
+                  Estimated Time
+
+                </p>
+
+                <h2 className="text-3xl font-bold">
+                  2 mins
+                </h2>
+
+              </div>
+
+              <div className="bg-white/20 rounded-2xl p-5">
+
+                <p className="text-sm">
+                  Reward
+                </p>
+
+                <h2 className="text-3xl font-bold">
+                  ⭐ +25 XP
+                </h2>
+
+              </div>
+
+            </div>
+
+          </div>
+
           {quizzes.map((quiz, index) => (
 
             <div

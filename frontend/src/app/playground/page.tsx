@@ -2,6 +2,8 @@
 
   import { useEffect, useState } from "react";
 
+  import PromptCoachTabs from "@/components/playground/PromptCoachTabs";
+
   import API from "@/services/api";
 
   import { useRef } from "react";
@@ -300,11 +302,9 @@
 
           try {
 
-            const coachRes =
-              await API.post(
-                "/prompt-coach",
+            const coachRes = await API.post(
+                "/evaluate-prompt",
                 {
-                  user_email: email,
                   prompt: prompt,
                 }
               );
@@ -315,12 +315,12 @@
             );
 
             if (coachRes.data.success) {
-          
-              setPromptAnalysis(coachRes.data.evaluation);
-          
-              setImprovedPrompt(coachRes.data.improved_prompt);
 
-              setPromptSuggestions(coachRes.data.suggestions);
+              setPromptAnalysis( coachRes.data.evaluation );
+
+              setImprovedPrompt("");
+
+              setPromptSuggestions([]);
 
             }
 
@@ -520,8 +520,7 @@
 
                         setTimeout(() => {
 
-                          const chatContainer =
-                            document.getElementById("chat-container");
+                          const chatContainer = document.getElementById("chat-container");
 
                           if (chatContainer) {
                             chatContainer.scrollTo({
@@ -546,17 +545,12 @@
 
                     <button
                       onClick={(e) => {
-
                         e.stopPropagation();
-
                         deleteChat(chat.id);
-
                       }}
                       className=" opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition ml-2 text-sm "
                     >
-
                       🗑
-
                     </button>
 
                   </div>
@@ -608,7 +602,7 @@
                       ? "justify-end"
                       : "justify-start"
                   }`}
-                >
+                  >
 
                   <div
                     className={` group relative max-w-3xl px-5 py-3 rounded-2xl whitespace-pre-wrap leading-6 shadow-sm
@@ -618,11 +612,9 @@
                           : "bg-white text-slate-800 border border-slate-200"
                       }
                     `}
-                  >
+                    >
 
                     <div>
-
-                  
 
                       <ReactMarkdown
                         components={{
@@ -736,9 +728,7 @@
 
               <div className="flex justify-start">
 
-                <div
-                  className=" bg-slate-100 px-5 py-4 rounded-2xl flex gap-1 "
-                >
+                <div className=" bg-slate-100 px-5 py-4 rounded-2xl flex gap-1 " >
 
                   <div className="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></div>
 
@@ -929,89 +919,22 @@
 
               )}
 
-            {promptSuggestions.length > 0 && (
-
-              <div
-                className=" mt-6 bg-amber-50 border border-yellow-200 rounded-3xl p-6 shadow-sm "
-              >
-
-                <h3
-                  className=" text-xl font-bold text-yellow-800 mb-4 "
-                >
-                  💡 Suggestions
-                </h3>
-
-                <ul
-                  className=" list-disc pl-5 space-y-3 text-slate-700 font-medium "
-                >
-
-                  {promptSuggestions.map(
-                    (
-                      suggestion,
-                      index
-                    ) => (
             
-                      <li
-                        key={index}
-                        className=" text-slate-700 leading-relaxed "
-                      >
-                        {suggestion}
-                        
-                      </li>
-            
-                    )
-                  )}
-
-                </ul>
-
-              </div>
-
-            )}
-
-            {improvedPrompt && (
-
-              <div
-                className=" mt-6 bg-green-50 border border-green-200 rounded-3xl p-6 "
-              >
-
-                <h3
-                  className=" text-xl font-bold text-green-800 mb-4 "
-                >
-                  ✨ Improved Prompt
-                </h3>
-
-                <p
-                  className=" whitespace-pre-wrap text-slate-700 leading-relaxed "
-                >
-                  {improvedPrompt}
-                </p>
-
-              </div>
-
-            )}
 
           </div>
 
         {/* INPUT AREA */}
 
-          <div
-            className=" shrink-0 border-t border-slate-200 bg-slate-50 px-6 py-3 "
-          >
+          <div className=" shrink-0 border-t border-slate-200 bg-slate-50 px-6 py-3 " >
 
-            <div
-              className=" relative bg-white border border-slate-300 rounded-3xl px-4 py-2 shadow-sm "
-            >
+            <div className=" relative bg-white border border-slate-300 rounded-3xl px-4 py-2 shadow-sm " >
 
               <textarea
                 value={prompt}
                 onChange={(e) => {
-
                   setPrompt(e.target.value);
-
                   e.target.style.height = "20px";
-
-                  e.target.style.height =
-                    e.target.scrollHeight + "px";
+                  e.target.style.height = e.target.scrollHeight + "px";
 
                 }}
 
@@ -1021,9 +944,7 @@
                     e.key === "Enter" &&
                     !e.shiftKey
                   ) {
-
                     e.preventDefault();
-
                     generateAIResponse();
 
                   }
@@ -1036,70 +957,68 @@
 
               {showTemplates && (
 
-                <div
-                  className=" absolute bottom-16 left-0 bg-white border border-slate-200 rounded-2xl shadow-xl w-72 z-50 overflow-hidden "
-                >
+                <div className=" absolute bottom-16 left-0 bg-white border border-slate-200 rounded-2xl shadow-xl w-72 z-50 overflow-hidden " >
 
-                <button
-                  onClick={() => {
-                    setPrompt("Summarize the following:");
-                    setShowTemplates(false);
-                  }}
-                  className=" w-full text-left px-4 py-3 hover:bg-slate-100 text-slate-800 font-medium "
-                >
-                  📝 Summarize
-                </button>
+                  <button
+                    onClick={() => {
+                      setPrompt("Summarize the following:");
+                      setShowTemplates(false);
+                      }}
+                      className=" w-full text-left px-4 py-3 hover:bg-slate-100 text-slate-800 font-medium "
+                    >
+                    📝 Summarize
+                  </button>
 
-                <button
-                  onClick={() => {
-                    setPrompt("Write a professional email:");
-                    setShowTemplates(false);
-                  }}
-                  className=" w-full text-left px-4 py-3 hover:bg-slate-100 text-slate-800 font-medium "
-                >
-                  📧 Email
-                </button>
+                  <button
+                    onClick={() => {
+                      setPrompt("Write a professional email:");
+                      setShowTemplates(false);
+                      }}
+                      className=" w-full text-left px-4 py-3 hover:bg-slate-100 text-slate-800 font-medium "
+                    >
+                    📧 Email
+                  </button>
 
-                <button
-                  onClick={() => {
-                    setPrompt("Explain this code:");
-                    setShowTemplates(false);
-                  }}
-                  className=" w-full text-left px-4 py-3 hover:bg-slate-100 text-slate-800 font-medium "
-                >
-                  💻 Explain Code
-                </button>
+                  <button
+                    onClick={() => {
+                      setPrompt("Explain this code:");
+                      setShowTemplates(false);
+                      }}
+                      className=" w-full text-left px-4 py-3 hover:bg-slate-100 text-slate-800 font-medium "
+                    >
+                      💻 Explain Code
+                  </button>
     
-              </div>
+                </div>
 
-            )}
+              )}
 
-            <div className="flex items-center justify-between mt-1">
+              <div className="flex items-center justify-between mt-1">
 
-              <button
-                onClick={() =>
-                  setShowTemplates(!showTemplates)
-                }
-                className=" w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xl transition "
-              >
-                +
-              </button>
+                <button
+                  onClick={() =>
+                    setShowTemplates(!showTemplates)
+                  }
+                  className=" w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xl transition "
+                  >
+                  +
+                </button>
 
-              <button
-                onClick={generateAIResponse}
-                disabled={loading}
-                className=" bg-orange-500 hover:bg-orange-600 text-white px-4 py-1.5 rounded-xl font-medium "
-              >
+                <button
+                  onClick={generateAIResponse}
+                  disabled={loading}
+                  className=" bg-orange-500 hover:bg-orange-600 text-white px-4 py-1.5 rounded-xl font-medium "
+                  >
 
-                {loading ? "..." : "Send"}
-              </button>
+                  {loading ? "..." : "Send"}
+                </button>
 
-              <button
-                onClick={exportChat}
-                className=" px-3 py-1.5 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 "
-              >
-                Export
-              </button>
+                <button
+                  onClick={exportChat}
+                  className=" px-3 py-1.5 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 "
+                  >
+                  Export
+                </button>
 
               </div>
 

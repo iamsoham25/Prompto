@@ -154,12 +154,6 @@ export default function ChallengeDetailPage() {
 
       <div className="max-w-5xl mx-auto">
 
-        <h1 className="text-4xl font-bold mb-6">
-
-          {challenge.title}
-
-        </h1>
-
         <div className="bg-white border border-slate-200 shadow-lg rounded-3xl p-8">
 
           <div className="flex gap-4 mb-6">
