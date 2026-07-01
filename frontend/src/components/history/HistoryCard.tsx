@@ -40,27 +40,21 @@ export default function HistoryCard({
 
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mt-8">
 
-        <Score
-            title="Clarity"
-            value={item.clarity_score}
-        />
+        <Score title="Clarity" value={item.clarity_score} />
 
-        <Score
-            title="Context"
-            value={item.context_score}
-        />
+        <Score title="Specificity" value={item.specificity_score} />
 
-        <Score
-            title="Constraints"
-            value={item.constraints_score}
-        />
+        <Score title="Context" value={item.context_score} />
 
-        <Score
-            title="Examples"
-            value={item.examples_score}
-        />
+        <Score title="Constraints" value={item.constraints_score} />
+
+        <Score title="Role" value={item.role_definition_score} />
+
+        <Score title="Output" value={item.output_format_score} />
+
+        <Score title="Examples" value={item.examples_score} />
 
       </div>
 
