@@ -30,6 +30,7 @@ from app.routes.ai_coach import router as coach_router
 from app.routes.prompt_trend import router as prompt_trend_router
 from app.routes.prompt_comparator import router as comparator_router
 from app.routes.analytics import router as analytics_router
+from app.routes.prompt_history import router as prompt_history_router
 
 import requests
 import os
@@ -79,6 +80,7 @@ app.include_router(coach_router)
 app.include_router(prompt_trend_router)
 app.include_router(comparator_router)
 app.include_router(analytics_router)
+app.include_router(prompt_history_router)
 
 class PromptRequest(BaseModel):
     prompt: str

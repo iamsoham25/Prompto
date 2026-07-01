@@ -39,7 +39,7 @@ async def submit_prompt(
 
         "ai_response": "",
 
-        "overall_score": evaluation["overall"],
+        "overall_score": evaluation["overall_score"],
 
         "clarity_score": evaluation["clarity"],
     
@@ -49,7 +49,7 @@ async def submit_prompt(
 
         "specificity_score": evaluation["specificity"],
 
-        "role_definition_score": evaluation["role_definition"],
+        "role_definition_score": evaluation["role"],
 
         "output_format_score": evaluation["output_format"],
 
@@ -57,7 +57,7 @@ async def submit_prompt(
 
         "strengths": evaluation["strengths"],
 
-        "weaknesses": evaluation["weaknesses"],
+        "weaknesses": evaluation["improvements"],
 
         "created_at": datetime.utcnow()
     }

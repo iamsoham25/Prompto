@@ -122,6 +122,13 @@ export default function Navbar() {
           Challenges
         </Link>
 
+        <Link
+          href="/history"
+          className="hover:text-orange-500 transition"
+        >
+          History
+        </Link>
+
         {/* Show Dashboard only after login */}
 
         {loggedIn && (
