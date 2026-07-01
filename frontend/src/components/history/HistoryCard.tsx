@@ -30,17 +30,11 @@ export default function HistoryCard({
 
         <div className="text-right">
 
-          <div className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl font-bold text-center">
+          <div className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl font-bold">
 
-                <div className="text-2xl">
-                    {Math.round(item.overall_score * 10)}
-                </div>
+            {item.overall_score}/10
 
-                <div className="text-xs text-slate-500">
-                    /100
-                </div>
-
-            </div>
+          </div>
 
         </div>
 
