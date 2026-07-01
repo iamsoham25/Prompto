@@ -1,116 +1,92 @@
 "use client";
 
-interface HistoryCardProps {
-  item: any;
-  onDelete: (id: string) => void;
-}
+import { useEffect, useState } from "react";
 
-export default function HistoryCard({
-  item,
-  onDelete,
-}: HistoryCardProps) {
+import API from "@/services/api";
 
-  return (
+import HistoryCard from "@/components/history/HistoryCard";
 
-    <div className="bg-white rounded-3xl p-8 shadow-lg border border-slate-200 hover:shadow-xl transition">
+export default function HistoryPage() {
 
-      <div className="flex justify-between items-start">
+  const [history, setHistory] = useState<any[]>([]);
 
-        <div>
+  useEffect(() => {
 
-          <h2 className="text-xl font-bold mb-2">
-            📝 Prompt
-          </h2>
+    fetchHistory();
 
-          <p className="text-slate-600 whitespace-pre-wrap">
-            {item.prompt}
-          </p>
+  }, []);
 
-        </div>
+  const fetchHistory = async () => {
 
-        <div className="text-right">
+    const email = localStorage.getItem("userEmail");
 
-          <div className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl font-bold">
+    const res = await API.get(`/history/${email}`);
 
-            {item.overall_score}/10
+    if (res.data.success) {
 
-          </div>
+      setHistory(res.data.history);
 
-        </div>
+    }
 
-      </div>
+  };
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+  const deleteHistory = async (id: string) => {
 
-        <Score title="Clarity" value={item.clarity} />
+    await API.delete(`/history/${id}`);
 
-        <Score title="Context" value={item.context} />
+    fetchHistory();
 
-        <Score title="Constraints" value={item.constraints} />
-
-        <Score title="Examples" value={item.examples} />
-
-      </div>
-
-      <div className="mt-8 flex justify-between items-center">
-
-        <span className="text-slate-500">
-
-          {new Date(item.created_at).toLocaleString()}
-
-        </span>
-
-        <button
-
-          onClick={() => onDelete(item._id)}
-
-          className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl"
-
-        >
-
-          Delete
-
-        </button>
-
-      </div>
-
-    </div>
-
-  );
-
-}
-
-function Score({
-
-  title,
-
-  value,
-
-}: {
-
-  title: string;
-
-  value: number;
-
-}) {
+  };
 
   return (
 
-    <div className="bg-slate-100 rounded-xl p-4 text-center">
+    <main className="min-h-screen bg-slate-50 p-10">
 
-      <p className="text-slate-500 text-sm">
+      <h1 className="text-5xl font-bold mb-10">
 
-        {title}
+        📜 Prompt History
 
-      </p>
+      </h1>
 
-      <h3 className="text-xl font-bold">
+      <div className="space-y-8">
 
-        {value}/10
+        {
 
-      </h3>
+          history.length === 0 ? (
 
-    </div>
+            <div className="bg-white rounded-3xl p-20 text-center shadow-lg">
+
+              <h2 className="text-3xl font-bold">
+
+                No Prompt History
+
+              </h2>
+
+            </div>
+
+          ) : (
+
+            history.map((item) => (
+
+              <HistoryCard
+
+                key={item._id}
+
+                item={item}
+
+                onDelete={deleteHistory}
+
+              />
+
+            ))
+
+          )
+
+        }
+
+      </div>
+
+    </main>
 
   );
 
