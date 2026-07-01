@@ -30,11 +30,17 @@ export default function HistoryCard({
 
         <div className="text-right">
 
-          <div className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl font-bold">
+          <div className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl font-bold text-center">
 
-            {item.overall_score}/10
+                <div className="text-2xl">
+                    {Math.round(item.overall_score * 10)}
+                </div>
 
-          </div>
+                <div className="text-xs text-slate-500">
+                    /100
+                </div>
+
+            </div>
 
         </div>
 
@@ -42,13 +48,25 @@ export default function HistoryCard({
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
 
-        <Score title="Clarity" value={item.clarity} />
+        <Score
+            title="Clarity"
+            value={item.clarity_score}
+        />
 
-        <Score title="Context" value={item.context} />
+        <Score
+            title="Context"
+            value={item.context_score}
+        />
 
-        <Score title="Constraints" value={item.constraints} />
+        <Score
+            title="Constraints"
+            value={item.constraints_score}
+        />
 
-        <Score title="Examples" value={item.examples} />
+        <Score
+            title="Examples"
+            value={item.examples_score}
+        />
 
       </div>
 

@@ -19,7 +19,7 @@ async def evaluate_prompt_api(data: dict):
     # Save prompt history if user email is available
     if user_email:
 
-        save_prompt_history(
+        await save_prompt_history(
             user_email=user_email,
             prompt=prompt,
             evaluation=evaluation

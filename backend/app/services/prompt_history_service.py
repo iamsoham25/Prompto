@@ -2,7 +2,7 @@ from bson import ObjectId
 from app.config.db import db
 from app.models.prompt_history import PromptHistory
 
-collection = db["prompt_history"]
+collection = db["prompt_submissions"]
 
 
 # -----------------------------

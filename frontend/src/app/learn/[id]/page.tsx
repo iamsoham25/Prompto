@@ -685,7 +685,7 @@ export default function LessonPage() {
                       </p>
 
                       <h2 className="text-4xl font-bold">
-                        {Math.round((quizScore / quizzes.length) * 100)}%
+                        {Math.round((lesson?.overall_score || 0) * 10)}/100
                       </h2>
 
                     </div>
