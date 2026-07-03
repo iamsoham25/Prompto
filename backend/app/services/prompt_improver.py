@@ -1,121 +1,123 @@
+# backend/app/services/prompt_improver.py
+
+import os
 import json
-import re
 
-from app.services.openrouter_service import client
+from openai import OpenAI
+from dotenv import load_dotenv
 
+
+load_dotenv()
+
+
+# =========================================================
+# OPENROUTER CLIENT
+# =========================================================
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY")
+)
+
+
+# =========================================================
+# SYSTEM PROMPT
+# =========================================================
 
 SYSTEM_PROMPT = """
-You are Prompto AI, an expert prompt engineering assistant.
+You are an expert Prompt Engineer.
 
-Your job is to analyze and rewrite user prompts so they become clearer,
-more specific, more structured, and more effective for AI systems.
+Your job is to analyze and rewrite user prompts so they become
+clear, specific, contextual, structured, and ready to use with
+an AI assistant.
 
-You must preserve the user's original intention.
+The improved prompt should preserve the user's original intention.
 
-Analyze the prompt using these principles:
+When appropriate, improve the prompt using:
 
-1. Clarity
-2. Specificity
+1. Role
+   Assign a relevant expert role to the AI.
+
+2. Task
+   Clearly describe what the AI must do.
+
 3. Context
-4. Role definition
-5. Constraints
-6. Output format
-7. Examples when useful
-8. Audience definition
-9. Tone requirements
-10. Success criteria
+   Add useful context only when it can be reasonably inferred.
+
+4. Audience
+   Specify the intended audience when appropriate.
+
+5. Scope
+   Define important topics or areas the response should cover.
+
+6. Constraints
+   Add useful requirements such as simplicity, depth, tone,
+   length, limitations, or technical level when appropriate.
+
+7. Output Format
+   Specify a suitable response format such as:
+   - headings
+   - bullet points
+   - numbered steps
+   - tables
+   - code blocks
+   - structured report
+
+8. Examples
+   Request practical or real-world examples when useful.
 
 IMPORTANT RULES:
 
-- Do not change the core intent of the user.
-- Do not answer the user's prompt.
-- Only improve and rewrite the prompt.
-- Do not unnecessarily make a simple prompt extremely long.
-- Do not repeat instructions that already exist.
-- Do not duplicate Role, Task, Requirements, Context, or Output Format sections.
-- If the prompt is already strong, refine it instead of rewriting it unnecessarily.
-- Make the rewritten prompt directly usable with an AI model.
-- Improvement score must be from 0 to 100.
-- Keep changes, strengths, and weaknesses concise and meaningful.
+- Do not change the original intention of the user.
+- Do not add unrelated requirements.
+- Do not make the improved prompt unnecessarily long.
+- Adapt the structure to the type of prompt.
+- Coding prompts should request technically correct code and explanations.
+- Research prompts should request structured and evidence-based analysis.
+- Writing prompts should specify tone, audience, and format.
+- Business prompts should request actionable recommendations.
+- Learning prompts should specify audience level and explanation style.
 
 Return ONLY valid JSON.
 
-The exact JSON structure must be:
+The JSON must follow exactly this structure:
 
 {
-    "improved_prompt": "The complete rewritten prompt",
-    "improvement_score": 85,
+    "improved_prompt": "complete rewritten prompt",
+    "improvement_score": 0,
     "changes": [
-        "Added a clear role definition",
-        "Added specific output requirements"
+        "change 1",
+        "change 2"
     ],
     "strengths": [
-        "The original intent is clear"
+        "strength 1"
     ],
     "weaknesses": [
-        "The prompt lacks context",
-        "The expected output format is not specified"
+        "weakness 1",
+        "weakness 2"
     ]
 }
 
-Do not include markdown code fences.
+The improvement_score must be an integer between 0 and 100.
 
-Do not write ```json.
-
-Return only the JSON object.
+Do not wrap the JSON in markdown code fences.
 """
 
 
-def clean_json_response(response: str) -> str:
-    """
-    Removes accidental markdown code fences from AI response.
-    """
-
-    response = response.strip()
-
-    response = re.sub(
-        r"^```json\s*",
-        "",
-        response,
-        flags=re.IGNORECASE
-    )
-
-    response = re.sub(
-        r"^```\s*",
-        "",
-        response
-    )
-
-    response = re.sub(
-        r"\s*```$",
-        "",
-        response
-    )
-
-    return response.strip()
-
+# =========================================================
+# AI PROMPT IMPROVER
+# =========================================================
 
 def improve_prompt(prompt: str):
-    """
-    Sends the original prompt to OpenRouter and returns
-    AI-generated prompt improvement analysis.
-    """
 
     if not prompt or not prompt.strip():
-        raise ValueError(
-            "Prompt cannot be empty."
-        )
+        raise ValueError("Prompt cannot be empty.")
 
     try:
 
         completion = client.chat.completions.create(
 
-            # Use the same working model that you use in your project.
-            # If this model is unavailable in your OpenRouter account,
-            # replace it with the model already working in playground.py.
             model="openai/gpt-3.5-turbo",
-
-            temperature=0.4,
 
             messages=[
                 {
@@ -124,44 +126,44 @@ def improve_prompt(prompt: str):
                 },
                 {
                     "role": "user",
-                    "content": (
-                        "Analyze and improve the following prompt:\n\n"
-                        f"{prompt}"
-                    )
+                    "content": f"""
+Analyze and improve the following prompt.
+
+Original Prompt:
+{prompt.strip()}
+"""
                 }
-            ]
+            ],
+
+            temperature=0.4
         )
 
 
-        ai_response = (
-            completion
-            .choices[0]
-            .message
-            .content
+        ai_content = completion.choices[0].message.content
+
+        if not ai_content:
+            raise ValueError("AI returned an empty response.")
+
+
+        # Remove accidental markdown formatting
+        cleaned_content = (
+            ai_content
+            .replace("```json", "")
+            .replace("```", "")
+            .strip()
         )
 
 
-        if not ai_response:
-            raise ValueError(
-                "AI returned an empty response."
-            )
+        result = json.loads(cleaned_content)
 
 
-        cleaned_response = clean_json_response(
-            ai_response
-        )
-
-
-        result = json.loads(
-            cleaned_response
-        )
-
-
-        # Validate important fields
+        # =================================================
+        # VALIDATION
+        # =================================================
 
         improved_prompt = result.get(
             "improved_prompt",
-            prompt
+            prompt.strip()
         )
 
         improvement_score = result.get(
@@ -185,16 +187,10 @@ def improve_prompt(prompt: str):
         )
 
 
-        # Ensure score is numeric and within 0-100
-
+        # Ensure score is valid
         try:
-
-            improvement_score = int(
-                improvement_score
-            )
-
-        except (ValueError, TypeError):
-
+            improvement_score = int(improvement_score)
+        except (TypeError, ValueError):
             improvement_score = 0
 
 
@@ -204,17 +200,23 @@ def improve_prompt(prompt: str):
         )
 
 
+        # Ensure arrays
+        if not isinstance(changes, list):
+            changes = []
+
+        if not isinstance(strengths, list):
+            strengths = []
+
+        if not isinstance(weaknesses, list):
+            weaknesses = []
+
+
         return {
-            "original_prompt": prompt,
-
+            "original_prompt": prompt.strip(),
             "improved_prompt": improved_prompt,
-
             "improvement_score": improvement_score,
-
             "changes": changes,
-
             "strengths": strengths,
-
             "weaknesses": weaknesses
         }
 
@@ -222,17 +224,12 @@ def improve_prompt(prompt: str):
     except json.JSONDecodeError as error:
 
         print(
-            "JSON Parsing Error:",
+            "AI JSON parsing error:",
             error
         )
 
-        print(
-            "Raw AI Response:",
-            ai_response
-        )
-
         raise ValueError(
-            "AI returned an invalid response format."
+            "AI response was not valid JSON."
         )
 
 
@@ -243,4 +240,4 @@ def improve_prompt(prompt: str):
             str(error)
         )
 
-        raise error
+        raise

@@ -1,8 +1,5 @@
-from fastapi import APIRouter
-from fastapi import HTTPException
-
-from pydantic import BaseModel
-from pydantic import Field
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
 
 from app.services.prompt_improver import improve_prompt
 
@@ -12,19 +9,25 @@ router = APIRouter(
 )
 
 
+# =========================================================
+# REQUEST MODEL
+# =========================================================
+
 class PromptRequest(BaseModel):
 
     prompt: str = Field(
         ...,
         min_length=2,
-        description="Prompt that should be analyzed and improved"
+        max_length=5000
     )
 
 
+# =========================================================
+# IMPROVE PROMPT ENDPOINT
+# =========================================================
+
 @router.post("/improve-prompt")
-async def improve_prompt_api(
-    data: PromptRequest
-):
+async def improve_prompt_api(data: PromptRequest):
 
     try:
 
@@ -35,31 +38,14 @@ async def improve_prompt_api(
 
         return {
             "success": True,
-
-            "original_prompt":
-                result["original_prompt"],
-
-            "improved_prompt":
-                result["improved_prompt"],
-
-            "improvement_score":
-                result["improvement_score"],
-
-            "changes":
-                result["changes"],
-
-            "strengths":
-                result["strengths"],
-
-            "weaknesses":
-                result["weaknesses"]
+            **result
         }
 
 
     except ValueError as error:
 
         raise HTTPException(
-            status_code=400,
+            status_code=422,
             detail=str(error)
         )
 
