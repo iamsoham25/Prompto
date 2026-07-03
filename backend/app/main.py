@@ -15,7 +15,6 @@ from app.routes.prompt_feedback import (router as feedback_router)
 from app.routes.prompt_coach import (router as coach_router)
 from app.routes.prompt_recommender import (router as recommender_router)
 from app.routes.dashboard import (router as dashboard_router)
-from app.routes import prompt_comparator
 from app.routes import prompt_templates
 from app.routes import prompt_mentor
 from app.routes import challenge_arena
@@ -28,7 +27,7 @@ from app.routes import streak
 from app.routes.achievements import (router as achievements_router)
 from app.routes.ai_coach import router as coach_router
 from app.routes.prompt_trend import router as prompt_trend_router
-from app.routes.prompt_comparator import router as comparator_router
+from app.routes.prompt_comparator import router as prompt_comparator_router
 from app.routes.analytics import router as analytics_router
 from app.routes.prompt_history import router as prompt_history_router
 
@@ -66,7 +65,6 @@ app.include_router(coach_router)
 app.include_router(recommender_router)
 app.include_router(challenge_router)
 app.include_router(dashboard_router)
-app.include_router(prompt_comparator.router)
 app.include_router(prompt_templates.router)
 app.include_router(prompt_mentor.router)
 app.include_router(challenge_arena.router)
@@ -78,7 +76,7 @@ app.include_router(streak.router)
 app.include_router(achievements_router)
 app.include_router(coach_router)
 app.include_router(prompt_trend_router)
-app.include_router(comparator_router)
+app.include_router(prompt_comparator_router)
 app.include_router(analytics_router)
 app.include_router(prompt_history_router)
 

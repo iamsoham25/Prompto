@@ -107,7 +107,9 @@ const navItem = (path: string) =>
               Playground
             </Link>
 
-            <Link href="/comparator">
+            <Link href="/comparator"
+            className={navItem("/comparator")}
+            >
               Comparator
             </Link>
 
