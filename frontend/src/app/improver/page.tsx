@@ -640,16 +640,8 @@ export default function ImproverPage() {
                   </h3>
 
 
-                  <p
-                    className="
-                    whitespace-pre-wrap
-                    text-slate-700
-                    leading-relaxed
-                    "
-                  >
-
+                  <p className=" whitespace-pre-wrap text-slate-700 leading-relaxed " >
                     {result.improved_prompt}
-
                   </p>
 
                 </div>
