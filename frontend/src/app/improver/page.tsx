@@ -588,15 +588,7 @@ export default function ImproverPage() {
 
                 {/* ORIGINAL */}
 
-                <div
-                  className="
-                  bg-red-50
-                  border
-                  border-red-100
-                  p-6
-                  rounded-2xl
-                  "
-                >
+                <div className=" bg-red-50 border border-red-100 p-6 rounded-2xl " >
 
                   <h3 className="font-bold text-xl mb-4">
                     ❌ Original Prompt
