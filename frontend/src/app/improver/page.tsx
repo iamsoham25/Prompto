@@ -623,20 +623,10 @@ export default function ImproverPage() {
 
                 {/* IMPROVED */}
 
-                <div
-                  className="
-                  bg-green-50
-                  border
-                  border-green-100
-                  p-6
-                  rounded-2xl
-                  "
-                >
+                <div className=" bg-green-50 border border-green-100 p-6 rounded-2xl " >
 
                   <h3 className="font-bold text-xl mb-4">
-
                     ✅ AI Improved Prompt
-
                   </h3>
 
 
