@@ -693,12 +693,8 @@ export default function ImproverPage() {
 
                     onClick={copyPrompt}
 
-                    className="
-                    text-purple-600
-                    hover:text-purple-800
-                    font-semibold
-                    "
-                  >
+                    className=" text-purple-600 hover:text-purple-800 font-semibold "
+                    >
 
                     Copy
 
@@ -707,24 +703,15 @@ export default function ImproverPage() {
                 </div>
 
 
-                <p
-                  className="
-                  whitespace-pre-wrap
-                  text-slate-700
-                  leading-relaxed
-                  "
-                >
-
+                <p className=" whitespace-pre-wrap text-slate-700 leading-relaxed " >
                   {result.improved_prompt}
-
                 </p>
 
               </div>
 
-
             </div>
-
           )
+
         }
 
       </div>
