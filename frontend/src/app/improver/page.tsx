@@ -599,22 +599,12 @@ export default function ImproverPage() {
                 >
 
                   <h3 className="font-bold text-xl mb-4">
-
                     ❌ Original Prompt
-
                   </h3>
 
 
-                  <p
-                    className="
-                    whitespace-pre-wrap
-                    text-slate-700
-                    leading-relaxed
-                    "
-                  >
-
+                  <p className=" whitespace-pre-wrap text-slate-700 leading-relaxed " >
                     {result.original_prompt}
-
                   </p>
 
                 </div>
