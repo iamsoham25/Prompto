@@ -662,16 +662,7 @@ export default function ImproverPage() {
                   FINAL COPYABLE PROMPT
               ===================== */}
 
-              <div
-                className="
-                mt-6
-                bg-slate-50
-                border
-                border-slate-200
-                p-6
-                rounded-2xl
-                "
-              >
+              <div className=" mt-6 bg-slate-50 border border-slate-200 p-6 rounded-2xl " >
 
                 <div className=" flex justify-between items-center mb-4 " >
 
