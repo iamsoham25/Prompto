@@ -307,14 +307,7 @@ export default function ImproverPage() {
                   HEADER
               ===================== */}
 
-              <div
-                className="
-                flex
-                justify-between
-                items-center
-                mb-6
-                "
-              >
+              <div className=" flex justify-between items-center mb-6 " >
 
                 <h2 className="text-3xl font-bold">
 
@@ -327,17 +320,7 @@ export default function ImproverPage() {
 
                   onClick={copyPrompt}
 
-                  className="
-                  bg-green-600
-                  hover:bg-green-700
-                  text-white
-                  px-5
-                  py-2
-                  rounded-xl
-                  font-semibold
-                  transition
-                  "
-                >
+                  className=" bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-xl font-semibold transition " >
 
                   {
                     copied
@@ -355,16 +338,7 @@ export default function ImproverPage() {
                   SCORE
               ===================== */}
 
-              <div
-                className="
-                bg-green-50
-                border
-                border-green-100
-                p-6
-                rounded-2xl
-                mb-6
-                "
-              >
+              <div className=" bg-green-50 border border-green-100 p-6 rounded-2xl mb-6 " >
 
                 <h3 className="font-bold text-xl mb-2">
 
@@ -373,13 +347,7 @@ export default function ImproverPage() {
                 </h3>
 
 
-                <p
-                  className="
-                  text-4xl
-                  font-bold
-                  text-green-600
-                  "
-                >
+                <p className=" text-4xl font-bold text-green-600 " >
 
                   {result.improvement_score}%
 
