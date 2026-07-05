@@ -518,15 +518,7 @@ export default function ImproverPage() {
 
                 {/* WEAKNESSES */}
 
-                <div
-                  className="
-                  bg-orange-50
-                  border
-                  border-orange-100
-                  p-6
-                  rounded-2xl
-                  "
-                >
+                <div className=" bg-orange-50 border border-orange-100 p-6 rounded-2xl " >
 
                   <h3 className="font-bold text-xl mb-4">
 
