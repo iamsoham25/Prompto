@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter  # type: ignore[import]
 from app.config.db import db
 
 router = APIRouter()

@@ -577,13 +577,7 @@ export default function ImproverPage() {
                   BEFORE VS AFTER
               ===================== */}
 
-              <div
-                className="
-                grid
-                md:grid-cols-2
-                gap-6
-                "
-              >
+              <div className=" grid md:grid-cols-2 gap-6 " >
 
 
                 {/* ORIGINAL */}
