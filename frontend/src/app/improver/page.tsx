@@ -393,16 +393,7 @@ export default function ImproverPage() {
                   CHANGES
               ===================== */}
 
-              <div
-                className="
-                bg-blue-50
-                border
-                border-blue-100
-                p-6
-                rounded-2xl
-                mb-6
-                "
-              >
+              <div className=" bg-blue-50 border border-blue-100 p-6 rounded-2xl mb-6 " >
 
                 <h3 className="font-bold text-xl mb-4">
 
@@ -451,14 +442,7 @@ export default function ImproverPage() {
                   STRENGTHS + WEAKNESSES
               ===================== */}
 
-              <div
-                className="
-                grid
-                md:grid-cols-2
-                gap-6
-                mb-6
-                "
-              >
+              <div className=" grid md:grid-cols-2 gap-6 mb-6 " >
 
 
                 {/* STRENGTHS */}
