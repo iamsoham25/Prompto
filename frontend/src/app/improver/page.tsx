@@ -463,15 +463,7 @@ export default function ImproverPage() {
 
                 {/* STRENGTHS */}
 
-                <div
-                  className="
-                  bg-emerald-50
-                  border
-                  border-emerald-100
-                  p-6
-                  rounded-2xl
-                  "
-                >
+                <div className=" bg-emerald-50 border border-emerald-100 p-6 rounded-2xl " >
 
                   <h3 className="font-bold text-xl mb-4">
 
