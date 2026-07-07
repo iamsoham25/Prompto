@@ -290,17 +290,7 @@ export default function ImproverPage() {
         {
           result && (
 
-            <div
-              className="
-              mt-8
-              bg-white
-              rounded-3xl
-              p-8
-              shadow-lg
-              border
-              border-slate-200
-              "
-            >
+            <div className=" mt-8 bg-white rounded-3xl p-8 shadow-lg border border-slate-200 " >
 
 
               {/* =====================
