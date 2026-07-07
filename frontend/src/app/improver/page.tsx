@@ -179,15 +179,7 @@ export default function ImproverPage() {
         ========================== */}
 
         <div
-          className="
-          bg-white
-          rounded-3xl
-          p-8
-          shadow-lg
-          border
-          border-slate-200
-          "
-        >
+          className=" bg-white rounded-3xl p-8 shadow-lg border border-slate-200 " >
 
           <h2 className="text-2xl font-bold mb-4">
 
