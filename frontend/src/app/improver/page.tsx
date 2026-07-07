@@ -208,20 +208,7 @@ export default function ImproverPage() {
 
             placeholder="Example: Explain Machine Learning"
 
-            className="
-            w-full
-            border
-            border-slate-300
-            rounded-2xl
-            p-5
-            outline-none
-            resize-none
-            mb-4
-            text-lg
-            focus:ring-2
-            focus:ring-purple-500
-            focus:border-transparent
-            "
+            className=" w-full border border-slate-300 rounded-2xl p-5 outline-none resize-none mb-4 text-l focus:ring-2 focus:ring-purple-500 focus:border-transparent "
 
           />
 
