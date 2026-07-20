@@ -76,14 +76,12 @@ export default function TemplatesPage() {
         </p>
 
         <input
-            placeholder="Search templates..."
+          placeholder="Search templates..."
         />
 
         {/* CATEGORY FILTER */}
 
-        <div
-          className=" flex flex-wrap gap-3 mb-8 "
-        >
+        <div className=" flex flex-wrap gap-3 mb-8 " >
 
           {[
             "All",
