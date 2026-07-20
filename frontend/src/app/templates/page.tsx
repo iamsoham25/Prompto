@@ -71,10 +71,8 @@ export default function TemplatesPage() {
           AI Prompt Templates
         </h1>
 
-        <p
-          className=" text-slate-600 mb-8 "
-        >
-        Discover professional prompts used by developers,marketers, researchers and creators.
+        <p className=" text-slate-600 mb-8 " >
+          Discover professional prompts used by developers,marketers, researchers and creators.
         </p>
 
         <input
