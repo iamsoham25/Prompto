@@ -148,9 +148,7 @@ export default function TemplatesPage() {
 
                 </div>
 
-                <h2
-                  className=" text-xl font-bold mb-2 "
-                >
+                <h2 className=" text-xl font-bold mb-2 " >
                   {template.title}
                 </h2>
 
