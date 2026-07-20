@@ -67,9 +67,7 @@ export default function TemplatesPage() {
 
       <div className="max-w-7xl mx-auto">
 
-        <h1
-          className=" bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 rounded-3xl p-10 text-white mb-10 "
-        >
+        <h1 className=" bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 rounded-3xl p-10 text-white mb-10 " >
           AI Prompt Templates
         </h1>
 
