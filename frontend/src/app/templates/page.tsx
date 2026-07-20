@@ -140,9 +140,7 @@ export default function TemplatesPage() {
                     }
                   </span>
 
-                  <span
-                    className=" text-xs bg-green-100 text-green-700 py-1 rounded-full "
-                  >
+                  <span className=" text-xs bg-green-100 text-green-700 py-1 rounded-full " >
                     {
                       template.difficulty
                     }
