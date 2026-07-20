@@ -134,9 +134,7 @@ export default function TemplatesPage() {
 
                 <div className=" flex justify-between mb-4 " >
 
-                  <span
-                    className=" text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full "
-                  >
+                  <span className=" text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full " >
                     {
                       template.category
                     }
