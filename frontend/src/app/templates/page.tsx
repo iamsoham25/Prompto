@@ -132,10 +132,7 @@ export default function TemplatesPage() {
                 className=" bg-white rounded-3xl p-6 shadow-md border border-slate-200 "
               >
 
-                <div
-                  className=" flex justify-between mb-4
-                "
-                >
+                <div className=" flex justify-between mb-4 " >
 
                   <span
                     className=" text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full "
