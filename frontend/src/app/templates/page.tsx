@@ -99,9 +99,7 @@ export default function TemplatesPage() {
               onClick={() =>
                 setCategory(cat)
               }
-              className={` px-4 py-2
-              rounded-xl
-              border
+              className={` px-4 py-2 rounded-xl border
               ${
                 category === cat
                   ? "bg-blue-600 text-white"
