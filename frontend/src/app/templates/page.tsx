@@ -158,9 +158,7 @@ export default function TemplatesPage() {
                   }
                 </p>
 
-                <div
-                  className=" bg-slate-100 p-4 rounded-xl text-sm line-clamp-6 whitespace-pre-wrap "
-                >
+                <div className=" bg-slate-100 p-4 rounded-xl text-sm line-clamp-6 whitespace-pre-wrap " >
                   {template.prompt}
                 </div>
 
