@@ -152,9 +152,7 @@ export default function TemplatesPage() {
                   {template.title}
                 </h2>
 
-                <p
-                  className=" text-slate-600 mb-4 "
-                >
+                <p className=" text-slate-600 mb-4 " >
                   {
                     template.description
                   }
