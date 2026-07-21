@@ -84,7 +84,7 @@ const navItem = (path: string) =>
 
         {/* Navigation */}
 
-          <div className="flex items-center gap-5 ml-16">
+          <div className="flex items-center gap-3 ml-16">
 
             <Link
               href="/"
