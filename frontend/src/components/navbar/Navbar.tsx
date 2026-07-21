@@ -135,6 +135,13 @@ const navItem = (path: string) =>
             </Link>
 
             <Link
+              href="/evaluator"
+              className={navItem("/evaluator")}
+            >
+              Evaluator
+            </Link>
+
+            <Link
               href="/history"
               className={navItem("/history")}
             >
