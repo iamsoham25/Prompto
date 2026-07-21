@@ -1,256 +1,118 @@
-# app/services/prompt_evaluator.py
+import os
+import json
+
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY")
+)
+
 
 def evaluate_prompt(prompt: str):
 
-    prompt_lower = prompt.lower()
+    system_prompt = """
+You are one of the world's best Prompt Engineering experts.
 
-    # -------------------------
-    # Clarity
-    # -------------------------
+Your task is to evaluate the quality of a user's prompt.
 
-    word_count = len(prompt.split())
+Evaluate the prompt on these criteria:
 
-    if word_count >= 30:
-        clarity = 100
-    elif word_count >= 20:
-        clarity = 80
-    elif word_count >= 10:
-        clarity = 60
-    else:
-        clarity = 30
+1. Clarity
+2. Specificity
+3. Context
+4. Constraints
+5. Role Definition
+6. Output Format
+7. Examples
 
-    # -------------------------
-    # Specificity
-    # -------------------------
+Score each criterion from 0 to 100.
 
-    specificity_keywords = [
-        "summarize",
-        "analyze",
-        "compare",
-        "generate",
-        "explain",
-        "classify",
-        "evaluate",
-        "predict",
-        "design",
-        "optimize",
-        "recommend"
-    ]
+Also calculate an overall_score.
 
-    specificity_matches = sum(
-        keyword in prompt_lower
-        for keyword in specificity_keywords
+Difficulty:
+- Beginner
+- Intermediate
+- Advanced
+
+Return ONLY valid JSON.
+
+The JSON format MUST be:
+
+{
+  "overall_score": 0,
+  "clarity": 0,
+  "specificity": 0,
+  "context": 0,
+  "constraints": 0,
+  "role": 0,
+  "output_format": 0,
+  "examples": 0,
+  "difficulty": "",
+  "strengths": [],
+  "improvements": [],
+  "summary": ""
+}
+
+Do not return markdown.
+
+Do not return explanations.
+
+Return JSON only.
+"""
+
+    completion = client.chat.completions.create(
+
+        model="openai/gpt-4o-mini",
+
+        temperature=0.2,
+
+        messages=[
+            {
+                "role": "system",
+                "content": system_prompt
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
     )
 
-    specificity = min(100, specificity_matches * 20)
+    content = completion.choices[0].message.content
 
-    # -------------------------
-    # Context
-    # -------------------------
+    try:
 
-    context_keywords = [
-        "for",
-        "target audience",
-        "background",
-        "context",
-        "industry",
-        "business"
-    ]
+        return json.loads(content)
 
-    context_matches = sum(
-        keyword in prompt_lower
-        for keyword in context_keywords
-    )
+    except Exception:
 
-    context = min(100, context_matches * 20)
+        return {
 
-    # -------------------------
-    # Constraints
-    # -------------------------
+            "overall_score": 0,
 
-    constraint_keywords = [
-        "bullet points",
-        "table",
-        "json",
-        "under",
-        "within",
-        "maximum",
-        "minimum",
-        "step by step",
-        "must",
-        "only",
-        "avoid"
-    ]
+            "clarity": 0,
 
-    constraint_matches = sum(
-        keyword in prompt_lower
-        for keyword in constraint_keywords
-    )
+            "specificity": 0,
 
-    constraints = min(100, constraint_matches * 15)
+            "context": 0,
 
-    # -------------------------
-    # Role
-    # -------------------------
+            "constraints": 0,
 
-    role_keywords = [
-        "act as",
-        "you are",
-        "behave as",
-        "pretend to be",
-        "role"
-    ]
+            "role": 0,
 
-    role_matches = sum(
-        keyword in prompt_lower
-        for keyword in role_keywords
-    )
+            "output_format": 0,
 
-    role = min(100, role_matches * 25)
+            "examples": 0,
 
-    # -------------------------
-    # Output Format
-    # -------------------------
+            "difficulty": "Unknown",
 
-    output_keywords = [
-        "json",
-        "table",
-        "bullet points",
-        "markdown",
-        "csv",
-        "list",
-        "xml",
-        "yaml"
-    ]
+            "strengths": [],
 
-    output_matches = sum(
-        keyword in prompt_lower
-        for keyword in output_keywords
-    )
+            "improvements": [],
 
-    output_format = min(100, output_matches * 15)
-
-    # -------------------------
-    # Examples
-    # -------------------------
-
-    example_keywords = [
-        "example",
-        "for example",
-        "sample",
-        "input",
-        "output"
-    ]
-
-    example_matches = sum(
-        keyword in prompt_lower
-        for keyword in example_keywords
-    )
-
-    examples = min(100, example_matches * 20)
-
-    # -------------------------
-    # Overall Score
-    # -------------------------
-
-    overall_score = round(
-
-        (
-            clarity +
-            specificity +
-            context +
-            constraints +
-            role +
-            output_format +
-            examples
-
-        ) / 7
-
-    )
-
-    # -------------------------
-    # Difficulty
-    # -------------------------
-
-    if overall_score >= 85:
-        difficulty = "Advanced"
-
-    elif overall_score >= 60:
-        difficulty = "Intermediate"
-
-    else:
-        difficulty = "Beginner"
-
-    # -------------------------
-    # Strengths
-    # -------------------------
-
-    strengths = []
-
-    if clarity >= 80:
-        strengths.append("Prompt is clear and detailed")
-
-    if specificity >= 60:
-        strengths.append("Specific instructions are provided")
-
-    if role >= 60:
-        strengths.append("Strong role definition")
-
-    if context >= 60:
-        strengths.append("Useful context is included")
-
-    if output_format >= 60:
-        strengths.append("Output format is well defined")
-
-    if examples >= 60:
-        strengths.append("Examples improve prompt quality")
-
-    # -------------------------
-    # Improvements
-    # -------------------------
-
-    improvements = []
-
-    if context < 60:
-        improvements.append("Add more context")
-
-    if constraints < 60:
-        improvements.append("Specify constraints")
-
-    if role < 60:
-        improvements.append("Assign a clear AI role")
-
-    if output_format < 60:
-        improvements.append("Specify the desired output format")
-
-    if examples < 60:
-        improvements.append("Include an example input/output")
-
-    if specificity < 60:
-        improvements.append("Use more specific instructions")
-
-    return {
-
-        "overall_score": overall_score,
-
-        "clarity": clarity,
-
-        "specificity": specificity,
-
-        "context": context,
-
-        "constraints": constraints,
-
-        "role": role,
-
-        "output_format": output_format,
-
-        "examples": examples,
-
-        "difficulty": difficulty,
-
-        "strengths": strengths,
-
-        "improvements": improvements
-
-    }
+            "summary": "Failed to parse AI response."
+        }
