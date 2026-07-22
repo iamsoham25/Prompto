@@ -6,14 +6,15 @@ print("Dashboard V2 Loaded")
 router = APIRouter()
 
 analytics_collection = db["prompt_analytics"]
-
 prompt_collection = db["prompt_submissions"]
 
 
+# ==========================================================
+# Dashboard Analytics
+# ==========================================================
+
 @router.get("/analytics/{email}")
-async def get_dashboard_analytics(
-    email: str
-):
+async def get_dashboard_analytics(email: str):
 
     analytics = await analytics_collection.find_one(
         {
@@ -32,57 +33,176 @@ async def get_dashboard_analytics(
 
         "success": True,
 
-        "data": {
+        "cards": {
 
             "total_prompts":
-                analytics.get(
-                    "total_prompts",
-                    0
-                ),
+                analytics.get("total_prompts", 0),
 
             "average_score":
-                analytics.get(
-                    "average_score",
-                    0
-                ),
+                analytics.get("average_score", 0),
 
             "best_score":
+                analytics.get("best_score", 0),
+
+            "lowest_score":
+                analytics.get("lowest_score", 0)
+
+        },
+
+        "radar": [
+
+            {
+                "skill": "Clarity",
+                "score": analytics.get("clarity_avg", 0)
+            },
+
+            {
+                "skill": "Specificity",
+                "score": analytics.get("specificity_avg", 0)
+            },
+
+            {
+                "skill": "Context",
+                "score": analytics.get("context_avg", 0)
+            },
+
+            {
+                "skill": "Constraints",
+                "score": analytics.get("constraints_avg", 0)
+            },
+
+            {
+                "skill": "Role",
+                "score": analytics.get("role_avg", 0)
+            },
+
+            {
+                "skill": "Output",
+                "score": analytics.get("output_avg", 0)
+            },
+
+            {
+                "skill": "Examples",
+                "score": analytics.get("examples_avg", 0)
+            }
+
+        ],
+
+        "bar_chart": [
+
+            {
+                "name": "Clarity",
+                "value": analytics.get("clarity_avg", 0)
+            },
+
+            {
+                "name": "Specificity",
+                "value": analytics.get("specificity_avg", 0)
+            },
+
+            {
+                "name": "Context",
+                "value": analytics.get("context_avg", 0)
+            },
+
+            {
+                "name": "Constraints",
+                "value": analytics.get("constraints_avg", 0)
+            },
+
+            {
+                "name": "Role",
+                "value": analytics.get("role_avg", 0)
+            },
+
+            {
+                "name": "Output",
+                "value": analytics.get("output_avg", 0)
+            },
+
+            {
+                "name": "Examples",
+                "value": analytics.get("examples_avg", 0)
+            }
+
+        ],
+
+        "distribution":
+            analytics.get(
+                "distribution",
+                {}
+            ),
+
+        "insights": {
+
+            "strongest":
                 analytics.get(
-                    "best_score",
-                    0
+                    "strongest_skill",
+                    "-"
                 ),
 
-            "clarity":
+            "weakest":
                 analytics.get(
-                    "clarity_avg",
-                    0
-                ),
-
-            "context":
-                analytics.get(
-                    "context_avg",
-                    0
-                ),
-
-            "constraints":
-                analytics.get(
-                    "constraints_avg",
-                    0
-                ),
-
-            "specificity":
-                analytics.get(
-                    "specificity_avg",
-                    0
+                    "weakest_skill",
+                    "-"
                 )
+
         }
+
     }
 
 
+# ==========================================================
+# Prompt Trend
+# ==========================================================
+
+@router.get("/prompt-trend/{email}")
+async def get_prompt_trend(email: str):
+
+    prompts = await prompt_collection.find(
+        {
+            "user_email": email
+        }
+    ).sort(
+        "created_at",
+        1
+    ).to_list(length=None)
+
+    trend = []
+
+    for index, prompt in enumerate(prompts):
+
+        trend.append(
+
+            {
+
+                "prompt": index + 1,
+
+                "score":
+                    prompt.get(
+                        "overall_score",
+                        0
+                    )
+
+            }
+
+        )
+
+    return {
+
+        "success": True,
+
+        "trend": trend
+
+    }
+
+
+# ==========================================================
+# Prompt Mastery
+# ==========================================================
+
 @router.get("/prompt-mastery/{email}")
-async def get_prompt_mastery(
-    email: str
-):
+async def get_prompt_mastery(email: str):
 
     analytics = await analytics_collection.find_one(
         {
@@ -93,126 +213,52 @@ async def get_prompt_mastery(
     if not analytics:
 
         return {
+
             "success": False
+
         }
 
-    improvement = round(
-
-        analytics.get(
-            "best_score",
-            0
-        )
-        -
-        analytics.get(
-            "average_score",
-            0
-        ),
-
-        2
-    )
-
-    level = "Beginner"
-
-    avg = analytics.get(
+    average = analytics.get(
         "average_score",
         0
     )
 
-    if avg >= 8:
-        level = "Prompt Engineer"
-
-    elif avg >= 6:
-        level = "Advanced"
-
-    elif avg >= 3:
-        level = "Intermediate"
-
-    return {
-
-        "success": True,
-
-        "total_prompts":
-            analytics.get(
-                "total_prompts",
-                0
-            ),
-
-        "average_clarity":
-            analytics.get(
-                "clarity_avg",
-                0
-            ),
-
-        "average_context":
-            analytics.get(
-                "context_avg",
-                0
-            ),
-
-        "average_constraints":
-            analytics.get(
-                "constraints_avg",
-                0
-            ),
-
-        "average_specificity":
-            analytics.get(
-                "specificity_avg",
-                0
-            ),
-
-        "average_overall":
-            analytics.get(
-                "average_score",
-                0
-            ),
-
-        "best_score":
-            analytics.get(
-                "best_score",
-                0
-            ),
-
-        "improvement":
-            improvement,
-
-        "mastery_level":
-            level
-    }
-
-
-@router.get("/prompt-trend/{email}")
-async def get_prompt_trend(
-    email: str
-):
-
-    cursor = prompt_collection.find(
-        {
-            "user_email": email
-        }
-    ).sort(
-        "created_at",
-        1
+    best = analytics.get(
+        "best_score",
+        0
     )
 
-    prompts = await cursor.to_list(length=None)
+    improvement = round(
+        best - average,
+        2
+    )
 
-    for p in prompts:
-        print(p)
+    if average >= 90:
 
-    print(prompts)
+        level = "Master"
 
-    scores = [
-        p.get(
-            "score",
-            0
-        )
-        for p in prompts
-    ]
+    elif average >= 80:
+
+        level = "Advanced"
+
+    elif average >= 60:
+
+        level = "Intermediate"
+
+    else:
+
+        level = "Beginner"
 
     return {
 
         "success": True,
 
-        "scores": scores
+        "mastery_level": level,
+
+        "average_score": average,
+
+        "best_score": best,
+
+        "improvement": improvement
+
     }
