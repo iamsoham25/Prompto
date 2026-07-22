@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import API from "@/services/api";
 
 export default function EvaluatorPage() {
@@ -10,6 +11,8 @@ export default function EvaluatorPage() {
   const [loading, setLoading] = useState(false);
 
   const [evaluation, setEvaluation] = useState<any>(null);
+
+  const router = useRouter();
 
   const evaluatePrompt = async () => {
 
@@ -96,7 +99,22 @@ export default function EvaluatorPage() {
 
           <div
 
-            className="h-3 rounded-full bg-blue-600 transition-all duration-500"
+            className={`h-3 rounded-full transition-all duration-700
+
+            ${
+            value>=80
+            ?"bg-green-500"
+
+            :value>=60
+            ?"bg-blue-500"
+
+            :value>=40
+            ?"bg-yellow-500"
+
+            :"bg-red-500"
+            }
+
+            `}
 
             style={{
 
@@ -113,6 +131,118 @@ export default function EvaluatorPage() {
     );
 
   }
+
+  function OverviewCard({
+
+    title,
+
+    value,
+
+  }: {
+
+    title: string;
+
+    value: any;
+
+  }) {
+
+    return (
+
+      <div className="bg-white/10 rounded-2xl p-6">
+
+        <p className="text-white/80">
+
+          {title}
+
+        </p>
+  
+        <h2 className="text-4xl font-bold mt-2">
+
+          {value}
+
+        </h2>
+
+      </div>
+
+    );
+
+  }
+
+  <div className="bg-white rounded-3xl shadow-lg p-8">
+
+<h2 className="text-2xl font-bold mb-6">
+
+⚡ Quick Actions
+
+</h2>
+
+<div className="flex flex-wrap gap-5">
+
+<button
+
+onClick={()=>
+
+navigator.clipboard.writeText(
+
+JSON.stringify(
+
+evaluation,
+
+null,
+
+2
+
+)
+
+)
+
+}
+
+className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-2xl"
+
+>
+
+📋 Copy Evaluation
+
+</button>
+
+<button
+
+onClick={()=>
+
+router.push("/improver")
+
+}
+
+className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl"
+
+>
+
+✨ Improve Prompt
+
+</button>
+
+<button
+
+onClick={()=>{
+
+setEvaluation(null);
+
+setPrompt("");
+
+}}
+
+className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-2xl"
+
+>
+
+🗑 Evaluate Another Prompt
+
+</button>
+
+</div>
+
+</div>
 
   return (
 
@@ -178,7 +308,7 @@ export default function EvaluatorPage() {
 
               loading
 
-                ? "Analyzing..."
+                ? "🤖 AI is Evaluating..."
 
                 : "🚀 Evaluate Prompt"
 
@@ -221,15 +351,23 @@ export default function EvaluatorPage() {
 
                   <div className="text-center">
 
-                    <div className="text-7xl font-bold text-blue-600">
+                    <div className="flex flex-col items-center">
 
-                      {evaluation.overall_score}
+                      <div className="w-36 h-36 rounded-full border-[10px] border-blue-500 flex items-center justify-center shadow-lg">
 
-                    </div>
+                        <div className="text-center">
+                    
+                          <h1 className="text-5xl font-bold text-blue-600">
+                            {evaluation.overall_score}
+                          </h1>
 
-                    <div className="text-slate-500">
+                          <p className="text-slate-500">
+                            /100
+                          </p>
 
-                      /100
+                        </div>
+
+                      </div>
 
                     </div>
 
@@ -496,12 +634,117 @@ export default function EvaluatorPage() {
 
               </div>
 
+              {/* =======================================================
+                  AI SUMMARY
+              ======================================================= */}
+
+              <div className="bg-white rounded-3xl shadow-lg p-8">
+
+                <h2 className="text-3xl font-bold mb-6">
+
+                  🤖 AI Evaluation Summary
+
+                </h2>
+
+                <div className="bg-slate-50 rounded-2xl p-6">
+
+                  <p className="text-lg leading-8 text-slate-700">
+
+                    {
+
+                      evaluation.summary
+
+                        ||
+
+                      `This prompt has an overall quality score of
+                      ${evaluation.overall_score}/100.
+                      ${
+                        evaluation.overall_score >= 80
+
+                          ? " It is already a strong prompt."
+
+                          : evaluation.overall_score >= 60
+
+                          ? " It can be improved with better context and constraints."
+
+                             : " It requires significant improvements before being used."
+                      }`
+
+                    }
+              
+                  </p>
+
+                </div>
+
+              </div>
+
+              {/* =======================================================
+                  QUICK OVERVIEW
+              ======================================================= */}
+
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl shadow-xl text-white p-8">
+
+                <h2 className="text-3xl font-bold mb-8">
+
+                  📋 Evaluation Overview
+
+                </h2>
+
+                <div className="grid md:grid-cols-4 gap-6">
+
+                  <OverviewCard
+
+                    title="Overall"
+
+                    value={`${evaluation.overall_score}/100`}
+
+                  />
+
+                  <OverviewCard
+
+                    title="Difficulty"
+
+                    value={evaluation.difficulty}
+              
+                  />
+
+                  <OverviewCard
+
+                    title="Strengths"
+
+                    value={evaluation.strengths.length}
+
+                  />
+
+                  <OverviewCard
+
+                    title="Improvements"
+
+                    value={evaluation.improvements.length}
+
+                  />
+
+                </div>
+
+              </div>
+
+
+
             </div>
 
           )
+
         }
 
       </div>
+
+      <footer className="mt-16 text-center text-slate-500 pb-10">
+
+        <p>
+          Built with ❤️ 
+        </p>
+
+      </footer>
 
     </main>
 
