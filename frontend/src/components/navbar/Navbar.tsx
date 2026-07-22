@@ -84,7 +84,7 @@ const navItem = (path: string) =>
 
         {/* Navigation */}
 
-          <div className="flex items-center gap-3 ml-16">
+          <div className="flex items-center gap-1 ml-16">
 
             <Link
               href="/"
@@ -139,6 +139,13 @@ const navItem = (path: string) =>
               className={navItem("/evaluator")}
             >
               Evaluator
+            </Link>
+
+            <Link
+              href="/analytics"
+              className={navItem("/analytics")}
+            >
+              Analytics
             </Link>
 
             <Link

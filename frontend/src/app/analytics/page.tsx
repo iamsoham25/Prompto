@@ -5,6 +5,11 @@ import { useEffect, useState } from "react";
 import API from "@/services/api";
 
 import MetricCard from "@/components/analytics/MetricCard";
+import RadarSkillChart from "@/components/analytics/RadarSkillChart";
+import ScoreTrendChart from "@/components/analytics/ScoreTrendChart";
+import SkillBarChart from "@/components/analytics/SkillBarChart";
+import ScorePieChart from "@/components/analytics/ScorePieChart";
+import InsightCard from "@/components/analytics/InsightCard";
 
 export default function AnalyticsPage() {
 
@@ -25,7 +30,7 @@ export default function AnalyticsPage() {
       const email = localStorage.getItem("userEmail");
 
       const res = await API.get(
-        `/analytics/${email}`
+        `/dashboard/analytics/${email}`
       );
 
       if (res.data.success) {
@@ -135,6 +140,48 @@ export default function AnalyticsPage() {
           />
 
         </div>
+
+        <div className="grid lg:grid-cols-2 gap-8 mt-12">
+
+<RadarSkillChart
+data={analytics.radar}
+/>
+
+<SkillBarChart
+data={analytics.radar}
+/>
+
+<ScoreTrendChart
+data={analytics.trend}
+/>
+
+<ScorePieChart
+score={analytics.cards.average_score}
+/>
+
+</div>
+
+<div className="grid md:grid-cols-3 gap-6 mt-10">
+
+<InsightCard
+title="🏆 Best Score"
+value={`${analytics.cards.best_score}/10`}
+color="bg-green-100"
+/>
+
+<InsightCard
+title="📉 Lowest Score"
+value={`${analytics.cards.lowest_score}/10`}
+color="bg-red-100"
+/>
+
+<InsightCard
+title="🚀 Total Prompts"
+value={analytics.cards.total_prompts.toString()}
+color="bg-indigo-100"
+/>
+
+</div>
 
         {/* Placeholder for Charts */}
 
