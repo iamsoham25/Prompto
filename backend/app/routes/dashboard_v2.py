@@ -33,6 +33,10 @@ async def get_dashboard_analytics(email: str):
 
         "success": True,
 
+        # ----------------------------
+        # KPI Cards
+        # ----------------------------
+
         "cards": {
 
             "total_prompts":
@@ -48,6 +52,10 @@ async def get_dashboard_analytics(email: str):
                 analytics.get("lowest_score", 0)
 
         },
+
+        # ----------------------------
+        # Radar Chart
+        # ----------------------------
 
         "radar": [
 
@@ -88,6 +96,10 @@ async def get_dashboard_analytics(email: str):
 
         ],
 
+        # ----------------------------
+        # Bar Chart
+        # ----------------------------
+
         "bar_chart": [
 
             {
@@ -127,11 +139,19 @@ async def get_dashboard_analytics(email: str):
 
         ],
 
+        # ----------------------------
+        # Distribution
+        # ----------------------------
+
         "distribution":
             analytics.get(
                 "distribution",
                 {}
             ),
+
+        # ----------------------------
+        # AI Insights
+        # ----------------------------
 
         "insights": {
 
@@ -145,9 +165,31 @@ async def get_dashboard_analytics(email: str):
                 analytics.get(
                     "weakest_skill",
                     "-"
+                ),
+
+            "recommendation":
+                analytics.get(
+                    "recommendation",
+                    "Keep practicing Prompt Engineering."
                 )
 
-        }
+        },
+
+        # ----------------------------
+        # Prompt Mastery
+        # ----------------------------
+
+        "mastery_level":
+            analytics.get(
+                "mastery_level",
+                "Beginner"
+            ),
+
+        "improvement":
+            analytics.get(
+                "improvement",
+                0
+            )
 
     }
 
