@@ -162,6 +162,65 @@ async def update_user_analytics(user_email: str):
     )
 
     # ----------------------------
+    # AI Recommendation
+    # ----------------------------
+
+    recommendation_map = {
+
+        "Clarity":
+            "Write clearer and more detailed prompts.",
+
+        "Specificity":
+            "Use more precise instructions and define the expected task clearly.",
+
+        "Context":
+            "Provide additional background and context for the AI.",
+    
+        "Constraints":
+            "Specify constraints such as word limits, format, or rules.",
+
+        "Role":
+            "Assign a clear role to the AI (e.g., 'Act as a Data Scientist').",
+
+        "Output":
+            "Specify the desired output format such as JSON, table, or bullet points.",
+
+        "Examples":
+            "Include example inputs and outputs to guide the AI."
+
+    }
+
+    recommendation = recommendation_map.get(
+        weakest_skill,
+        "Keep practicing Prompt Engineering."
+    )
+
+    # ----------------------------
+    # Mastery Level
+    # ----------------------------
+
+    if average_score >= 90:
+
+        mastery_level = "Master"
+
+    elif average_score >= 75:
+
+        mastery_level = "Advanced"
+
+    elif average_score >= 60:
+
+        mastery_level = "Intermediate"
+
+    else:
+
+        mastery_level = "Beginner"
+
+    improvement = round(
+        best_score - average_score,
+        2
+    )
+
+    # ----------------------------
     # Save Analytics
     # ----------------------------
 
@@ -213,7 +272,13 @@ async def update_user_analytics(user_email: str):
 
                 "strongest_skill": strongest_skill,
 
-                "weakest_skill": weakest_skill
+                "weakest_skill": weakest_skill,
+
+                "recommendation": recommendation,
+
+                "mastery_level": mastery_level,
+
+                "improvement": improvement
 
             }
 
