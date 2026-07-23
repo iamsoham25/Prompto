@@ -1,3 +1,4 @@
+print("🔥 NEW ANALYTICS SERVICE LOADED")
 from app.config.db import db
 
 analytics_collection = db["prompt_analytics"]
@@ -6,11 +7,17 @@ prompt_collection = db["prompt_submissions"]
 
 async def update_user_analytics(user_email: str):
 
+    print("=" * 60)
+    print("Updating analytics for:", user_email)
+
+
     prompts = await prompt_collection.find(
         {
             "user_email": user_email
         }
     ).to_list(length=None)
+
+    print("Total prompts:", len(prompts))
 
     if not prompts:
         return
@@ -224,6 +231,27 @@ async def update_user_analytics(user_email: str):
     # Save Analytics
     # ----------------------------
 
+    # ... all your calculations ...
+
+    print("Saving analytics...")
+
+    print({
+        "average_score": average_score,
+        "best_score": best_score,
+        "lowest_score": lowest_score,
+        "strongest_skill": strongest_skill,
+        "weakest_skill": weakest_skill,
+        "recommendation": recommendation,
+        "mastery_level": mastery_level,
+        "improvement": improvement,
+        "distribution": {
+            "excellent": excellent,
+            "good": good,
+            "average": average,
+            "poor": poor
+        }
+    })
+
     await analytics_collection.update_one(
 
         {
@@ -287,3 +315,6 @@ async def update_user_analytics(user_email: str):
         upsert=True
 
     )
+
+    print("Analytics Saved Successfully!")
+    print("=" * 60)
