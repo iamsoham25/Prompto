@@ -1,41 +1,89 @@
 "use client";
 
+interface InsightCardProps {
+
+  strongest: string;
+
+  weakest: string;
+
+  recommendation: string;
+
+}
+
 export default function InsightCard({
 
-title,
+  strongest,
 
-value,
+  weakest,
 
-color
+  recommendation,
 
-}:{
+}: InsightCardProps) {
 
-title:string;
+  return (
 
-value:string;
+    <div className="bg-white rounded-3xl shadow-lg p-8">
 
-color:string;
+      <h2 className="text-3xl font-bold mb-8">
 
-}){
+        🧠 AI Insights
 
-return(
+      </h2>
 
-<div className={`${color} rounded-3xl shadow-lg p-6`}>
+      <div className="space-y-6">
 
-<h3 className="text-lg font-semibold">
+        <div className="bg-green-50 rounded-2xl p-5">
 
-{title}
+          <p className="text-sm text-slate-500">
 
-</h3>
+            Strongest Skill
 
-<p className="mt-3 text-3xl font-bold">
+          </p>
 
-{value}
+          <h3 className="text-2xl font-bold text-green-700">
 
-</p>
+            💪 {strongest}
 
-</div>
+          </h3>
 
-);
+        </div>
+
+        <div className="bg-red-50 rounded-2xl p-5">
+
+          <p className="text-sm text-slate-500">
+
+            Weakest Skill
+
+          </p>
+
+          <h3 className="text-2xl font-bold text-red-700">
+
+            🎯 {weakest}
+
+          </h3>
+
+        </div>
+
+        <div className="bg-indigo-50 rounded-2xl p-5">
+
+          <p className="text-sm text-slate-500">
+
+            AI Recommendation
+
+          </p>
+
+          <p className="mt-2 text-lg font-medium">
+
+            💡 {recommendation}
+
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  );
 
 }

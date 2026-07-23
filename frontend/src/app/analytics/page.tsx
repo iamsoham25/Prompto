@@ -11,6 +11,8 @@ import SkillBarChart from "@/components/analytics/SkillBarChart";
 import ScorePieChart from "@/components/analytics/ScorePieChart";
 import InsightCard from "@/components/analytics/InsightCard";
 
+const ScoreTrendChartComponent: any = ScoreTrendChart;
+
 export default function AnalyticsPage() {
 
   const [analytics, setAnalytics] = useState<any>(null);
@@ -149,7 +151,9 @@ data={analytics.radar}
 data={analytics.radar}
 />
 
-<ScoreTrendChart />
+<ScoreTrendChartComponent
+  data={analytics.trend}
+/>
 
 <ScorePieChart
 score={analytics.cards.average_score}
@@ -157,25 +161,51 @@ score={analytics.cards.average_score}
 
 </div>
 
-<div className="grid md:grid-cols-3 gap-6 mt-10">
+<div className="mt-10">
 
-<InsightCard
-title="🏆 Best Score"
-value={`${analytics.cards.best_score}/10`}
-color="bg-green-100"
-/>
+  <InsightCard
 
-<InsightCard
-title="📉 Lowest Score"
-value={`${analytics.cards.lowest_score}/10`}
-color="bg-red-100"
-/>
+    strongest={analytics.insights.strongest}
 
-<InsightCard
-title="🚀 Total Prompts"
-value={analytics.cards.total_prompts.toString()}
-color="bg-indigo-100"
-/>
+    weakest={analytics.insights.weakest}
+
+    recommendation={analytics.insights.recommendation}
+
+  />
+
+</div>
+
+<div className="mt-10 bg-white rounded-3xl shadow-lg p-8">
+
+  <h2 className="text-3xl font-bold mb-8">
+
+    🎯 Prompt Mastery
+
+  </h2>
+
+  <div className="grid md:grid-cols-4 gap-6">
+
+    <MetricCard
+      title="Mastery Level"
+      value={analytics.mastery_level}
+    />
+
+    <MetricCard
+      title="Average Score"
+      value={`${analytics.cards.average_score}`}
+    />
+
+    <MetricCard
+      title="Best Score"
+      value={`${analytics.cards.best_score}`}
+    />
+
+    <MetricCard
+      title="Improvement"
+      value={`${analytics.improvement}`}
+    />
+
+  </div>
 
 </div>
 
