@@ -29,9 +29,7 @@ export default function AnalyticsPage() {
 
       const email = localStorage.getItem("userEmail");
 
-      const res = await API.get(
-        `/dashboard/analytics/${email}`
-      );
+      const res = await API.get(`/dashboard/analytics/${email}`);
 
       if (res.data.success) {
 
@@ -151,9 +149,7 @@ data={analytics.radar}
 data={analytics.radar}
 />
 
-<ScoreTrendChart
-data={analytics.trend}
-/>
+<ScoreTrendChart />
 
 <ScorePieChart
 score={analytics.cards.average_score}
@@ -183,24 +179,7 @@ color="bg-indigo-100"
 
 </div>
 
-        {/* Placeholder for Charts */}
-
-        <div className="mt-12 bg-white rounded-3xl shadow-lg p-10">
-
-          <h2 className="text-3xl font-bold">
-
-            📈 Analytics Charts
-
-          </h2>
-
-          <p className="mt-4 text-slate-500">
-
-            Radar Chart, Line Chart, Bar Chart and Pie Chart will appear here in Part 3.
-
-          </p>
-
-        </div>
-
+        
       </div>
 
     </main>

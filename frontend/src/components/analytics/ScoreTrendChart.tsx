@@ -1,83 +1,92 @@
 "use client";
 
-import{
+import { useEffect, useState } from "react";
 
-ResponsiveContainer,
-LineChart,
-Line,
-XAxis,
-YAxis,
-CartesianGrid,
-Tooltip
+import API from "@/services/api";
 
-}from"recharts";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
 
-export default function ScoreTrendChart({
+export default function ScoreTrendChart() {
 
-data
+  const [chartData, setChartData] = useState<any[]>([]);
 
-}:{
+  useEffect(() => {
 
-data:number[];
+    loadTrend();
 
-}){
+  }, []);
 
-const chart = (data || []).map(
+  const loadTrend = async () => {
 
-(score,index)=>({
+    try {
 
-attempt:index+1,
+      const email = localStorage.getItem("userEmail");
 
-score
+      const res = await API.get(
+        `/dashboard/prompt-trend/${email}`
+      );
 
-})
+      if (res.data.success) {
 
-);
+        setChartData(res.data.trend);
 
-return(
+      }
 
-<div className="bg-white rounded-3xl shadow-lg p-6">
+    } catch (err) {
 
-<h2 className="text-2xl font-bold mb-6">
+      console.log(err);
 
-📈 Score Trend
+    }
 
-</h2>
+  };
 
-<div className="h-96">
+  return (
 
-<ResponsiveContainer>
+    <div className="bg-white rounded-3xl shadow-lg p-6">
 
-<LineChart data={chart}>
+      <h2 className="text-2xl font-bold mb-6">
 
-<CartesianGrid strokeDasharray="3 3"/>
+        📈 Score Trend
 
-<XAxis dataKey="attempt"/>
+      </h2>
 
-<YAxis domain={[0,10]}/>
+      <div className="h-96">
 
-<Tooltip/>
+        <ResponsiveContainer width="100%" height="100%">
 
-<Line
+          <LineChart data={chartData}>
 
-type="monotone"
+            <CartesianGrid strokeDasharray="3 3" />
 
-dataKey="score"
+            <XAxis dataKey="prompt" />
 
-stroke="#8B5CF6"
+            <YAxis domain={[0, 100]} />
 
-strokeWidth={3}
+            <Tooltip />
 
-/>
+            <Line
+              type="monotone"
+              dataKey="score"
+              stroke="#8B5CF6"
+              strokeWidth={3}
+            />
 
-</LineChart>
+          </LineChart>
 
-</ResponsiveContainer>
+        </ResponsiveContainer>
 
-</div>
+      </div>
 
-</div>
+    </div>
 
-);
+  );
 
 }
