@@ -161,19 +161,19 @@ export default function AnalyticsPage() {
 
         </div>
 
-<div className="mt-10">
+        <div className="mt-10">
 
-  <InsightCard
+          <InsightCard
 
-    strongest={analytics.insights.strongest}
+            strongest={analytics.insights.strongest}
 
-    weakest={analytics.insights.weakest}
+            weakest={analytics.insights.weakest}
 
-    recommendation={analytics.insights.recommendation}
+            recommendation={analytics.insights.recommendation}
 
-  />
+          />
 
-</div>
+        </div>
 
 <div className="mt-10 bg-white rounded-3xl shadow-lg p-8">
 
