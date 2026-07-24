@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { getChallenge } from "@/lib/challengeLoader";
 import API from "@/services/api";
+import EvaluationResult from "@/components/arena/EvaluationResult";
 
 export default function ChallengeEngine() {
 
@@ -164,87 +165,7 @@ export default function ChallengeEngine() {
 
                         </button>
 
-                        {result && (
-
-                        <div className="mt-8 bg-slate-50 rounded-2xl p-6 border">
-
-                            <h3 className="text-2xl font-bold">
-
-                                AI Evaluation
-
-                            </h3>
-
-                            <div className="mt-5 space-y-2">
-
-                               <p>
-
-                                    Overall Score:
-
-                                    <strong> {result.overall_score}/100</strong>
-
-                                </p>
-
-                                <p>
-
-                                    Clarity:
-
-                                    <strong> {result.clarity}</strong>
-
-                                </p>
-
-                                <p>
-
-                                    Context:
-
-                                    <strong> {result.context}</strong>
-
-                                </p>
-
-                                <p>
-
-                                    Specificity:
-
-                                    <strong> {result.specificity}</strong>
-
-                                </p>
-
-                                <p>
-
-                                    Constraints:
-
-                                    <strong> {result.constraints}</strong>
-
-                                </p>
-
-                                <p>
-
-                                    Role:
-
-                                    <strong> {result.role}</strong>
-
-                                </p>
-
-                                <p>
-
-                                    Output Format:
-
-                                    <strong> {result.output_format}</strong>
-
-                                </p>
-
-                                <p>
-
-                                    Examples:
-
-                                    <strong> {result.examples}</strong>
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    )}
+                        <EvaluationResult result={result} />
 
                     </div>
 
