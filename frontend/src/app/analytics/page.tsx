@@ -175,39 +175,39 @@ export default function AnalyticsPage() {
 
         </div>
 
-<div className="mt-10 bg-white rounded-3xl shadow-lg p-8">
+        <div className="mt-10 bg-white rounded-3xl shadow-lg p-8">
 
-  <h2 className="text-3xl font-bold mb-8">
+          <h2 className="text-3xl font-bold mb-8">
 
-    🎯 Prompt Mastery
+            🎯 Prompt Mastery
 
-  </h2>
+          </h2>
 
-  <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-6">
 
-    <MetricCard
-      title="Mastery Level"
-      value={analytics.mastery_level}
-    />
+            <MetricCard
+              title="Mastery Level"
+              value={analytics.mastery_level}
+            />
 
-    <MetricCard
-      title="Average Score"
-      value={`${analytics.cards.average_score}`}
-    />
+            <MetricCard
+              title="Average Score"
+              value={`${analytics.cards.average_score}`}
+            />
 
-    <MetricCard
-      title="Best Score"
-      value={`${analytics.cards.best_score}`}
-    />
+            <MetricCard
+              title="Best Score"
+              value={`${analytics.cards.best_score}`}
+            />
 
-    <MetricCard
-      title="Improvement"
-      value={`${analytics.improvement}`}
-    />
+            <MetricCard
+              title="Improvement"
+              value={`${analytics.improvement}`}
+            />
 
-  </div>
+          </div>
 
-</div>
+        </div>
 
         
       </div>
