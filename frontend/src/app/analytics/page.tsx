@@ -143,23 +143,23 @@ export default function AnalyticsPage() {
 
         <div className="grid lg:grid-cols-2 gap-8 mt-12">
 
-<RadarSkillChart
-data={analytics.radar}
-/>
+          <RadarSkillChart
+            data={analytics.radar}
+          />
 
-<SkillBarChart
-data={analytics.radar}
-/>
+          <SkillBarChart
+            data={analytics.radar}
+          />
 
-<ScoreTrendChartComponent
-  data={analytics.trend}
-/>
+          <ScoreTrendChartComponent
+            data={analytics.trend}
+          />
 
-<ScorePieChart
-score={analytics.cards.average_score}
-/>
+          <ScorePieChart
+            score={analytics.cards.average_score}
+          />
 
-</div>
+        </div>
 
 <div className="mt-10">
 
