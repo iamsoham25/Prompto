@@ -15,11 +15,17 @@ export default function ChallengeEngine() {
     );
 
     if (!challenge) {
-      return (
-        <div className="min-h-screen flex items-center justify-center text-2xl">
-          Challenge not found.
-        </div>
-      );
+
+        return (
+
+            <div className="min-h-screen flex items-center justify-center text-2xl">
+
+            Challenge not found.
+
+            </div>
+
+        );
+
     }
 
     const [prompt, setPrompt] = useState("");
