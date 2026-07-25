@@ -5,6 +5,7 @@ import { useState } from "react";
 import { getChallenge } from "@/lib/challengeLoader";
 import API from "@/services/api";
 import EvaluationResult from "@/components/arena/EvaluationResult";
+import ChallengeResult from "@/components/arena/ChallengeResult";
 
 export default function ChallengeEngine() {
 
@@ -57,6 +58,31 @@ export default function ChallengeEngine() {
 
                 setResult(res.data.evaluation);
 
+                const score = res.data.evaluation.overall_score;
+
+                let xp = 20;
+
+                if (score >= 90) xp = 100;
+                else if (score >= 80) xp = 80;
+                else if (score >= 70) xp = 60;
+                else if (score >= 60) xp = 40;
+
+                await API.post("/challenge-progress", {
+
+                 user_email: email,
+
+                 track,
+
+                 challenge_id: Number(id),
+
+                 score,
+
+                 xp,
+
+                  completed: score >= 70
+
+                });
+
             }
 
         } catch (err) {
@@ -70,6 +96,16 @@ export default function ChallengeEngine() {
         }
 
     };
+
+    const retryChallenge = () => {
+
+        setPrompt("");
+
+        setResult(null);
+
+    };
+
+    
 
     return (
 
@@ -166,6 +202,13 @@ export default function ChallengeEngine() {
                         </button>
 
                         <EvaluationResult result={result} />
+
+                        <ChallengeResult
+                            result={result}
+                            track={track as string}
+                            challengeId={Number(id)}
+                            onRetry={retryChallenge}
+                        />
 
                     </div>
 

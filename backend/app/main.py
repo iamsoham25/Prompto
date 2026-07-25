@@ -37,41 +37,25 @@ from app.routes.prompt_recommender import router as recommender_router
 
 from app.routes.dashboard import router as dashboard_router
 
-from app.routes.challenge_validator import (
-    router as challenge_validator_router
-)
+from app.routes.challenge_progress import router as challenge_progress_router
 
-from app.routes.prompt_submission import (
-    router as prompt_submission_router
-)
+from app.routes.challenge_validator import (router as challenge_validator_router)
 
-from app.routes.dashboard_v2 import (
-    router as dashboard_v2_router
-)
+from app.routes.prompt_submission import (router as prompt_submission_router)
 
-from app.routes.achievements import (
-    router as achievements_router
-)
+from app.routes.dashboard_v2 import (router as dashboard_v2_router)
 
-from app.routes.ai_coach import (
-    router as ai_coach_router
-)
+from app.routes.achievements import (router as achievements_router)
 
-from app.routes.prompt_trend import (
-    router as prompt_trend_router
-)
+from app.routes.ai_coach import (router as ai_coach_router)
 
-from app.routes.prompt_comparator import (
-    router as prompt_comparator_router
-)
+from app.routes.prompt_trend import (router as prompt_trend_router)
 
-from app.routes.analytics import (
-    router as analytics_router
-)
+from app.routes.prompt_comparator import (router as prompt_comparator_router)
 
-from app.routes.prompt_history import (
-    router as prompt_history_router
-)
+from app.routes.analytics import (router as analytics_router)
+
+from app.routes.prompt_history import (router as prompt_history_router)
 
 
 # Module-based routers
@@ -175,6 +159,8 @@ app.include_router(challenge_arena.router)
 app.include_router(challenge_validator_router)
 
 app.include_router(prompt_submission_router)
+
+app.include_router(challenge_progress_router)
 
 
 # ==========================

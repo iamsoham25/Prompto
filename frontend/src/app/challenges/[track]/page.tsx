@@ -3,12 +3,39 @@
 import { useParams } from "next/navigation";
 import { challengeTracks } from "@/data/challengeTracks";
 import ChallengeCard from "@/components/arena/ChallengeCard";
+import { useEffect, useState } from "react";
+import API from "@/services/api";
 
 export default function TrackPage() {
   const { track } = useParams();
 
-  const challenges =
-    challengeTracks[track as string] || [];
+  const challenges =challengeTracks[track as string] || [];
+
+  const [progress, setProgress] = useState<any[]>([]);
+
+  useEffect(() => {
+
+    loadProgress();
+
+  }, []);
+
+  const completedChallenges = new Set(
+
+    progress.map(
+
+      (item) => item.challenge_id
+
+        )
+
+    );
+
+  const completedCount = completedChallenges.size;
+
+  const progressPercentage = Math.round(
+
+      (completedCount / challenges.length) * 100
+
+  );
 
   if (challenges.length === 0) {
     return (
@@ -22,6 +49,32 @@ export default function TrackPage() {
     (sum, challenge) => sum + challenge.xp,
     0
   );
+
+  const loadProgress = async () => {
+
+    try {
+
+        const email = localStorage.getItem("userEmail");
+
+        const res = await API.get(
+
+            `/challenge-progress/${email}/${track}`
+
+        );
+
+        if(res.data.success){
+
+            setProgress(res.data.progress);
+
+        }
+
+    } catch(err){
+
+        console.log(err);
+
+    }
+
+}
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -90,6 +143,42 @@ export default function TrackPage() {
 
       </section>
 
+      <div className="bg-white rounded-3xl shadow-lg p-8 mb-10">
+
+<h2 className="text-3xl font-bold">
+
+🚀 Track Progress
+
+</h2>
+
+<div className="mt-6 w-full bg-gray-200 rounded-full h-5">
+
+<div
+
+className="bg-green-500 h-5 rounded-full"
+
+style={{
+
+width:`${progressPercentage}%`
+
+}}
+
+>
+
+</div>
+
+</div>
+
+<p className="mt-4 text-lg">
+
+{completedCount} / {challenges.length}
+
+Challenges Completed
+
+</p>
+
+</div>
+
       {/* Challenge List */}
 
       <section className="max-w-7xl mx-auto px-8 pb-20">
@@ -99,15 +188,17 @@ export default function TrackPage() {
           {challenges.map((challenge) => (
 
             <ChallengeCard
-  key={challenge.id}
-  id={challenge.id}
-  track={track as string}
-  title={challenge.title}
-  description={challenge.description}
-  difficulty={challenge.difficulty}
-  xp={challenge.xp}
-  time={challenge.time}
-/>
+              key={challenge.id}
+              id={challenge.id}
+              track={track as string}
+              title={challenge.title}
+              description={challenge.description}
+              difficulty={challenge.difficulty}
+              xp={challenge.xp}
+              time={challenge.time}
+              completed={completedChallenges.has(challenge.id)}
+              locked={challenge.locked}
+           />
 
           ))}
 
