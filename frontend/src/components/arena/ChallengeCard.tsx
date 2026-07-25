@@ -72,9 +72,9 @@ export default function ChallengeCard({
 
       {locked ? (
 
-  <button
-    disabled
-    className="
+        <button
+          disabled
+          className="
       mt-8
       w-full
       bg-gray-300
@@ -84,16 +84,16 @@ export default function ChallengeCard({
       font-semibold
       cursor-not-allowed
     "
-  >
-    🔒 Locked
-  </button>
+        >
+          🔒 Locked
+        </button>
 
-) : (
+      ) : (
 
-  <Link href={`/challenges/${track}/${id}`}>
+        <Link href={`/challenges/${track}/${id}`}>
 
-    <button
-      className="
+          <button
+            className="
         mt-8
         w-full
         bg-indigo-600
@@ -104,13 +104,13 @@ export default function ChallengeCard({
         font-semibold
         transition
       "
-    >
-      {completed ? "Review Challenge ↺" : "Start Challenge →"}
-    </button>
+          >
+            {completed ? "Review Challenge ↺" : "Start Challenge →"}
+          </button>
 
-  </Link>
+        </Link>
 
-)}
+      )}
     </div>
   );
 }
