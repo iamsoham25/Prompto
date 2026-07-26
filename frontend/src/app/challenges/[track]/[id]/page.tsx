@@ -64,27 +64,23 @@ export default function ChallengeEngine() {
 
                 const score = res.data.evaluation.overall_score;
 
-                let xp = 20;
+                let earnedXP = Math.floor(challenge.xp * 0.4);
 
-                if (score >= 90) xp = 100;
-                else if (score >= 80) xp = 80;
-                else if (score >= 70) xp = 60;
-                else if (score >= 60) xp = 40;
+                if (score >= passScore) {
+                    earnedXP = challenge.xp;
+                }
+
+                if (score >= bonusScore) {
+                    earnedXP = challenge.xp + bonusXP;
+                }
 
                 await API.post("/challenge-progress", {
-
-                 user_email: email,
-
-                 track,
-
-                 challenge_id: Number(id),
-
-                 score,
-
-                 xp,
-
-                  completed: score >= 70
-
+                     user_email: email,
+                     track,
+                     challenge_id: Number(id),
+                     score,
+                     xp: earnedXP,
+                     completed: score >= passScore,
                 });
 
             }
@@ -166,6 +162,114 @@ export default function ChallengeEngine() {
                             {challenge.description}
 
                         </p>
+
+                    </div>
+
+                    {/* Challenge Requirements */}
+
+                    <div className="bg-white rounded-3xl shadow-lg p-8">
+
+                        <h2 className="text-3xl font-bold">
+                            🎯 Challenge Requirements
+                        </h2>
+
+                        <div className="grid md:grid-cols-3 gap-6 mt-8">
+
+                            <div className="bg-green-50 rounded-2xl p-6">
+
+                                <p className="text-gray-500">
+                                    Passing Score Needed
+                                </p>
+
+                                <h2 className="text-4xl font-bold text-green-600 mt-2">
+                                    {passScore}/100
+                                </h2>
+
+                            </div>
+
+                            <div className="bg-yellow-50 rounded-2xl p-6">
+
+                                <p className="text-gray-500">
+                                    Challenge XP
+                                </p>
+
+                                <h2 className="text-4xl font-bold text-yellow-600 mt-2">
+                                    {challenge.xp}
+                                </h2>
+
+                            </div>
+
+                            <div className="bg-purple-50 rounded-2xl p-6">
+
+                                <p className="text-gray-500">
+                                    Bonus Reward
+                                </p>
+
+                                <h2 className="text-4xl font-bold text-purple-600 mt-2">
+                                    +{bonusXP}
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-10 mt-10">
+
+                            <div>
+
+                                <h3 className="font-bold text-xl mb-4">
+                                    📊 AI Evaluation
+                                </h3>
+
+                                <ul className="space-y-2 text-slate-600">
+
+                                    <li>✔ Clarity</li>
+
+                                    <li>✔ Specificity</li>
+
+                                    <li>✔ Context</li>
+
+                                    <li>✔ Role</li>
+
+                                    <li>✔ Constraints</li>
+
+                                    <li>✔ Output Format</li>
+
+                                    <li>✔ Examples</li>
+ 
+                                </ul>
+
+                            </div>
+
+                            <div>
+
+                                <h3 className="font-bold text-xl mb-4">
+                                    📜 Rules
+                                </h3>
+
+                                <ul className="space-y-2 text-slate-600">
+
+                                    <li>
+                                        ✅ Score at least <b>{passScore}/100</b> to pass.
+                                    </li>
+
+                                    <li>
+                                        ⭐ Score <b>{bonusScore}+</b> to earn an additional <b>{bonusXP} XP</b>.
+                                     </li>
+
+                                    <li>
+                                        🔁 Unlimited retries are allowed.
+                                    </li>
+
+                                    <li>
+                                        🏆 Your highest score will be saved.
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -265,6 +369,30 @@ export default function ChallengeEngine() {
                                 <span className="float-right font-semibold">
 
                                     {challenge.time}
+
+                                </span>
+
+                            </p>
+
+                            <p>
+
+                                Pass Score
+
+                                <span className="float-right font-semibold text-green-600">
+
+                                    {passScore}/100
+
+                                </span>
+
+                            </p>
+
+                            <p>
+
+                                Bonus XP
+
+                                <span className="float-right font-semibold text-purple-600">
+
+                                    +{bonusXP}
 
                                 </span>
 
