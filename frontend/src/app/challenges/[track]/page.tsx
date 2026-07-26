@@ -9,15 +9,36 @@ import API from "@/services/api";
 export default function TrackPage() {
   const { track } = useParams();
 
-  const challenges =challengeTracks[track as string] || [];
+  const challenges =
+    typeof track === "string" && track in challengeTracks
+      ? challengeTracks[track as keyof typeof challengeTracks]
+      : [];
 
   const [progress, setProgress] = useState<any[]>([]);
 
-  useEffect(() => {
+  const loadProgress = async () => {
 
+    try {
+
+        const email = localStorage.getItem("userEmail");
+
+        const res = await API.get(
+            `/challenge-progress/${email}/${track}`
+        );
+
+        if (res.data.success) {
+            setProgress(res.data.progress);
+        }
+
+    } catch (err) {
+        console.log(err);
+    }
+
+};
+
+useEffect(() => {
     loadProgress();
-
-  }, []);
+}, [track]);
 
   const completedChallenges = new Set(
 
@@ -31,11 +52,10 @@ export default function TrackPage() {
 
   const completedCount = completedChallenges.size;
 
-  const progressPercentage = Math.round(
-
-      (completedCount / challenges.length) * 100
-
-  );
+  const progressPercentage =
+  challenges.length > 0
+    ? Math.round((completedCount / challenges.length) * 100)
+    : 0;
 
   if (challenges.length === 0) {
     return (
@@ -50,31 +70,7 @@ export default function TrackPage() {
     0
   );
 
-  const loadProgress = async () => {
-
-    try {
-
-        const email = localStorage.getItem("userEmail");
-
-        const res = await API.get(
-
-            `/challenge-progress/${email}/${track}`
-
-        );
-
-        if(res.data.success){
-
-            setProgress(res.data.progress);
-
-        }
-
-    } catch(err){
-
-        console.log(err);
-
-    }
-
-}
+  
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -197,7 +193,7 @@ Challenges Completed
               xp={challenge.xp}
               time={challenge.time}
               completed={completedChallenges.has(challenge.id)}
-              locked={challenge.locked}
+          
            />
 
           ))}

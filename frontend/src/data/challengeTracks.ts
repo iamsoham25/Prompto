@@ -1,14 +1,23 @@
 import { codingChallenges } from "./codingChallenges";
-// Later we'll add:
-// import { jsonChallenges } from "./jsonChallenges";
-// import { marketingChallenges } from "./marketingChallenges";
-// ...
+import { summarizationChallenges } from "./summarizationChallenges";
+import { jsonChallenges } from "./jsonChallenges";
+import { marketingChallenges } from "./marketingChallenges";
+import { chainOfThoughtChallenges } from "./chainOfThoughtChallenges";
+import { agenticChallenges } from "./agenticChallenges";
+import { ragChallenges } from "./ragChallenges";
+import { enterpriseChallenges } from "./enterpriseChallenges";
+import { educationChallenges } from "./educationChallenges";
+import { creativeChallenges } from "./creativeChallenges";
 
-export const challengeTracks: Record<string, any[]> = {
-  coding: codingChallenges,
-
-  // json: jsonChallenges,
-  // marketing: marketingChallenges,
-  // rag: ragChallenges,
-  // enterprise: enterpriseChallenges,
+export const challengeTracks = {
+    coding: codingChallenges,
+    summarization: summarizationChallenges,
+    json: jsonChallenges,
+    marketing: marketingChallenges,
+    cot: chainOfThoughtChallenges,
+    agentic: agenticChallenges,
+    rag: ragChallenges,
+    enterprise: enterpriseChallenges,
+    education: educationChallenges,
+    creative: creativeChallenges,
 };
