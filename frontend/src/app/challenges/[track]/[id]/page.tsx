@@ -36,6 +36,10 @@ export default function ChallengeEngine() {
 
     const [result, setResult] = useState<any>(null);
 
+    const passScore = challenge.passScore ?? 70;
+    const bonusScore = challenge.bonusScore ?? 90;
+    const bonusXP = challenge.bonusXP ?? 20;
+
     const evaluatePrompt = async () => {
 
         if (!prompt.trim()) return;

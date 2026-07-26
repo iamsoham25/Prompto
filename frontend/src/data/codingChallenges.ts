@@ -6,6 +6,9 @@ export const codingChallenges = [
     difficulty: "Easy",
     xp: 50,
     time: "10 mins",
+    passScore: 70,
+    bonusScore: 85,
+    bonusXP: 20,
   },
   {
     id: 2,
@@ -14,6 +17,9 @@ export const codingChallenges = [
     difficulty: "Easy",
     xp: 60,
     time: "10 mins",
+    passScore: 70,
+    bonusScore: 85,
+    bonusXP: 20,
   },
   {
     id: 3,
@@ -22,6 +28,9 @@ export const codingChallenges = [
     difficulty: "Medium",
     xp: 70,
     time: "15 mins",
+    passScore: 75,
+    bonusScore: 90,
+    bonusXP: 25,
   },
   {
     id: 4,
@@ -30,6 +39,9 @@ export const codingChallenges = [
     difficulty: "Medium",
     xp: 80,
     time: "15 mins",
+    passScore: 75,
+    bonusScore: 90,
+    bonusXP: 25,
   },
   {
     id: 5,
@@ -38,6 +50,9 @@ export const codingChallenges = [
     difficulty: "Medium",
     xp: 90,
     time: "20 mins",
+    passScore: 75,
+    bonusScore: 90,
+    bonusXP: 30,
   },
   {
     id: 6,
@@ -46,6 +61,9 @@ export const codingChallenges = [
     difficulty: "Hard",
     xp: 100,
     time: "20 mins",
+    passScore: 80,
+    bonusScore: 95,
+    bonusXP: 35,
   },
   {
     id: 7,
@@ -54,6 +72,9 @@ export const codingChallenges = [
     difficulty: "Hard",
     xp: 110,
     time: "25 mins",
+    passScore: 80,
+    bonusScore: 95,
+    bonusXP: 35,
   },
   {
     id: 8,
@@ -62,6 +83,9 @@ export const codingChallenges = [
     difficulty: "Hard",
     xp: 120,
     time: "25 mins",
+    passScore: 80,
+    bonusScore: 95,
+    bonusXP: 40,
   },
   {
     id: 9,
@@ -70,6 +94,9 @@ export const codingChallenges = [
     difficulty: "Expert",
     xp: 140,
     time: "30 mins",
+    passScore: 85,
+    bonusScore: 98,
+    bonusXP: 50,
   },
   {
     id: 10,
@@ -78,5 +105,8 @@ export const codingChallenges = [
     difficulty: "Master",
     xp: 160,
     time: "35 mins",
+    passScore: 90,
+    bonusScore: 100,
+    bonusXP: 60,
   },
 ];

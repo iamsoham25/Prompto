@@ -184,17 +184,16 @@ Challenges Completed
           {challenges.map((challenge) => (
 
             <ChallengeCard
-              key={challenge.id}
-              id={challenge.id}
-              track={track as string}
-              title={challenge.title}
-              description={challenge.description}
-              difficulty={challenge.difficulty}
-              xp={challenge.xp}
-              time={challenge.time}
-              completed={completedChallenges.has(challenge.id)}
-          
-           />
+  key={challenge.id}
+  id={challenge.id}
+  track={track as string}
+  title={challenge.title}
+  description={challenge.description}
+  difficulty={challenge.difficulty}
+  xp={challenge.xp}
+  time={challenge.time}
+  completed={completedChallenges.has(challenge.id)}
+/>
 
           ))}
 
