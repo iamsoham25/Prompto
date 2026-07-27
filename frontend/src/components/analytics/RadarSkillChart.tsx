@@ -1,29 +1,22 @@
 "use client";
 
-import {
-Radar,
-RadarChart,
-PolarGrid,
-PolarAngleAxis,
-PolarRadiusAxis,
-ResponsiveContainer
-} from "recharts";
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 
 export default function RadarSkillChart({
-data,
-}:{
-data:any[];
-}){
+    data,
+        }:{
+        data:any[];
+    }){
 
-return(
+    return(
 
-<div className="bg-white rounded-3xl shadow-lg p-6">
+    <div className="bg-white rounded-3xl shadow-lg p-6">
 
-<h2 className="text-2xl font-bold mb-6">
-🎯 Skill Radar
-</h2>
+        <h2 className="text-2xl font-bold mb-6">
+            🎯 Skill Radar
+        </h2>
 
-<div className="h-96">
+        <div className="h-96">
 
 <ResponsiveContainer>
 
