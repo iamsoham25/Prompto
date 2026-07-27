@@ -31,15 +31,10 @@ export default function TrackCard({
         shadow-lg
         overflow-hidden
         hover:shadow-2xl
-        hover:-translate-y-2
-        transition-all
-        duration-300
-      "
+        hover:-translate-y-2 transition-all duration-300 "
     >
       {/* Top Gradient */}
-      <div
-        className={`bg-gradient-to-r ${color} p-6 text-white`}
-      >
+      <div className={`bg-gradient-to-r ${color} p-6 text-white`} >
         <div className="text-5xl">{icon}</div>
 
         <h2 className="mt-4 text-2xl font-bold">
@@ -76,8 +71,7 @@ export default function TrackCard({
 
         <Link href={`/challenges/${slug}`}>
           <button
-            className="
-              mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition "
+            className=" mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition "
           >
             Open Track →
           </button>
