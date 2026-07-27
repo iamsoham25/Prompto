@@ -27,11 +27,7 @@ export default function TrackCard({
     <div
       className="
         bg-white
-        rounded-3xl
-        shadow-lg
-        overflow-hidden
-        hover:shadow-2xl
-        hover:-translate-y-2 transition-all duration-300 "
+        rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 "
     >
       {/* Top Gradient */}
       <div className={`bg-gradient-to-r ${color} p-6 text-white`} >
