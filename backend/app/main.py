@@ -57,6 +57,8 @@ from app.routes.analytics import (router as analytics_router)
 
 from app.routes.prompt_history import (router as prompt_history_router)
 
+from app.routes.challenge_submission import router as challenge_submission_router
+
 
 # Module-based routers
 
@@ -120,6 +122,8 @@ app.include_router(chat_router)
 app.include_router(conversation_router)
 
 app.include_router(challenge_router)
+
+app.include_router(challenge_submission_router)
 
 
 # ==========================

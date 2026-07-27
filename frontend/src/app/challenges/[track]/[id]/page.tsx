@@ -83,6 +83,30 @@ export default function ChallengeEngine() {
                      completed: score >= passScore,
                 });
 
+                await API.post("/submit-challenge", {
+
+                    user_email: email,
+
+                    track,
+
+                    challenge_id: Number(id),
+
+                    challenge_title: challenge.title,
+
+                    difficulty: challenge.difficulty,
+
+                    prompt,
+
+                    evaluation: res.data.evaluation,
+
+                    score,
+
+                    xp: earnedXP,
+
+                    passed: score >= challenge.passScore
+
+                });
+
             }
 
         } catch (err) {

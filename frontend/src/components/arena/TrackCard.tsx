@@ -83,10 +83,7 @@ export default function TrackCard({
               hover:bg-orange-600
               text-white
               py-3
-              rounded-xl
-              font-semibold
-              transition
-            "
+              rounded-xl font-semibold transition "
           >
             Open Track →
           </button>
