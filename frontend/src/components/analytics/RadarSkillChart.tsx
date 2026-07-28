@@ -10,7 +10,7 @@ export default function RadarSkillChart({
 
     return(
 
-    <div className="bg-white rounded-3xl shadow-lg p-6">
+        <div className="bg-white rounded-3xl shadow-lg p-6">
 
         <h2 className="text-2xl font-bold mb-6">
             🎯 Skill Radar
@@ -33,15 +33,15 @@ export default function RadarSkillChart({
                                     stroke="#6366F1"
                                     fill="#6366F1"
                                     fillOpacity={0.6}
-/>
+                                />
 
-</RadarChart>
+                </RadarChart>
 
-</ResponsiveContainer>
+            </ResponsiveContainer>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 );
 
