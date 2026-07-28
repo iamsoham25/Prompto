@@ -22,18 +22,18 @@ export default function RadarSkillChart({
 
                     <RadarChart data={data || []}>
 
-                    <PolarGrid/>
+                        <PolarGrid/>
 
-                        <PolarAngleAxis dataKey="skill"/>
+                            <PolarAngleAxis dataKey="skill"/>
 
-                            <PolarRadiusAxis domain={[0,10]}/>
+                                <PolarRadiusAxis domain={[0,10]}/>
 
-                                <Radar
-                                    dataKey="score"
-                                    stroke="#6366F1"
-                                    fill="#6366F1"
-                                    fillOpacity={0.6}
-                                />
+                                 <Radar
+                                     dataKey="score"
+                                     stroke="#6366F1"
+                                     fill="#6366F1"
+                                     fillOpacity={0.6}
+                                 />
 
                 </RadarChart>
 
