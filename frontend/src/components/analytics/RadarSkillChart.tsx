@@ -18,9 +18,9 @@ export default function RadarSkillChart({
 
         <div className="h-96">
 
-<ResponsiveContainer>
+            <ResponsiveContainer>
 
-<RadarChart data={data || []}>
+                <RadarChart data={data || []}>
 
 <PolarGrid/>
 
