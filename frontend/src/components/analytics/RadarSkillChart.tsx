@@ -12,15 +12,15 @@ export default function RadarSkillChart({
 
         <div className="bg-white rounded-3xl shadow-lg p-6">
 
-        <h2 className="text-2xl font-bold mb-6">
-            🎯 Skill Radar
-        </h2>
+            <h2 className="text-2xl font-bold mb-6">
+                🎯 Skill Radar
+            </h2>
 
-        <div className="h-96">
+            <div className="h-96">
 
-            <ResponsiveContainer>
+                <ResponsiveContainer>
 
-                <RadarChart data={data || []}>
+                    <RadarChart data={data || []}>
 
                     <PolarGrid/>
 
