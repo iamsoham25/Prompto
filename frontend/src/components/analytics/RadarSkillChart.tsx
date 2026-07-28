@@ -39,10 +39,10 @@ export default function RadarSkillChart({
 
                 </ResponsiveContainer>
 
+            </div>
+
         </div>
 
-    </div>
-
-);
+    );
 
 }
