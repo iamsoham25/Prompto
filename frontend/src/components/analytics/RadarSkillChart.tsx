@@ -24,9 +24,9 @@ export default function RadarSkillChart({
 
                         <PolarGrid/>
 
-                            <PolarAngleAxis dataKey="skill"/>
+                        <PolarAngleAxis dataKey="skill"/>
 
-                                <PolarRadiusAxis domain={[0,10]}/>
+                        <PolarRadiusAxis domain={[0,10]}/>
 
                                     <Radar
                                         dataKey="score"
