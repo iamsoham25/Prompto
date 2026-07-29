@@ -28,8 +28,8 @@ export default function RadarSkillChart({
 
                         <PolarRadiusAxis domain={[0,10]}/>
 
-                                    <Radar
-                                        dataKey="score"
+                        <Radar
+                            dataKey="score"
                                         stroke="#6366F1"
                                         fill="#6366F1"
                                         fillOpacity={0.6}
