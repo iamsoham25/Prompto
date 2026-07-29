@@ -32,8 +32,8 @@ export default function RadarSkillChart({
                             dataKey="score"
                             stroke="#6366F1"
                             fill="#6366F1"
-                                        fillOpacity={0.6}
-                                    />
+                            fillOpacity={0.6}
+                            />
 
                     </RadarChart>
 
