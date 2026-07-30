@@ -40,13 +40,13 @@ return(
 
         🥧 Average Score
 
-</h2>
+    </h2>
 
-<div className="h-96">
+    <div className="h-96">
 
-<ResponsiveContainer>
+        <ResponsiveContainer>
 
-<PieChart>
+            <PieChart>
 
 <Pie
 
