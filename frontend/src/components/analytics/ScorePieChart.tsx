@@ -12,35 +12,35 @@ export default function ScorePieChart({
 
 }){
 
-const data=[
+    const data=[
 
-    {
+        {
 
-        name:"Score",
+            name:"Score",
 
-        value: score ?? 0
+            value: score ?? 0
 
-    },
+        },
 
-    {
+        {
 
-        name:"Remaining",
+            name:"Remaining",
 
-        value: 10 - (score ?? 0)
+            value: 10 - (score ?? 0)
 
-    }
+       }
 
-];
+    ];
 
-return(
+    return(
 
-    <div className="bg-white rounded-3xl shadow-lg p-6">
+        <div className="bg-white rounded-3xl shadow-lg p-6">
 
-        <h2 className="text-2xl font-bold mb-6">
+            <h2 className="text-2xl font-bold mb-6">
 
-            🥧 Average Score
+                🥧 Average Score
 
-        </h2>
+            </h2>
 
         <div className="h-96">
 
@@ -66,9 +66,9 @@ return(
 
             </ResponsiveContainer>
 
-    </div>
+        </div>
 
-</div>
+    </div>
 
 );
 
