@@ -1,17 +1,10 @@
 "use client";
 
-import{
-
-ResponsiveContainer,
-PieChart,
-Pie,
-Tooltip
-
-}from"recharts";
+import{ ResponsiveContainer, PieChart, Pie, Tooltip }from"recharts";
 
 export default function ScorePieChart({
 
-score
+    score
 
 }:{
 
