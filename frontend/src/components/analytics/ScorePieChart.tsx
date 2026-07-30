@@ -6,9 +6,9 @@ export default function ScorePieChart({
 
     score
 
-}:{
+    }:{
 
-score:number;
+    score:number;
 
 }){
 
