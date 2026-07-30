@@ -14,11 +14,11 @@ export default function ScorePieChart({
 
 const data=[
 
-{
+    {
 
-name:"Score",
+        name:"Score",
 
-value: score ?? 0
+        value: score ?? 0
 
 },
 
