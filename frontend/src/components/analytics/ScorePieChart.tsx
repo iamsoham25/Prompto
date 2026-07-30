@@ -48,21 +48,21 @@ return(
 
             <PieChart>
 
-<Pie
+                <Pie
 
-data={data}
+                    data={data}
 
-dataKey="value"
+                    dataKey="value"
 
-outerRadius={120}
+                    outerRadius={120}
 
-fill="#10B981"
+                    fill="#10B981"
 
-/>
+                    />
 
-<Tooltip/>
+                <Tooltip/>
 
-</PieChart>
+            </PieChart>
 
 </ResponsiveContainer>
 
