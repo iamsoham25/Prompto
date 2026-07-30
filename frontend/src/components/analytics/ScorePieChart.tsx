@@ -38,35 +38,35 @@ return(
 
         <h2 className="text-2xl font-bold mb-6">
 
-        🥧 Average Score
+            🥧 Average Score
 
-    </h2>
+        </h2>
 
-    <div className="h-96">
+        <div className="h-96">
 
-        <ResponsiveContainer>
+            <ResponsiveContainer>
 
-            <PieChart>
+                <PieChart>
 
-                <Pie
+                    <Pie
 
-                    data={data}
+                        data={data}
 
-                    dataKey="value"
+                        dataKey="value"
 
-                    outerRadius={120}
+                        outerRadius={120}
 
-                    fill="#10B981"
+                        fill="#10B981"
 
-                    />
+                       />
 
-                <Tooltip/>
+                    <Tooltip/>
 
-            </PieChart>
+                </PieChart>
 
-</ResponsiveContainer>
+            </ResponsiveContainer>
 
-</div>
+    </div>
 
 </div>
 
