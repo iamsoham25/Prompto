@@ -28,17 +28,17 @@ const data=[
 
         value: 10 - (score ?? 0)
 
-}
+    }
 
 ];
 
 return(
 
-<div className="bg-white rounded-3xl shadow-lg p-6">
+    <div className="bg-white rounded-3xl shadow-lg p-6">
 
-<h2 className="text-2xl font-bold mb-6">
+        <h2 className="text-2xl font-bold mb-6">
 
-🥧 Average Score
+        🥧 Average Score
 
 </h2>
 
