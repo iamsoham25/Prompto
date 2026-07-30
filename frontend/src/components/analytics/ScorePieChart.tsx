@@ -20,13 +20,13 @@ const data=[
 
         value: score ?? 0
 
-},
+    },
 
-{
+    {
 
-name:"Remaining",
+        name:"Remaining",
 
-value: 10 - (score ?? 0)
+        value: 10 - (score ?? 0)
 
 }
 
