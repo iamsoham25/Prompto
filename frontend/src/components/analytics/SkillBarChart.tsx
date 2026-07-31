@@ -1,8 +1,6 @@
 "use client";
 
-import{
-
-ResponsiveContainer,
+    import{ ResponsiveContainer,
 BarChart,
 Bar,
 XAxis,
