@@ -22,11 +22,11 @@ export default function SkillBarChart({
 
             </h2>
 
-<div className="h-96">
+            <div className="h-96">
 
-<ResponsiveContainer>
+                <ResponsiveContainer>
 
-<BarChart data={data || []}>
+                    <BarChart data={data || []}>
 
 <CartesianGrid strokeDasharray="3 3"/>
 
