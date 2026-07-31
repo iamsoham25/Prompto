@@ -12,11 +12,11 @@ export default function SkillBarChart({
 
 }){
 
-return(
+    return(
 
-<div className="bg-white rounded-3xl shadow-lg p-6">
+        <div className="bg-white rounded-3xl shadow-lg p-6">
 
-<h2 className="text-2xl font-bold mb-6">
+            <h2 className="text-2xl font-bold mb-6">
 
 📊 Skill Comparison
 
