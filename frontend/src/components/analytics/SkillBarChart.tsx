@@ -32,9 +32,9 @@ export default function SkillBarChart({
 
                         <XAxis dataKey="skill"/>
 
-<YAxis domain={[0,10]}/>
+                        <YAxis domain={[0,10]}/>
 
-<Tooltip/>
+                        <Tooltip/>
 
 <Bar
 
