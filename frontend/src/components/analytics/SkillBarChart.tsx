@@ -28,9 +28,9 @@ export default function SkillBarChart({
 
                     <BarChart data={data || []}>
 
-<CartesianGrid strokeDasharray="3 3"/>
+                        <CartesianGrid strokeDasharray="3 3"/>
 
-<XAxis dataKey="skill"/>
+                        <XAxis dataKey="skill"/>
 
 <YAxis domain={[0,10]}/>
 
