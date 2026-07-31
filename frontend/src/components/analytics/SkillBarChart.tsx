@@ -18,9 +18,9 @@ export default function SkillBarChart({
 
             <h2 className="text-2xl font-bold mb-6">
 
-📊 Skill Comparison
+                📊 Skill Comparison
 
-</h2>
+            </h2>
 
 <div className="h-96">
 
