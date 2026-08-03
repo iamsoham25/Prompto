@@ -38,9 +38,9 @@ export default function SkillBarChart({
 
                     <Bar
 
-dataKey="score"
+                    dataKey="score"
 
-fill="#4F46E5"
+                    fill="#4F46E5"
 
 />
 
