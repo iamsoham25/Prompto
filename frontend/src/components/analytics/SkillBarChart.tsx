@@ -46,9 +46,9 @@ export default function SkillBarChart({
 
                     </BarChart>
 
-</ResponsiveContainer>
+                </ResponsiveContainer>
 
-</div>
+            </div>
 
 </div>
 
