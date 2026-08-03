@@ -36,7 +36,7 @@ export default function SkillBarChart({
 
                         <Tooltip/>
 
-<Bar
+        <Bar
 
 dataKey="score"
 
