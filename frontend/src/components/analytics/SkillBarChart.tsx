@@ -40,11 +40,11 @@ export default function SkillBarChart({
 
                         dataKey="score"
 
-                    fill="#4F46E5"
+                        fill="#4F46E5"
 
-                 />
+                        />
 
-</BarChart>
+                    </BarChart>
 
 </ResponsiveContainer>
 
