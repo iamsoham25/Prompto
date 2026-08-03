@@ -50,7 +50,7 @@ export default function SkillBarChart({
 
             </div>
 
-</div>
+        </div>
 
 );
 
