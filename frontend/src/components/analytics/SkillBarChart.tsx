@@ -36,13 +36,13 @@ export default function SkillBarChart({
 
                         <Tooltip/>
 
-                    <Bar
+                        <Bar
 
-                    dataKey="score"
+                        dataKey="score"
 
                     fill="#4F46E5"
 
-/>
+                 />
 
 </BarChart>
 
