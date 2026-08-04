@@ -1,9 +1,15 @@
 import Hero from "@/components/home/Hero";
+import Marquee from "@/components/home/Marquee";
+import WhatIsPrompto from "@/components/home/WhatIsPrompto";
+import StoryIntro from "@/components/home/StoryIntro";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-white">
+    <main className="overflow-x-hidden bg-white text-slate-950">
       <Hero />
+      <Marquee />
+      <WhatIsPrompto />
+      <StoryIntro />
     </main>
   );
 }
