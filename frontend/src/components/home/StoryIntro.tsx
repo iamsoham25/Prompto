@@ -1,69 +1,51 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 
+const ease = [0.16, 1, 0.3, 1] as const;
+
 export default function StoryIntro() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section
       className="
-        relative
-        overflow-hidden
+        relative overflow-hidden
         bg-[#09090f]
-        px-5
-        py-28
+        px-5 py-28
         text-white
 
-        sm:px-8
-        sm:py-36
+        sm:px-8 sm:py-36
 
-        lg:px-12
-        lg:py-44
+        lg:px-12 lg:py-44
       "
     >
-      {/* Background glow */}
+      {/* Static background glows */}
 
-      <motion.div
-        animate={{
-          x: [0, 120, 0],
-          y: [0, 50, 0],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
+      <div
         className="
-          absolute
-          left-[10%]
-          top-[10%]
-          h-[400px]
-          w-[400px]
+          pointer-events-none
+          absolute left-[5%] top-[10%]
+          hidden h-[300px] w-[300px]
           rounded-full
-          bg-purple-700/20
-          blur-[130px]
+          bg-purple-700/15
+          blur-[80px]
+
+          md:block
         "
       />
 
-      <motion.div
-        animate={{
-          x: [0, -80, 0],
-          y: [0, -40, 0],
-        }}
-        transition={{
-          duration: 14,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
+      <div
         className="
-          absolute
-          bottom-[-100px]
-          right-[5%]
-          h-[450px]
-          w-[450px]
+          pointer-events-none
+          absolute bottom-[-100px] right-[5%]
+          hidden h-[320px] w-[320px]
           rounded-full
-          bg-pink-600/15
-          blur-[140px]
+          bg-pink-600/10
+          blur-[80px]
+
+          md:block
         "
       />
 
@@ -71,9 +53,9 @@ export default function StoryIntro() {
 
       <div
         className="
-          absolute
-          inset-0
-          opacity-[0.05]
+          pointer-events-none
+          absolute inset-0
+          opacity-[0.04]
         "
         style={{
           backgroundImage: `
@@ -84,38 +66,37 @@ export default function StoryIntro() {
         }}
       />
 
-      {/* Content */}
-
       <div
         className="
-          relative
-          z-10
-          mx-auto
-          max-w-6xl
+          relative z-10
+          mx-auto max-w-6xl
           text-center
         "
       >
         <motion.p
-          initial={{
-            opacity: 0,
-            y: 35,
-          }}
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                  y: 25,
+                }
+          }
           whileInView={{
             opacity: 1,
             y: 0,
           }}
           viewport={{
             once: true,
-            amount: 0.5,
+            amount: 0.4,
           }}
           transition={{
-            duration: 0.7,
+            duration: 0.55,
+            ease,
           }}
           className="
-            text-4xl
-            font-black
-            uppercase
-            leading-tight
+            text-4xl font-black
+            uppercase leading-tight
             tracking-[-0.04em]
 
             sm:text-5xl
@@ -128,26 +109,26 @@ export default function StoryIntro() {
         </motion.p>
 
         <motion.div
-          initial={{
-            opacity: 0,
-            scaleY: 0,
-          }}
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                  scaleY: 0,
+                }
+          }
           whileInView={{
             opacity: 1,
             scaleY: 1,
           }}
-          viewport={{
-            once: true,
-          }}
+          viewport={{ once: true }}
           transition={{
-            delay: 0.3,
-            duration: 0.6,
+            duration: 0.4,
+            ease,
           }}
           className="
-            mx-auto
-            my-10
-            h-16
-            w-px
+            mx-auto my-10
+            h-16 w-px
             origin-top
             bg-gradient-to-b
             from-purple-400
@@ -156,26 +137,26 @@ export default function StoryIntro() {
         />
 
         <motion.p
-          initial={{
-            opacity: 0,
-            y: 35,
-          }}
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                  y: 20,
+                }
+          }
           whileInView={{
             opacity: 1,
             y: 0,
           }}
-          viewport={{
-            once: true,
-          }}
+          viewport={{ once: true }}
           transition={{
-            delay: 0.25,
-            duration: 0.7,
+            duration: 0.5,
+            ease,
           }}
           className="
-            text-3xl
-            font-black
-            uppercase
-            leading-tight
+            text-3xl font-black
+            uppercase leading-tight
             tracking-[-0.03em]
             text-white/60
 
@@ -189,26 +170,21 @@ export default function StoryIntro() {
         </motion.p>
 
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                }
+          }
           whileInView={{
             opacity: 1,
-            y: 0,
           }}
-          viewport={{
-            once: true,
-          }}
+          viewport={{ once: true }}
           transition={{
-            delay: 0.55,
-            duration: 0.6,
+            duration: 0.4,
           }}
-          className="
-            my-12
-            flex
-            justify-center
-          "
+          className="my-12 flex justify-center"
         >
           <ArrowDown
             size={32}
@@ -217,20 +193,25 @@ export default function StoryIntro() {
         </motion.div>
 
         <motion.p
-          initial={{
-            opacity: 0,
-            y: 40,
-          }}
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                  y: 25,
+                }
+          }
           whileInView={{
             opacity: 1,
             y: 0,
           }}
           viewport={{
             once: true,
+            amount: 0.3,
           }}
           transition={{
-            delay: 0.65,
-            duration: 0.8,
+            duration: 0.6,
+            ease,
           }}
           className="
             bg-gradient-to-r
@@ -238,10 +219,9 @@ export default function StoryIntro() {
             via-purple-400
             to-pink-400
             bg-clip-text
-            text-4xl
-            font-black
-            uppercase
-            leading-tight
+
+            text-4xl font-black
+            uppercase leading-tight
             tracking-[-0.04em]
             text-transparent
 

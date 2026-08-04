@@ -103,7 +103,7 @@ export default function ChallengeEngine() {
 
                     xp: earnedXP,
 
-                    passed: score >= challenge.passScore
+                    passed: score >= passScore
 
                 });
 

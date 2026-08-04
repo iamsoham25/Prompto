@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+
 import {
   BookOpen,
   BrainCircuit,
@@ -55,11 +56,13 @@ const steps = [
   },
 ];
 
+const ease = [0.16, 1, 0.3, 1] as const;
+
 const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.12,
+      staggerChildren: 0.07,
     },
   },
 };
@@ -67,71 +70,61 @@ const containerVariants = {
 const itemVariants = {
   hidden: {
     opacity: 0,
-    y: 30,
+    y: 20,
   },
+
   visible: {
     opacity: 1,
     y: 0,
+
     transition: {
-      duration: 0.55,
-      ease: [0.16, 1, 0.3, 1] as [
-        number,
-        number,
-        number,
-        number,
-      ],
+      duration: 0.45,
+      ease,
     },
   },
 };
 
 export default function WhatIsPrompto() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section
       id="what-is-prompto"
       className="
-        relative
-        overflow-hidden
-        bg-white
-        py-20
+        relative overflow-hidden
+        bg-white py-20
 
         sm:py-24
         lg:py-32
       "
     >
-      {/* Decorative background */}
+      {/* Lightweight decorative gradients */}
 
       <div
         className="
           pointer-events-none
-          absolute
-          left-[-180px]
-          top-[10%]
-          h-[400px]
-          w-[400px]
+          absolute left-0 top-20
+          h-72 w-72
+          -translate-x-1/2
           rounded-full
-          bg-purple-100
-          blur-[130px]
+          bg-purple-50
         "
       />
 
       <div
         className="
           pointer-events-none
-          absolute
-          bottom-[-180px]
-          right-[-150px]
-          h-[400px]
-          w-[400px]
+          absolute bottom-0 right-0
+          h-72 w-72
+          translate-x-1/2
           rounded-full
-          bg-orange-100
-          blur-[130px]
+          bg-orange-50
         "
       />
 
       <div
         className="
-          relative
-          mx-auto
+          relative mx-auto
           max-w-[1400px]
           px-5
 
@@ -140,36 +133,32 @@ export default function WhatIsPrompto() {
           xl:px-16
         "
       >
-        {/* Header */}
-
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                  y: 25,
+                }
+          }
           whileInView={{
             opacity: 1,
             y: 0,
           }}
           viewport={{
             once: true,
-            amount: 0.3,
+            amount: 0.25,
           }}
           transition={{
-            duration: 0.65,
-            ease: [0.16, 1, 0.3, 1],
+            duration: 0.55,
+            ease,
           }}
-          className="
-            mx-auto
-            max-w-4xl
-            text-center
-          "
+          className="mx-auto max-w-4xl text-center"
         >
           <span
             className="
-              text-sm
-              font-black
-              uppercase
+              text-sm font-black uppercase
               tracking-[0.25em]
               text-orange-500
             "
@@ -180,8 +169,7 @@ export default function WhatIsPrompto() {
           <h2
             className="
               mt-5
-              text-4xl
-              font-black
+              text-4xl font-black
               leading-tight
               tracking-[-0.04em]
               text-slate-950
@@ -191,6 +179,7 @@ export default function WhatIsPrompto() {
             "
           >
             Prompt Engineering is more than
+
             <span
               className="
                 bg-gradient-to-r
@@ -201,18 +190,14 @@ export default function WhatIsPrompto() {
                 text-transparent
               "
             >
-              {" "}
-              asking AI questions.
+              {" "}asking AI questions.
             </span>
           </h2>
 
           <p
             className="
-              mx-auto
-              mt-6
-              max-w-3xl
-              text-base
-              leading-8
+              mx-auto mt-6 max-w-3xl
+              text-base leading-8
               text-slate-600
 
               sm:text-lg
@@ -224,80 +209,64 @@ export default function WhatIsPrompto() {
           </p>
         </motion.div>
 
-        {/* Steps */}
-
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
+          variants={
+            reduceMotion
+              ? undefined
+              : containerVariants
+          }
+          initial={
+            reduceMotion
+              ? undefined
+              : "hidden"
+          }
+          whileInView={
+            reduceMotion
+              ? undefined
+              : "visible"
+          }
           viewport={{
             once: true,
-            amount: 0.15,
+            amount: 0.1,
           }}
           className="
-            mt-16
-            grid
+            mt-16 grid
             grid-cols-1
 
             md:grid-cols-2
-
             lg:grid-cols-3
           "
         >
-          {steps.map((step, index) => {
+          {steps.map((step) => {
             const Icon = step.icon;
 
             return (
-              <motion.div
+              <motion.article
                 key={step.number}
-                variants={itemVariants}
-                className={`
-                  group
-                  relative
+                variants={
+                  reduceMotion
+                    ? undefined
+                    : itemVariants
+                }
+                className="
+                  group relative
                   min-h-[280px]
-                  border-slate-200
-                  px-6
-                  py-9
-                  transition-colors
-                  duration-300
-
-                  hover:bg-slate-50
+                  border-b border-slate-200
+                  px-6 py-9
 
                   sm:px-8
 
-                  ${
-                    index < 3
-                      ? "lg:border-b"
-                      : ""
-                  }
+                  md:border-r
+                  md:[&:nth-child(even)]:border-r-0
 
-                  ${
-                    index % 3 !== 2
-                      ? "lg:border-r"
-                      : ""
-                  }
-
-                  border-b
-                  last:border-b-0
-
-                  md:[&:nth-child(odd)]:border-r
-
-                  lg:[&:nth-child(odd)]:border-r-0
-                `}
+                  lg:[&:nth-child(even)]:border-r
+                  lg:[&:nth-child(3n)]:border-r-0
+                "
               >
-                {/* Number */}
-
-                <div
-                  className="
-                    flex
-                    items-start
-                    justify-between
-                  "
-                >
+                <div className="flex items-start justify-between">
                   <span
                     className="
-                      text-sm
-                      font-black
+                      text-sm font-black
                       tracking-[0.2em]
                       text-orange-500
                     "
@@ -307,21 +276,17 @@ export default function WhatIsPrompto() {
 
                   <div
                     className="
-                      flex
-                      h-12
-                      w-12
-                      items-center
-                      justify-center
+                      flex h-12 w-12
+                      items-center justify-center
                       rounded-2xl
                       bg-slate-100
                       text-slate-800
-                      transition-all
-                      duration-300
+                      transition
+                      duration-200
 
                       group-hover:-translate-y-1
                       group-hover:bg-orange-500
                       group-hover:text-white
-                      group-hover:shadow-lg
                     "
                   >
                     <Icon size={22} />
@@ -331,8 +296,7 @@ export default function WhatIsPrompto() {
                 <h3
                   className="
                     mt-12
-                    text-3xl
-                    font-black
+                    text-3xl font-black
                     tracking-[-0.03em]
                     text-slate-950
                   "
@@ -342,36 +306,30 @@ export default function WhatIsPrompto() {
 
                 <p
                   className="
-                    mt-4
-                    max-w-sm
-                    text-base
-                    leading-7
+                    mt-4 max-w-sm
+                    text-base leading-7
                     text-slate-600
                   "
                 >
                   {step.description}
                 </p>
 
-                {/* hover line */}
-
                 <div
                   className="
-                    absolute
-                    bottom-0
-                    left-0
-                    h-[3px]
-                    w-0
+                    absolute bottom-0 left-0
+                    h-[3px] w-0
                     bg-gradient-to-r
                     from-orange-500
                     via-purple-500
                     to-pink-500
-                    transition-all
-                    duration-500
+
+                    transition-[width]
+                    duration-300
 
                     group-hover:w-full
                   "
                 />
-              </motion.div>
+              </motion.article>
             );
           })}
         </motion.div>

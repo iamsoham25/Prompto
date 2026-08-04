@@ -12,18 +12,9 @@ import {
 } from "lucide-react";
 
 const scoreBars = [
-  {
-    label: "Clarity",
-    value: 92,
-  },
-  {
-    label: "Context",
-    value: 86,
-  },
-  {
-    label: "Constraints",
-    value: 78,
-  },
+  { label: "Clarity", value: 92 },
+  { label: "Context", value: 86 },
+  { label: "Constraints", value: 78 },
 ];
 
 const benefits = [
@@ -31,6 +22,8 @@ const benefits = [
   "AI Evaluation",
   "Real Challenges",
 ];
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function Hero() {
   const reduceMotion = useReducedMotion();
@@ -42,119 +35,37 @@ export default function Hero() {
         relative
         min-h-[calc(100svh-5rem)]
         overflow-hidden
-        bg-[#12052f]
+        bg-gradient-to-br
+        from-[#4338ca]
+        via-[#8617e8]
+        to-[#ec268f]
         text-white
       "
     >
-      {/* ========================================= */}
-      {/* BACKGROUND GRADIENT */}
-      {/* ========================================= */}
+      {/* Static background glows - much cheaper than animated blur */}
 
       <div
         className="
-          absolute
-          inset-0
-          bg-gradient-to-br
-          from-[#4338ca]
-          via-[#8617e8]
-          to-[#ec268f]
+          pointer-events-none absolute -left-32 top-10
+          hidden h-[350px] w-[350px]
+          rounded-full bg-blue-400/20 blur-[80px]
+          md:block
         "
       />
-
-      {/* ========================================= */}
-      {/* ANIMATED GLOW BLOBS */}
-      {/* ========================================= */}
-
-      <motion.div
-        className="
-          absolute
-          -left-32
-          top-10
-          h-[420px]
-          w-[420px]
-          rounded-full
-          bg-blue-400/30
-          blur-[110px]
-        "
-        animate={
-          reduceMotion
-            ? undefined
-            : {
-                x: [0, 70, 0],
-                y: [0, 40, 0],
-                scale: [1, 1.15, 1],
-              }
-        }
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      <motion.div
-        className="
-          absolute
-          right-[-120px]
-          top-[20%]
-          h-[500px]
-          w-[500px]
-          rounded-full
-          bg-pink-400/30
-          blur-[120px]
-        "
-        animate={
-          reduceMotion
-            ? undefined
-            : {
-                x: [0, -80, 0],
-                y: [0, 60, 0],
-                scale: [1, 1.2, 1],
-              }
-        }
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      <motion.div
-        className="
-          absolute
-          bottom-[-220px]
-          left-[35%]
-          h-[500px]
-          w-[500px]
-          rounded-full
-          bg-violet-300/20
-          blur-[130px]
-        "
-        animate={
-          reduceMotion
-            ? undefined
-            : {
-                x: [0, 50, -30, 0],
-                scale: [1, 1.15, 1],
-              }
-        }
-        transition={{
-          duration: 14,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      {/* ========================================= */}
-      {/* GRID */}
-      {/* ========================================= */}
 
       <div
         className="
-          absolute
-          inset-0
-          opacity-[0.13]
+          pointer-events-none absolute -right-32 top-[20%]
+          hidden h-[400px] w-[400px]
+          rounded-full bg-pink-400/20 blur-[90px]
+          md:block
         "
+      />
+
+      {/* Grid */}
+
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.10]"
         style={{
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
@@ -164,119 +75,49 @@ export default function Hero() {
         }}
       />
 
-      {/* ========================================= */}
-      {/* TOP LIGHT */}
-      {/* ========================================= */}
-
       <div
         className="
-          absolute
-          left-1/2
-          top-[-200px]
-          h-[500px]
-          w-[700px]
-          -translate-x-1/2
-          rounded-full
-          bg-white/10
-          blur-[130px]
-        "
-      />
+          relative z-10 mx-auto grid
+          w-full max-w-[1500px]
+          grid-cols-1 items-center
+          gap-14 px-5 py-16
 
-      {/* ========================================= */}
-      {/* CONTENT */}
-      {/* ========================================= */}
-
-      <div
-        className="
-          relative
-          z-10
-          mx-auto
-          grid
-          w-full
-          max-w-[1500px]
-          grid-cols-1
-          items-center
-          gap-14
-          px-5
-          py-16
-
-          sm:px-8
-          sm:py-20
+          sm:px-8 sm:py-20
 
           lg:grid-cols-[1.05fr_0.95fr]
-          lg:gap-16
-          lg:px-12
-          lg:py-24
+          lg:gap-16 lg:px-12 lg:py-24
 
           xl:px-16
         "
       >
-        {/* ========================================= */}
-        {/* LEFT SIDE */}
-        {/* ========================================= */}
+        {/* LEFT */}
 
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 35,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.7,
-            ease: [0.16, 1, 0.3, 1],
-          }}
+          initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease }}
           className="max-w-3xl"
         >
-          {/* Badge */}
-
-          <motion.div
-            initial={{
-              opacity: 0,
-              x: -20,
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-            }}
-            transition={{
-              delay: 0.15,
-              duration: 0.5,
-            }}
+          <div
             className="
-              mb-7
-              inline-flex
-              items-center
-              gap-2
-              rounded-full
-              border
-              border-white/25
-              bg-white/10
-              px-4
-              py-2
-              text-sm
-              font-semibold
-              backdrop-blur-xl
+              mb-7 inline-flex items-center gap-2
+              rounded-full border border-white/25
+              bg-white/10 px-4 py-2
+              text-sm font-semibold
 
-              sm:px-5
-              sm:text-base
+              sm:px-5 sm:text-base
             "
           >
             <Sparkles size={18} />
 
             The Future of AI Learning
-          </motion.div>
-
-          {/* Heading */}
+          </div>
 
           <h1
             className="
               max-w-[900px]
               text-[clamp(3rem,7vw,6.7rem)]
-              font-black
-              uppercase
+              font-black uppercase
               leading-[0.9]
               tracking-[-0.055em]
             "
@@ -287,11 +128,8 @@ export default function Hero() {
             <span
               className="
                 bg-gradient-to-r
-                from-white
-                via-white
-                to-pink-100
-                bg-clip-text
-                text-transparent
+                from-white via-white to-pink-100
+                bg-clip-text text-transparent
               "
             >
               Prompting
@@ -305,281 +143,142 @@ export default function Hero() {
             Professional.
           </h1>
 
-          {/* Description */}
-
-          <motion.p
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              delay: 0.25,
-              duration: 0.6,
-            }}
+          <p
             className="
-              mt-8
-              max-w-2xl
-              text-base
-              leading-8
-              text-white/80
+              mt-8 max-w-2xl
+              text-base leading-8 text-white/80
 
               sm:text-lg
-
               xl:text-xl
             "
           >
             Learn how to communicate with Artificial Intelligence through
             structured learning, hands-on practice, intelligent evaluation,
             real challenges and continuous feedback.
-          </motion.p>
+          </p>
 
-          {/* Buttons */}
-
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              delay: 0.35,
-              duration: 0.6,
-            }}
+          <div
             className="
-              mt-9
-              flex
-              flex-col
-              gap-4
-
-              sm:flex-row
-              sm:flex-wrap
+              mt-9 flex flex-col gap-4
+              sm:flex-row sm:flex-wrap
             "
           >
             <Link
               href="/learn"
               className="
-                group
-                inline-flex
-                min-h-14
-                items-center
-                justify-center
-                gap-2
-                rounded-2xl
-                bg-orange-500
-                px-7
-                py-4
-                font-bold
-                text-white
-                shadow-[0_15px_40px_rgba(249,115,22,0.35)]
-                transition-all
-                duration-300
-
+                group inline-flex min-h-14
+                items-center justify-center gap-2
+                rounded-2xl bg-orange-500
+                px-7 py-4 font-bold text-white
+                shadow-lg
+                transition-transform duration-200
                 hover:-translate-y-1
                 hover:bg-orange-600
-                hover:shadow-[0_20px_50px_rgba(249,115,22,0.45)]
               "
             >
               Start Learning
 
               <ArrowRight
                 size={19}
-                className="
-                  transition-transform
-                  group-hover:translate-x-1
-                "
+                className="transition-transform group-hover:translate-x-1"
               />
             </Link>
 
             <Link
               href="/playground"
               className="
-                group
-                inline-flex
-                min-h-14
-                items-center
-                justify-center
-                gap-3
-                rounded-2xl
-                border
-                border-white/30
-                bg-white
-                px-7
-                py-4
-                font-bold
-                text-slate-950
-                shadow-xl
-                transition-all
-                duration-300
-
+                group inline-flex min-h-14
+                items-center justify-center gap-3
+                rounded-2xl bg-white
+                px-7 py-4
+                font-bold text-slate-950
+                shadow-lg
+                transition-transform duration-200
                 hover:-translate-y-1
-                hover:bg-white/90
               "
             >
-              <Play
-                size={18}
-                fill="currentColor"
-              />
+              <Play size={18} fill="currentColor" />
 
               Explore Playground
             </Link>
-          </motion.div>
+          </div>
 
-          {/* Benefits */}
-
-          <div
-            className="
-              mt-9
-              flex
-              flex-wrap
-              gap-x-6
-              gap-y-3
-            "
-          >
-            {benefits.map((benefit, index) => (
-              <motion.div
+          <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3">
+            {benefits.map((benefit) => (
+              <div
                 key={benefit}
-                initial={{
-                  opacity: 0,
-                  y: 15,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  delay: 0.45 + index * 0.12,
-                  duration: 0.45,
-                }}
                 className="
-                  flex
-                  items-center
-                  gap-2
-                  text-sm
-                  font-medium
-                  text-white/85
-
+                  flex items-center gap-2
+                  text-sm font-medium text-white/85
                   sm:text-base
                 "
               >
                 <span
                   className="
-                    flex
-                    h-5
-                    w-5
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/50
+                    flex h-5 w-5
+                    items-center justify-center
+                    rounded-full border border-white/50
                   "
                 >
                   <Check size={12} />
                 </span>
 
                 {benefit}
-              </motion.div>
+              </div>
             ))}
           </div>
         </motion.div>
 
-        {/* ========================================= */}
-        {/* RIGHT SIDE */}
-        {/* ========================================= */}
+        {/* RIGHT */}
 
         <motion.div
-          initial={{
-            opacity: 0,
-            x: 60,
-            scale: 0.96,
-          }}
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                  x: 35,
+                }
+          }
           animate={{
             opacity: 1,
             x: 0,
-            scale: 1,
           }}
           transition={{
-            delay: 0.25,
-            duration: 0.8,
-            ease: [0.16, 1, 0.3, 1],
+            delay: 0.15,
+            duration: 0.65,
+            ease,
           }}
           className="
-            relative
-            mx-auto
-            w-full
-            max-w-[620px]
+            relative mx-auto
+            w-full max-w-[620px]
           "
         >
-          {/* Decorative glow */}
-
           <div
             className="
-              absolute
-              -inset-8
-              rounded-[50px]
-              bg-white/10
-              blur-3xl
-            "
-          />
-
-          {/* Floating card */}
-
-          <motion.div
-            animate={
-              reduceMotion
-                ? undefined
-                : {
-                    y: [0, -9, 0],
-                  }
-            }
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="
-              relative
-              overflow-hidden
+              relative overflow-hidden
               rounded-[28px]
-              border
-              border-white/50
-              bg-white
-              text-slate-950
-              shadow-[0_35px_100px_rgba(15,23,42,0.35)]
+              border border-white/40
+              bg-white text-slate-950
+              shadow-2xl
             "
           >
-            {/* Evaluator header */}
+            {/* Header */}
 
             <div
               className="
-                flex
-                items-center
-                justify-between
-                border-b
-                border-slate-200
-                px-5
-                py-4
-
-                sm:px-7
-                sm:py-5
+                flex items-center justify-between
+                border-b border-slate-200
+                px-5 py-4
+                sm:px-7 sm:py-5
               "
             >
               <div className="flex items-center gap-3">
                 <div
                   className="
-                    flex
-                    h-11
-                    w-11
-                    items-center
-                    justify-center
-                    rounded-xl
-                    bg-orange-100
+                    flex h-11 w-11
+                    items-center justify-center
+                    rounded-xl bg-orange-100
                     text-xl
                   "
                 >
@@ -587,15 +286,7 @@ export default function Hero() {
                 </div>
 
                 <div>
-                  <h3
-                    className="
-                      text-base
-                      font-extrabold
-                      text-slate-950
-
-                      sm:text-lg
-                    "
-                  >
+                  <h3 className="font-extrabold sm:text-lg">
                     Prompt Evaluator
                   </h3>
 
@@ -612,78 +303,41 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Evaluator body */}
+            {/* Body */}
 
             <div className="p-5 sm:p-7">
               <p
                 className="
-                  mb-3
-                  text-xs
-                  font-bold
-                  uppercase
-                  tracking-[0.22em]
+                  mb-3 text-xs font-bold
+                  uppercase tracking-[0.22em]
                   text-slate-400
                 "
               >
                 Your Prompt
               </p>
 
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 10,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  delay: 0.8,
-                  duration: 0.5,
-                }}
+              <div
                 className="
-                  rounded-2xl
-                  border
-                  border-slate-200
-                  bg-slate-50
-                  p-4
-                  text-sm
-                  leading-6
-                  text-slate-700
+                  rounded-2xl border border-slate-200
+                  bg-slate-50 p-4
+                  text-sm leading-6 text-slate-700
 
-                  sm:p-5
-                  sm:text-base
+                  sm:p-5 sm:text-base
                 "
               >
                 Act as an AI product strategist. Analyze the following product
                 idea and provide its target audience, key features, risks and a
                 structured launch plan.
-              </motion.div>
+              </div>
 
               {/* Score */}
 
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  scale: 0.95,
-                }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                }}
-                transition={{
-                  delay: 1.1,
-                  duration: 0.5,
-                }}
+              <div
                 className="
-                  mt-5
-                  flex
-                  flex-col
-                  gap-4
+                  mt-5 flex flex-col gap-4
                   rounded-2xl
                   bg-gradient-to-r
-                  from-indigo-50
-                  to-pink-50
+                  from-indigo-50 to-pink-50
                   p-5
 
                   sm:flex-row
@@ -697,18 +351,9 @@ export default function Hero() {
                   </p>
 
                   <div className="mt-1 flex items-end gap-2">
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 1.3 }}
-                      className="
-                        text-4xl
-                        font-black
-                        text-slate-950
-                      "
-                    >
+                    <span className="text-4xl font-black">
                       87
-                    </motion.span>
+                    </span>
 
                     <span className="pb-1 text-slate-400">
                       / 100
@@ -718,13 +363,10 @@ export default function Hero() {
 
                 <span
                   className="
-                    w-fit
-                    rounded-full
+                    w-fit rounded-full
                     bg-emerald-100
-                    px-4
-                    py-2
-                    text-xs
-                    font-extrabold
+                    px-4 py-2
+                    text-xs font-extrabold
                     text-emerald-700
 
                     sm:text-sm
@@ -732,56 +374,41 @@ export default function Hero() {
                 >
                   STRONG PROMPT
                 </span>
-              </motion.div>
+              </div>
 
-              {/* Bars */}
+              {/* Score bars */}
 
               <div className="mt-6 space-y-5">
-                {scoreBars.map((score, index) => (
+                {scoreBars.map((score) => (
                   <div key={score.label}>
                     <div
                       className="
-                        mb-2
-                        flex
-                        items-center
-                        justify-between
-                        text-sm
-                        font-semibold
+                        mb-2 flex
+                        items-center justify-between
+                        text-sm font-semibold
                       "
                     >
                       <span>{score.label}</span>
-
                       <span>{score.value}</span>
                     </div>
 
                     <div
                       className="
-                        h-2
-                        overflow-hidden
-                        rounded-full
-                        bg-slate-100
+                        h-2 overflow-hidden
+                        rounded-full bg-slate-100
                       "
                     >
-                      <motion.div
-                        initial={{
-                          width: 0,
-                        }}
-                        animate={{
-                          width: `${score.value}%`,
-                        }}
-                        transition={{
-                          delay: 1.5 + index * 0.2,
-                          duration: 0.9,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
+                      <div
                         className="
-                          h-full
-                          rounded-full
+                          h-full rounded-full
                           bg-gradient-to-r
                           from-indigo-500
                           via-purple-500
                           to-pink-500
                         "
+                        style={{
+                          width: `${score.value}%`,
+                        }}
                       />
                     </div>
                   </div>
@@ -790,32 +417,12 @@ export default function Hero() {
 
               {/* Tip */}
 
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 12,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  delay: 2.3,
-                  duration: 0.5,
-                }}
+              <div
                 className="
-                  mt-6
-                  flex
-                  items-start
-                  gap-3
-                  rounded-xl
-                  border
-                  border-orange-200
-                  bg-orange-50
-                  p-4
-                  text-sm
-                  font-medium
-                  text-orange-800
+                  mt-6 flex items-start gap-3
+                  rounded-xl border border-orange-200
+                  bg-orange-50 p-4
+                  text-sm font-medium text-orange-800
                 "
               >
                 <Lightbulb
@@ -824,38 +431,19 @@ export default function Hero() {
                 />
 
                 Add clearer output constraints to improve this prompt further.
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Floating XP */}
+          {/* XP card */}
 
-          <motion.div
-            animate={
-              reduceMotion
-                ? undefined
-                : {
-                    y: [0, 7, 0],
-                  }
-            }
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+          <div
             className="
-              absolute
-              -bottom-7
-              -left-3
-              hidden
-              rounded-2xl
-              border
-              border-white/50
-              bg-white
-              px-5
-              py-4
-              text-slate-950
-              shadow-2xl
+              absolute -bottom-7 -left-3
+              hidden rounded-2xl
+              border border-white/50
+              bg-white px-5 py-4
+              text-slate-950 shadow-xl
 
               sm:block
               lg:-left-8
@@ -868,49 +456,26 @@ export default function Hero() {
             <p className="mt-1 font-black text-orange-500">
               +80 XP ⚡
             </p>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
 
-      {/* ========================================= */}
-      {/* SCROLL INDICATOR */}
-      {/* ========================================= */}
+      {/* Scroll */}
 
-      <motion.a
+      <a
         href="#what-is-prompto"
-        animate={
-          reduceMotion
-            ? undefined
-            : {
-                y: [0, 7, 0],
-              }
-        }
-        transition={{
-          duration: 1.8,
-          repeat: Infinity,
-        }}
         className="
-          relative
-          z-20
-          mx-auto
-          mb-8
-          flex
-          w-fit
-          items-center
-          gap-2
-          text-xs
-          font-semibold
-          uppercase
-          tracking-[0.18em]
-          text-white/65
+          relative z-20 mx-auto mb-8
+          flex w-fit items-center gap-2
+          text-xs font-semibold uppercase
+          tracking-[0.18em] text-white/65
 
           sm:text-sm
         "
       >
         Scroll to Explore
-
         <ChevronDown size={17} />
-      </motion.a>
+      </a>
     </section>
   );
 }

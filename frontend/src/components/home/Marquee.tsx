@@ -13,89 +13,58 @@ const marqueeItems = [
 ];
 
 export default function Marquee() {
-  const repeatedItems = [
-    ...marqueeItems,
-    ...marqueeItems,
-  ];
-
   return (
-    <section
-      className="
-        overflow-hidden
-        border-y
-        border-slate-200
-        bg-white
-        py-5
-      "
-    >
-      <div className="marquee-track flex w-max items-center">
-        {repeatedItems.map((item, index) => (
-          <div
-            key={`${item}-${index}`}
-            className="
-              flex
-              shrink-0
-              items-center
-              gap-6
-              pr-6
-
-              sm:gap-8
-              sm:pr-8
-            "
-          >
-            <span
-              className={`
-                whitespace-nowrap
-                text-sm
-                font-black
-                tracking-[0.16em]
-
-                sm:text-base
-                lg:text-lg
-
-                ${
+    <section className="w-full overflow-hidden border-y border-slate-200 bg-white py-5">
+      <div className="prompto-marquee">
+        <div className="prompto-marquee-group">
+          {marqueeItems.map((item, index) => (
+            <div
+              key={`first-${index}`}
+              className="flex shrink-0 items-center gap-6 pr-6 sm:gap-8 sm:pr-8"
+            >
+              <span
+                className={
                   index % 2 === 0
-                    ? "text-slate-900"
-                    : "text-orange-500"
+                    ? "whitespace-nowrap text-sm font-black tracking-[0.16em] text-slate-900 sm:text-base lg:text-lg"
+                    : "whitespace-nowrap text-sm font-black tracking-[0.16em] text-orange-500 sm:text-base lg:text-lg"
                 }
-              `}
-            >
-              {item}
-            </span>
+              >
+                {item}
+              </span>
 
-            <span
-              className="
-                text-xl
-                text-purple-500
-              "
+              <span className="text-xl text-purple-500">
+                ✦
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="prompto-marquee-group"
+          aria-hidden="true"
+        >
+          {marqueeItems.map((item, index) => (
+            <div
+              key={`second-${index}`}
+              className="flex shrink-0 items-center gap-6 pr-6 sm:gap-8 sm:pr-8"
             >
-              ✦
-            </span>
-          </div>
-        ))}
+              <span
+                className={
+                  index % 2 === 0
+                    ? "whitespace-nowrap text-sm font-black tracking-[0.16em] text-slate-900 sm:text-base lg:text-lg"
+                    : "whitespace-nowrap text-sm font-black tracking-[0.16em] text-orange-500 sm:text-base lg:text-lg"
+                }
+              >
+                {item}
+              </span>
+
+              <span className="text-xl text-purple-500">
+                ✦
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
-
-      <style jsx>{`
-        .marquee-track {
-          animation: marquee 28s linear infinite;
-        }
-
-        @keyframes marquee {
-          from {
-            transform: translateX(0);
-          }
-
-          to {
-            transform: translateX(-50%);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .marquee-track {
-            animation: none;
-          }
-        }
-      `}</style>
     </section>
   );
 }
