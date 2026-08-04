@@ -1,214 +1,450 @@
 "use client";
 
 import Link from "next/link";
-
-import { BrainCircuit } from "lucide-react";
+import {
+  BrainCircuit,
+  Menu,
+  X,
+  LogOut,
+  LayoutDashboard,
+} from "lucide-react";
 
 import { useEffect, useState } from "react";
-
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
-
   const [loggedIn, setLoggedIn] = useState(false);
-
   const [userName, setUserName] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const router = useRouter();
-
   const pathname = usePathname();
 
+  // =========================================================
+  // CHECK LOGIN
+  // =========================================================
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const name = localStorage.getItem("userName");
 
-  const token = localStorage.getItem("token");
+    setLoggedIn(!!token);
 
-  const name = localStorage.getItem("userName");
+    if (name) {
+      setUserName(name);
+    }
+  }, []);
 
-  setLoggedIn(!!token);
+  // =========================================================
+  // CLOSE MOBILE MENU WHEN ROUTE CHANGES
+  // =========================================================
 
-  if (name) {
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
-    setUserName(name);
+  // =========================================================
+  // LOCK PAGE SCROLL WHEN MOBILE MENU IS OPEN
+  // =========================================================
 
-  }
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
 
-}, []);
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("isLoggedIn");
 
-  localStorage.removeItem("token");
+    setLoggedIn(false);
+    setMenuOpen(false);
 
-  localStorage.removeItem("userEmail");
+    router.push("/login");
+  };
 
-  localStorage.removeItem("userName");
+  // =========================================================
+  // NAVIGATION ITEMS
+  // =========================================================
 
-  localStorage.removeItem("isLoggedIn");
+  const navigation = [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Learn",
+      path: "/learn",
+    },
+    {
+      name: "Playground",
+      path: "/playground",
+    },
+    {
+      name: "Comparator",
+      path: "/comparator",
+    },
+    {
+      name: "Templates",
+      path: "/templates",
+    },
+    {
+      name: "Improver",
+      path: "/improver",
+    },
+    {
+      name: "Challenges",
+      path: "/challenges",
+    },
+    {
+      name: "Evaluator",
+      path: "/evaluator",
+    },
+    {
+      name: "Analytics",
+      path: "/analytics",
+    },
+    {
+      name: "History",
+      path: "/history",
+    },
+  ];
 
-  setLoggedIn(false);
+  // =========================================================
+  // ACTIVE LINK CHECK
+  // =========================================================
 
-  router.push("/login");
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
 
-};
+    return pathname === path || pathname.startsWith(`${path}/`);
+  };
 
-const navItem = (path: string) =>
+  // =========================================================
+  // DESKTOP NAV STYLE
+  // =========================================================
 
-    pathname === path
+  const desktopNavItem = (path: string) =>
+    isActive(path)
+      ? "px-3 py-2 rounded-xl bg-orange-500 text-white font-semibold transition whitespace-nowrap"
+      : "px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition whitespace-nowrap";
 
-        ? "px-4 py-2 rounded-xl bg-orange-500 text-white font-semibold transition"
+  // =========================================================
+  // MOBILE NAV STYLE
+  // =========================================================
 
-        : "px-4 py-2 rounded-xl hover:bg-orange-100 hover:text-orange-600 transition";
+  const mobileNavItem = (path: string) =>
+    isActive(path)
+      ? "block w-full px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold transition"
+      : "block w-full px-4 py-3 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition";
 
   return (
+    <>
+      <nav className="sticky top-0 z-50 w-full bg-white border-b border-slate-200 shadow-sm">
+        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="h-16 lg:h-20 flex items-center justify-between">
 
-    <nav className="sticky top-0 z-50 bg-white border-b border-slate-200">
-
-      <div className="w-full h-20 px-10 flex items-center">
-
-        {/* Logo */}
-
-          <Link
-            href="/"
-            className="flex items-center gap-3 shrink-0"
-            >
-
-            <BrainCircuit
-              className="text-orange-500"
-              size={34}
-            />
-
-            <h1 className="text-3xl font-bold text-slate-900">
-              Prompto
-            </h1>
-
-          </Link>
-
-        {/* Navigation */}
-
-          <div className="flex items-center gap-1 ml-16">
+            {/* =====================================================
+                LOGO
+            ===================================================== */}
 
             <Link
               href="/"
-              className={navItem("/")}
+              className="flex items-center gap-2 lg:gap-3 shrink-0"
             >
-              Home
+              <BrainCircuit
+                className="text-orange-500 shrink-0"
+                size={32}
+              />
+
+              <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">
+                Prompto
+              </h1>
             </Link>
 
-            <Link
-              href="/learn"
-              className={navItem("/learn")}
-            >
-              Learn
-            </Link>
+            {/* =====================================================
+                DESKTOP NAVIGATION
+            ===================================================== */}
 
-            <Link
-              href="/playground"
-              className={navItem("/playground")}
-            >
-              Playground
-            </Link>
-
-            <Link href="/comparator"
-            className={navItem("/comparator")}
-            >
-              Comparator
-            </Link>
-
-            <Link
-              href="/templates"
-              className={navItem("/templates")}
-            >
-             Templates
-            </Link>
-
-            <Link
-              href="/improver"
-              className={navItem("/improver")}
-            >
-              Improver
-            </Link>
-
-            <Link
-              href="/challenges"
-              className={navItem("/challenges")}
-            >
-              Challenges
-            </Link>
-
-            <Link
-              href="/evaluator"
-              className={navItem("/evaluator")}
-            >
-              Evaluator
-            </Link>
-
-            <Link
-              href="/analytics"
-              className={navItem("/analytics")}
-            >
-              Analytics
-            </Link>
-
-            <Link
-              href="/history"
-              className={navItem("/history")}
-            >
-              History
-            </Link>
-
-          {/* Show Dashboard only after login */}
-
-            {loggedIn && (
-
-              <Link
-                href="/dashboard"
-                className={navItem("/dashboard")}
-              >
-                Dashboard
-              </Link>
-
-            )}
-
-            {/* Auth Buttons */}
-
-            <div className="ml-8 flex items-center gap-4">
-
-            {!loggedIn ? (
-
-              <>
-
+            <div className="hidden xl:flex items-center gap-1 ml-8">
+              {navigation.map((item) => (
                 <Link
-                  href="/login"
-                  className="px-5 py-2 rounded-xl border border-orange-300 hover:text-bg-orange-500/10 transition"
-                  >
-                  Login
-                </Link>
-
-                <Link
-                  href="/signup"
-                  className="px-5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 transition"
+                  key={item.path}
+                  href={item.path}
+                  className={desktopNavItem(item.path)}
                 >
-                  Sign Up
+                  {item.name}
                 </Link>
+              ))}
 
-              </>
-            ) : (
+              {/* Dashboard */}
 
-            <>
-      
-              <button
-                onClick={handleLogout}
-                className="ml-3 px-5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white transition"
-              >
-                Logout
-              </button>
-      
-            </>
-          )}
+              {loggedIn && (
+                <Link
+                  href="/dashboard"
+                  className={desktopNavItem("/dashboard")}
+                >
+                  Dashboard
+                </Link>
+              )}
 
+              {/* Authentication */}
+
+              <div className="ml-3 flex items-center gap-2">
+                {!loggedIn ? (
+                  <>
+                    <Link
+                      href="/login"
+                      className="
+                        px-4 py-2
+                        rounded-xl
+                        border border-orange-300
+                        text-slate-700
+                        hover:bg-orange-50
+                        hover:text-orange-600
+                        transition
+                        whitespace-nowrap
+                      "
+                    >
+                      Login
+                    </Link>
+
+                    <Link
+                      href="/signup"
+                      className="
+                        px-4 py-2
+                        rounded-xl
+                        bg-orange-500
+                        hover:bg-orange-600
+                        text-white
+                        transition
+                        whitespace-nowrap
+                      "
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+                ) : (
+                  <button
+                    onClick={handleLogout}
+                    className="
+                      px-4 py-2
+                      rounded-xl
+                      bg-orange-500
+                      hover:bg-orange-600
+                      text-white
+                      transition
+                      whitespace-nowrap
+                      cursor-pointer
+                    "
+                  >
+                    Logout
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* =====================================================
+                MOBILE / TABLET MENU BUTTON
+            ===================================================== */}
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen((previous) => !previous)}
+              className="
+                xl:hidden
+                flex
+                items-center
+                justify-center
+                w-10
+                h-10
+                rounded-xl
+                text-slate-800
+                hover:bg-slate-100
+                transition
+                cursor-pointer
+              "
+              aria-label="Toggle navigation menu"
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? (
+                <X size={27} />
+              ) : (
+                <Menu size={27} />
+              )}
+            </button>
           </div>
-
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* =========================================================
+          MOBILE MENU
+      ========================================================= */}
+
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 xl:hidden">
+
+          {/* DARK BACKDROP */}
+
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            onClick={() => setMenuOpen(false)}
+            className="absolute inset-0 bg-slate-950/40"
+          />
+
+          {/* MENU PANEL */}
+
+          <div
+            className="
+              absolute
+              top-16
+              left-0
+              right-0
+              max-h-[calc(100vh-4rem)]
+              overflow-y-auto
+              bg-white
+              border-b
+              border-slate-200
+              shadow-xl
+            "
+          >
+            <div className="px-4 sm:px-6 py-5">
+
+              {/* USER INFORMATION */}
+
+              {loggedIn && userName && (
+                <div className="mb-4 p-4 rounded-2xl bg-slate-50">
+                  <p className="text-xs text-slate-500">
+                    Signed in as
+                  </p>
+
+                  <p className="mt-1 font-semibold text-slate-900">
+                    {userName}
+                  </p>
+                </div>
+              )}
+
+              {/* NAVIGATION */}
+
+              <div className="space-y-1">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    className={mobileNavItem(item.path)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+
+              {/* DASHBOARD */}
+
+              {loggedIn && (
+                <div className="mt-3 pt-3 border-t border-slate-200">
+                  <Link
+                    href="/dashboard"
+                    className={`
+                      ${mobileNavItem("/dashboard")}
+                      flex items-center gap-3
+                    `}
+                  >
+                    <LayoutDashboard size={19} />
+
+                    Dashboard
+                  </Link>
+                </div>
+              )}
+
+              {/* AUTHENTICATION */}
+
+              <div className="mt-4 pt-4 border-t border-slate-200">
+                {!loggedIn ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link
+                      href="/login"
+                      className="
+                        flex
+                        items-center
+                        justify-center
+                        px-4
+                        py-3
+                        rounded-xl
+                        border
+                        border-orange-300
+                        text-slate-700
+                        font-medium
+                        hover:bg-orange-50
+                        transition
+                      "
+                    >
+                      Login
+                    </Link>
+
+                    <Link
+                      href="/signup"
+                      className="
+                        flex
+                        items-center
+                        justify-center
+                        px-4
+                        py-3
+                        rounded-xl
+                        bg-orange-500
+                        hover:bg-orange-600
+                        text-white
+                        font-semibold
+                        transition
+                      "
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleLogout}
+                    className="
+                      w-full
+                      flex
+                      items-center
+                      justify-center
+                      gap-2
+                      px-4
+                      py-3
+                      rounded-xl
+                      bg-orange-500
+                      hover:bg-orange-600
+                      text-white
+                      font-semibold
+                      transition
+                      cursor-pointer
+                    "
+                  >
+                    <LogOut size={19} />
+
+                    Logout
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

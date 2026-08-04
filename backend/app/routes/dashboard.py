@@ -1,24 +1,177 @@
-from fastapi import APIRouter  # type: ignore[import]
+from fastapi import APIRouter
+from datetime import datetime, timezone
+
 from app.config.db import db
+
 
 router = APIRouter()
 
-user_xp_collection = db["user_xp"]
-users_collection = db["users"]
-lesson_collection = db["lesson_completions"]
-challenge_collection = db["challenge_completions"]
-challenge_master_collection = db["challenges"]
-prompt_collection = db["prompt_analytics"]
 
+# ==========================================================
+# MongoDB Collections
+# ==========================================================
+
+user_xp_collection = db["user_xp"]
+
+users_collection = db["users"]
+
+lesson_collection = db["lesson_completions"]
+
+challenge_progress_collection = db["challenge_progress"]
+
+challenge_submission_collection = db["challenge_submissions"]
+
+challenge_master_collection = db["challenges"]
+
+
+# ==========================================================
+# Helper
+# ==========================================================
+
+def calculate_xp_profile(xp: int):
+
+    """
+    Central XP level calculation.
+
+    Beginner:
+        0 - 199 XP
+
+    Intermediate:
+        200 - 499 XP
+
+    Advanced:
+        500 - 999 XP
+
+    Expert:
+        1000 - 1999 XP
+
+    Master:
+        2000+ XP
+    """
+
+    if xp < 200:
+
+        return {
+            "level": 1,
+            "rank": "Beginner",
+            "current_level_xp": xp,
+            "next_level_xp": 200,
+            "progress": round((xp / 200) * 100, 2)
+        }
+
+    elif xp < 500:
+
+        current = xp - 200
+        required = 300
+
+        return {
+            "level": 2,
+            "rank": "Intermediate",
+            "current_level_xp": current,
+            "next_level_xp": required,
+            "progress": round((current / required) * 100, 2)
+        }
+
+    elif xp < 1000:
+
+        current = xp - 500
+        required = 500
+
+        return {
+            "level": 3,
+            "rank": "Advanced",
+            "current_level_xp": current,
+            "next_level_xp": required,
+            "progress": round((current / required) * 100, 2)
+        }
+
+    elif xp < 2000:
+
+        current = xp - 1000
+        required = 1000
+
+        return {
+            "level": 4,
+            "rank": "Expert",
+            "current_level_xp": current,
+            "next_level_xp": required,
+            "progress": round((current / required) * 100, 2)
+        }
+
+    else:
+
+        return {
+            "level": 5,
+            "rank": "Master",
+            "current_level_xp": xp,
+            "next_level_xp": xp,
+            "progress": 100
+        }
+
+
+# ==========================================================
+# User XP Profile
+# ==========================================================
+
+@router.get("/xp/{email}")
+async def get_xp_profile(email: str):
+
+    user = await user_xp_collection.find_one(
+        {
+            "user_email": email
+        }
+    )
+
+    xp = 0
+
+    if user:
+
+        xp = int(
+            user.get(
+                "xp",
+                0
+            )
+        )
+
+    profile = calculate_xp_profile(xp)
+
+    return {
+
+        "success": True,
+
+        "xp": xp,
+
+        "level": profile["level"],
+
+        "rank": profile["rank"],
+
+        "current_level_xp":
+            profile["current_level_xp"],
+
+        "next_level_xp":
+            profile["next_level_xp"],
+
+        "progress":
+            profile["progress"]
+
+    }
+
+
+# ==========================================================
+# Backward Compatible User XP
+# ==========================================================
 
 @router.get("/user-xp/{email}")
 async def get_user_xp(email: str):
 
     user = await user_xp_collection.find_one(
-        {"user_email": email}
+        {
+            "user_email": email
+        }
     )
 
     if not user:
+
         return {
             "success": True,
             "xp": 0
@@ -26,123 +179,326 @@ async def get_user_xp(email: str):
 
     return {
         "success": True,
-        "xp": user["xp"]
+        "xp": int(
+            user.get(
+                "xp",
+                0
+            )
+        )
     }
 
+
+# ==========================================================
+# Leaderboard
+# ==========================================================
 
 @router.get("/leaderboard")
 async def get_leaderboard():
 
     leaderboard = []
 
-    async for user in user_xp_collection.find().sort("xp", -1):
+    cursor = user_xp_collection.find().sort(
+        "xp",
+        -1
+    )
 
-        username = user["user_email"]
+    position = 1
+
+    async for user in cursor:
+
+        email = user.get(
+            "user_email",
+            ""
+        )
+
+        username = email
 
         user_data = await users_collection.find_one(
-            {"email": user["user_email"]}
+            {
+                "email": email
+            }
         )
 
         if user_data:
-            username = user_data["username"]
+
+            username = (
+                user_data.get("username")
+                or user_data.get("name")
+                or email
+            )
 
         leaderboard.append({
+
+            "position": position,
+
             "name": username,
-            "xp": user["xp"]
+
+            "user_email": email,
+
+            "xp": int(
+                user.get(
+                    "xp",
+                    0
+                )
+            )
+
         })
 
+        position += 1
+
     return {
+
         "success": True,
+
         "leaderboard": leaderboard
+
     }
 
+
+# ==========================================================
+# User Rank
+# ==========================================================
 
 @router.get("/user-rank/{email}")
 async def get_user_rank(email: str):
 
-    users = []
+    users = await user_xp_collection.find().sort(
+        "xp",
+        -1
+    ).to_list(length=None)
 
-    async for user in user_xp_collection.find().sort("xp", -1):
-        users.append(user)
+    for index, user in enumerate(users):
 
-    rank = 1
-
-    for user in users:
-
-        if user["user_email"] == email:
+        if user.get("user_email") == email:
 
             return {
+
                 "success": True,
-                "rank": rank
+
+                "rank": index + 1
+
             }
 
-        rank += 1
-
     return {
+
         "success": True,
+
         "rank": "-"
+
     }
 
 
-@router.get("/achievements/{email}")
-async def get_achievements(email: str):
+# ==========================================================
+# Challenge Statistics
+# ==========================================================
 
-    achievements = []
+@router.get("/challenge-stats/{email}")
+async def get_challenge_stats(email: str):
 
-    lessons_completed = await lesson_collection.count_documents(
-        {"user_email": email}
+    """
+    Real challenge statistics.
+
+    Completed challenges are read from challenge_progress.
+
+    Attempts are read from challenge_submissions.
+
+    XP is NOT used to estimate completed challenges.
+    """
+
+    completed = await challenge_progress_collection.count_documents(
+
+        {
+            "user_email": email,
+            "completed": True
+        }
+
     )
 
-    challenge_completed = await challenge_collection.count_documents(
-        {"user_email": email}
+    attempts = await challenge_submission_collection.count_documents(
+
+        {
+            "user_email": email
+        }
+
     )
 
-    prompts_analyzed = await prompt_collection.count_documents(
-        {"user_email": email}
+    passed_attempts = await challenge_submission_collection.count_documents(
+
+        {
+            "user_email": email,
+            "passed": True
+        }
+
     )
-
-    if lessons_completed >= 1:
-        achievements.append("First Lesson Completed")
-
-    if lessons_completed >= 10:
-        achievements.append("Lesson Master")
-
-    if challenge_completed >= 1:
-        achievements.append("First Challenge Completed")
-
-    if challenge_completed >= 5:
-        achievements.append("Challenge Champion")
-
-    if prompts_analyzed >= 5:
-        achievements.append("Prompt Beginner")
-
-    if prompts_analyzed >= 10:
-        achievements.append("Prompt Engineer")
 
     return {
+
         "success": True,
-        "achievements": achievements
+
+        "completed": completed,
+
+        "attempts": attempts,
+
+        "passed_attempts": passed_attempts
+
     }
 
+
+# ==========================================================
+# Daily Challenge
+# ==========================================================
 
 @router.get("/daily-challenge")
 async def get_daily_challenge():
+
+    """
+    For now this returns one real challenge from MongoDB.
+
+    Later we can implement true date-based daily challenge rotation.
+    """
 
     challenge = await challenge_master_collection.find_one()
 
     if not challenge:
 
         return {
+
             "success": False,
-            "message": "No challenge found"
+
+            "message": "No challenge found",
+
+            "challenge": None
+
         }
 
+    challenge_id = (
+        challenge.get("challenge_id")
+        or challenge.get("id")
+    )
+
+    xp = (
+        challenge.get("xp_reward")
+        or challenge.get("xp")
+        or 0
+    )
+
     return {
+
         "success": True,
+
         "challenge": {
-            "title": challenge["title"],
-            "description": challenge["description"],
-            "difficulty": challenge["difficulty"],
-            "xp": challenge["xp_reward"]
+
+            "id": challenge_id,
+
+            "title":
+                challenge.get(
+                    "title",
+                    "Prompt Challenge"
+                ),
+
+            "description":
+                challenge.get(
+                    "description",
+                    ""
+                ),
+
+            "difficulty":
+                challenge.get(
+                    "difficulty",
+                    "Easy"
+                ),
+
+            "xp": xp
+
         }
+
+    }
+
+
+# ==========================================================
+# Dashboard Summary
+# ==========================================================
+
+@router.get("/dashboard-summary/{email}")
+async def get_dashboard_summary(email: str):
+
+    """
+    Lightweight summary for Dashboard.
+
+    All values come from MongoDB.
+    """
+
+    user = await users_collection.find_one(
+        {
+            "email": email
+        }
+    )
+
+    xp_document = await user_xp_collection.find_one(
+        {
+            "user_email": email
+        }
+    )
+
+    xp = 0
+
+    if xp_document:
+
+        xp = int(
+            xp_document.get(
+                "xp",
+                0
+            )
+        )
+
+    xp_profile = calculate_xp_profile(xp)
+
+    completed_lessons = await lesson_collection.count_documents(
+        {
+            "user_email": email
+        }
+    )
+
+    completed_challenges = (
+        await challenge_progress_collection.count_documents(
+            {
+                "user_email": email,
+                "completed": True
+            }
+        )
+    )
+
+    username = email.split("@")[0]
+
+    if user:
+
+        username = (
+            user.get("username")
+            or user.get("name")
+            or username
+        )
+
+    return {
+
+        "success": True,
+
+        "username": username,
+
+        "email": email,
+
+        "xp": xp,
+
+        "level": xp_profile["level"],
+
+        "rank": xp_profile["rank"],
+
+        "xp_progress":
+            xp_profile["progress"],
+
+        "completed_lessons":
+            completed_lessons,
+
+        "completed_challenges":
+            completed_challenges
+
     }
