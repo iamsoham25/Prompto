@@ -344,75 +344,7 @@ async def get_challenge_stats(email: str):
     }
 
 
-# ==========================================================
-# Daily Challenge
-# ==========================================================
 
-@router.get("/daily-challenge")
-async def get_daily_challenge():
-
-    """
-    For now this returns one real challenge from MongoDB.
-
-    Later we can implement true date-based daily challenge rotation.
-    """
-
-    challenge = await challenge_master_collection.find_one()
-
-    if not challenge:
-
-        return {
-
-            "success": False,
-
-            "message": "No challenge found",
-
-            "challenge": None
-
-        }
-
-    challenge_id = (
-        challenge.get("challenge_id")
-        or challenge.get("id")
-    )
-
-    xp = (
-        challenge.get("xp_reward")
-        or challenge.get("xp")
-        or 0
-    )
-
-    return {
-
-        "success": True,
-
-        "challenge": {
-
-            "id": challenge_id,
-
-            "title":
-                challenge.get(
-                    "title",
-                    "Prompt Challenge"
-                ),
-
-            "description":
-                challenge.get(
-                    "description",
-                    ""
-                ),
-
-            "difficulty":
-                challenge.get(
-                    "difficulty",
-                    "Easy"
-                ),
-
-            "xp": xp
-
-        }
-
-    }
 
 
 # ==========================================================
