@@ -252,143 +252,150 @@ export default function HowItWorks() {
 
             {/* PROCESS */}
 
-            <div className="rounded-[28px] border border-purple-500/30 bg-gradient-to-b from-purple-500/10 to-pink-500/5 p-7">
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-400">
-                  Prompto Process
-                </p>
+                        <div className="rounded-[28px] border border-purple-500/30 bg-gradient-to-b from-purple-500/10 to-pink-500/5 p-7">
+                            <div className="flex items-center justify-between">
+                                <p className="text-xs font-black uppercase tracking-[0.18em] text-purple-400">
+                                    Prompto Process
+                                </p>
 
-                <Sparkles size={18} className="text-purple-400" />
-              </div>
+                                <Sparkles size={18} className="text-purple-400" />
+                            </div>
 
-              <div className="mt-8 space-y-4">
-                <ProcessItem number="01" text="Define the AI role" />
+                            <div className="mt-8 space-y-4">
+                                <ProcessItem number="01" text="Define the AI role" />
 
-                <ProcessItem number="02" text="Add relevant context" />
+                                <ProcessItem number="02" text="Add relevant context" />
 
-                <ProcessItem number="03" text="Specify the audience" />
+                                <ProcessItem number="03" text="Specify the audience" />
 
-                <ProcessItem number="04" text="Set clear constraints" />
+                                <ProcessItem number="04" text="Set clear constraints" />
 
-                <ProcessItem number="05" text="Define output format" />
-              </div>
+                                <ProcessItem number="05" text="Define output format" />
+                            </div>
+                        </div>
+
+                        {/* ARROW */}
+
+                        <ProcessArrow />
+
+                        {/* AFTER */}
+
+                        <TransformationCard
+                            label="Professional Prompt"
+                            badge="Strong"
+                            badgeStyle="bg-emerald-400/10 text-emerald-400"
+                        >
+                            <p className="text-base font-semibold leading-7 text-white sm:text-lg">
+                                &quot;Act as an AI instructor. Explain machine learning to a
+                                beginner using simple terminology, one real-world example and
+                                a structured step-by-step explanation.&quot;
+                            </p>
+
+                            <div className="mt-8 flex flex-wrap gap-2">
+                                <PromptTag text="Role" />
+                                <PromptTag text="Context" />
+                                <PromptTag text="Audience" />
+                                <PromptTag text="Constraints" />
+                                <PromptTag text="Format" />
+                            </div>
+
+                            <div className="mt-7 flex items-center gap-2 text-sm font-bold text-emerald-400">
+                                <Check size={17} />
+                                Clear, structured and actionable
+                            </div>
+
+                        </TransformationCard>
+
+                    </div>
+
+                </motion.div>
+
             </div>
 
-            {/* ARROW */}
+        </section>
 
-            <ProcessArrow />
+    );
 
-            {/* AFTER */}
-
-            <TransformationCard
-              label="Professional Prompt"
-              badge="Strong"
-              badgeStyle="bg-emerald-400/10 text-emerald-400"
-            >
-              <p className="text-base font-semibold leading-7 text-white sm:text-lg">
-                &quot;Act as an AI instructor. Explain machine learning to a
-                beginner using simple terminology, one real-world example and
-                a structured step-by-step explanation.&quot;
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-2">
-                <PromptTag text="Role" />
-                <PromptTag text="Context" />
-                <PromptTag text="Audience" />
-                <PromptTag text="Constraints" />
-                <PromptTag text="Format" />
-              </div>
-
-              <div className="mt-7 flex items-center gap-2 text-sm font-bold text-emerald-400">
-                <Check size={17} />
-                Clear, structured and actionable
-              </div>
-            </TransformationCard>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
 }
+
 
 /* ------------------------------------------------ */
 /* Supporting Components                            */
 /* ------------------------------------------------ */
 
 function TransformationCard({
-  label,
-  badge,
-  badgeStyle,
-  children,
+    label,
+    badge,
+    badgeStyle,
+    children,
 }: {
-  label: string;
-  badge: string;
-  badgeStyle: string;
-  children: React.ReactNode;
+    label: string;
+    badge: string;
+    badgeStyle: string;
+    children: React.ReactNode;
 }) {
-  return (
-    <div className="rounded-[28px] border border-white/10 bg-white/[0.045] p-7">
-      <div className="flex items-center justify-between gap-4">
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
-          {label}
-        </p>
+    return (
+        <div className="rounded-[28px] border border-white/10 bg-white/[0.045] p-7">
+            <div className="flex items-center justify-between gap-4">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+                    {label}
+                </p>
 
-        <span
-          className={`rounded-full px-3 py-1 text-xs font-black uppercase ${badgeStyle}`}
-        >
-          {badge}
-        </span>
-      </div>
+                <span className={`rounded-full px-3 py-1 text-xs font-black uppercase ${badgeStyle}`} >
+                    {badge}
+                </span>
+            </div>
 
-      <div className="mt-8">{children}</div>
-    </div>
-  );
+            <div className="mt-8">{children}</div>
+
+        </div>
+    );
 }
 
 function ProcessArrow() {
-  return (
-    <div className="flex items-center justify-center py-1">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.06]">
-        <ArrowRight className="rotate-90 text-orange-400 lg:rotate-0" size={20} />
-      </div>
-    </div>
-  );
+    return (
+        <div className="flex items-center justify-center py-1">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.06]">
+                <ArrowRight className="rotate-90 text-orange-400 lg:rotate-0" size={20} />
+            </div>
+        </div>
+    );
 }
 
 function WeakItem({ text }: { text: string }) {
-  return (
-    <div className="flex items-center gap-3 text-sm text-slate-400">
-      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-400" />
-
-      {text}
-    </div>
-  );
+    return (
+        <div className="flex items-center gap-3 text-sm text-slate-400">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-400" />
+            {text}
+        </div>
+    );
 }
 
 function ProcessItem({
-  number,
-  text,
+    number,
+    text,
 }: {
-  number: string;
-  text: string;
+    number: string;
+    text: string;
 }) {
-  return (
-    <div className="flex items-center gap-4">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-xs font-black text-purple-300">
-        {number}
-      </div>
+    return (
+        <div className="flex items-center gap-4">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-xs font-black text-purple-300">
+                {number}
+            </div>
 
-      <p className="text-sm font-semibold text-slate-300">
-        {text}
-      </p>
-    </div>
-  );
+            <p className="text-sm font-semibold text-slate-300">
+                {text}
+            </p>
+
+        </div>
+    );
 }
 
 function PromptTag({ text }: { text: string }) {
-  return (
-    <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-bold text-emerald-300">
-      {text}
-    </span>
-  );
+    return (
+        <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-bold text-emerald-300">
+            {text}
+        </span>
+    );
 }
