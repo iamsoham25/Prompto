@@ -117,7 +117,7 @@ const challenges = [
 ========================================================= */
 
 export default function ChallengesShowcase() {
-  return (
+    return (
     <section
       id="challenges-showcase"
       className="
