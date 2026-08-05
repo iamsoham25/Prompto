@@ -205,26 +205,26 @@ export default function HowItWorks() {
 
         {/* TRANSFORMATION SECTION */}
 
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.6 }}
-          className="mt-28"
-        >
-          {/* Transformation Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: 35 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.6 }}
+                    className="mt-28"
+                    >
+                    {/* Transformation Header */}
 
-          <div className="text-center">
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-purple-400">
-              From idea to engineered prompt
-            </p>
+                    <div className="text-center">
+                        <p className="text-xs font-black uppercase tracking-[0.22em] text-purple-400">
+                            From idea to engineered prompt
+                        </p>
 
-            <h3 className="mt-4 text-3xl font-black tracking-[-0.03em] sm:text-4xl lg:text-5xl">
-              See what the process changes.
-            </h3>
-          </div>
+                        <h3 className="mt-4 text-3xl font-black tracking-[-0.03em] sm:text-4xl lg:text-5xl">
+                            See what the process changes.
+                        </h3>
+                    </div>
 
-          {/* Transformation Cards */}
+                    {/* Transformation Cards */}
 
                     <div className="mt-12 grid items-stretch gap-5 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
                         {/* BEFORE */}
