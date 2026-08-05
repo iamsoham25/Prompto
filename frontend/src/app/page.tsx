@@ -4,6 +4,7 @@ import WhatIsPrompto from "@/components/home/WhatIsPrompto";
 import StoryIntro from "@/components/home/StoryIntro";
 import ProductWorkspace from "@/components/home/ProductWorkspace";
 import HowItWorks from "@/components/home/HowItWorks";
+import LearningRoadmap from "@/components/home/LearningRoadmap";
 
 export default function HomePage() {
   return (
@@ -19,6 +20,8 @@ export default function HomePage() {
       <ProductWorkspace />
 
       <HowItWorks />
+
+      <LearningRoadmap />
     </main>
   );
 }
