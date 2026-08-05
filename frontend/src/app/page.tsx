@@ -5,6 +5,7 @@ import StoryIntro from "@/components/home/StoryIntro";
 import ProductWorkspace from "@/components/home/ProductWorkspace";
 import HowItWorks from "@/components/home/HowItWorks";
 import LearningRoadmap from "@/components/home/LearningRoadmap";
+import ChallengesShowcase from "@/components/home/ChallengesShowcase";
 
 export default function HomePage() {
   return (
@@ -22,6 +23,8 @@ export default function HomePage() {
       <HowItWorks />
 
       <LearningRoadmap />
+
+      <ChallengesShowcase />
     </main>
   );
 }
