@@ -3,6 +3,7 @@ import Marquee from "@/components/home/Marquee";
 import WhatIsPrompto from "@/components/home/WhatIsPrompto";
 import StoryIntro from "@/components/home/StoryIntro";
 import ProductWorkspace from "@/components/home/ProductWorkspace";
+import HowItWorks from "@/components/home/HowItWorks";
 
 export default function HomePage() {
   return (
@@ -16,6 +17,8 @@ export default function HomePage() {
       <StoryIntro />
 
       <ProductWorkspace />
+
+      <HowItWorks />
     </main>
   );
 }
