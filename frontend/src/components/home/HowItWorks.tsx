@@ -226,31 +226,31 @@ export default function HowItWorks() {
 
           {/* Transformation Cards */}
 
-          <div className="mt-12 grid items-stretch gap-5 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
-            {/* BEFORE */}
+                    <div className="mt-12 grid items-stretch gap-5 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
+                        {/* BEFORE */}
 
-            <TransformationCard
-              label="Before Prompto"
-              badge="Basic"
-              badgeStyle="bg-red-400/10 text-red-400"
-            >
-              <p className="text-xl font-bold leading-8 text-white">
-                &quot;Explain machine learning.&quot;
-              </p>
+                            <TransformationCard
+                                label="Before Prompto"
+                                badge="Basic"
+                                badgeStyle="bg-red-400/10 text-red-400"
+                            >
+                            <p className="text-xl font-bold leading-8 text-white">
+                                &quot;Explain machine learning.&quot;
+                            </p>
 
-              <div className="mt-8 space-y-3">
-                <WeakItem text="No role" />
-                <WeakItem text="No target audience" />
-                <WeakItem text="No output structure" />
-                <WeakItem text="No clear constraints" />
-              </div>
-            </TransformationCard>
+                            <div className="mt-8 space-y-3">
+                                <WeakItem text="No role" />
+                                <WeakItem text="No target audience" />
+                                <WeakItem text="No output structure" />
+                                <WeakItem text="No clear constraints" />
+                            </div>
+                        </TransformationCard>
 
-            {/* ARROW */}
+                        {/* ARROW */}
 
-            <ProcessArrow />
+                        <ProcessArrow />
 
-            {/* PROCESS */}
+                        {/* PROCESS */}
 
                         <div className="rounded-[28px] border border-purple-500/30 bg-gradient-to-b from-purple-500/10 to-pink-500/5 p-7">
                             <div className="flex items-center justify-between">
