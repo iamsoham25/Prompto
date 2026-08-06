@@ -111,82 +111,82 @@ export default function HowItWorks() {
 
                             {/* WORKFLOW */}
 
-        <div className="relative mt-20 lg:mt-24">
-            {/* Desktop connecting line */}
+                            <div className="relative mt-20 lg:mt-24">
+                                {/* Desktop connecting line */}
 
-            <div className="absolute left-[8%] right-[8%] top-[42px] hidden h-[2px] bg-white/10 lg:block">
-                <motion.div
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 1.1 }}
-                    className="h-full origin-left bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500"
-                    />
-            </div>
-
-            {/* Mobile connecting line */}
-
-            <div className="absolute bottom-10 left-[35px] top-10 w-[2px] bg-white/10 lg:hidden">
-                <motion.div
-                    initial={{ scaleY: 0 }}
-                    whileInView={{ scaleY: 1 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 1 }}
-                    className="h-full origin-top bg-gradient-to-b from-orange-500 via-purple-500 to-pink-500"
-                />
-            </div>
-
-            <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-6 lg:gap-4">
-                {steps.map((step, index) => {
-                    const Icon = step.icon;
-
-                    return (
-                        <motion.div
-                            key={step.number}
-                            initial={{ opacity: 0, y: 25 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.3 }}
-                            transition={{
-                                duration: 0.45,
-                                delay: index * 0.06,
-                            }}
-                            className="group relative z-10 flex gap-5 lg:block lg:text-center"
-                            >
-                            {/* STEP ICON */}
-
-                            <div className=" relative flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-slate-900 shadow-xl transition-all duration-300 group-hover:-translate-y-2 group-hover:border-purple-400/50 group-hover:bg-purple-600 " >
-                                <Icon
-                                    size={25}
-                                    className="text-white"
-                                />
-
-                                <div className="absolute -right-2 -top-2 flex h-7 min-w-7 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-black text-white">
-                                    {step.number}
+                                <div className="absolute left-[8%] right-[8%] top-[42px] hidden h-[2px] bg-white/10 lg:block">
+                                    <motion.div
+                                        initial={{ scaleX: 0 }}
+                                        whileInView={{ scaleX: 1 }}
+                                        viewport={{ once: true, amount: 0.5 }}
+                                        transition={{ duration: 1.1 }}
+                                        className="h-full origin-left bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500"
+                                        />
                                 </div>
+
+                                {/* Mobile connecting line */}
+
+                                <div className="absolute bottom-10 left-[35px] top-10 w-[2px] bg-white/10 lg:hidden">
+                                    <motion.div
+                                        initial={{ scaleY: 0 }}
+                                        whileInView={{ scaleY: 1 }}
+                                        viewport={{ once: true, amount: 0.2 }}
+                                        transition={{ duration: 1 }}
+                                        className="h-full origin-top bg-gradient-to-b from-orange-500 via-purple-500 to-pink-500"
+                                    />
+                                </div>
+
+                                <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-6 lg:gap-4">
+                                    {steps.map((step, index) => {
+                                        const Icon = step.icon;
+
+                                        return (
+                                            <motion.div
+                                                key={step.number}
+                                                initial={{ opacity: 0, y: 25 }}
+                                                whileInView={{ opacity: 1, y: 0 }}
+                                                viewport={{ once: true, amount: 0.3 }}
+                                                transition={{
+                                                    duration: 0.45,
+                                                    delay: index * 0.06,
+                                                }}
+                                                className="group relative z-10 flex gap-5 lg:block lg:text-center"
+                                                >
+                                                {/* STEP ICON */}
+
+                                                <div className=" relative flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-slate-900 shadow-xl transition-all duration-300 group-hover:-translate-y-2 group-hover:border-purple-400/50 group-hover:bg-purple-600 " >
+                                                    <Icon
+                                                        size={25}
+                                                        className="text-white"
+                                                    />
+
+                                                    <div className="absolute -right-2 -top-2 flex h-7 min-w-7 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-black text-white">
+                                                        {step.number}
+                                                    </div>
+                                                </div>
+
+                                                {/* STEP TEXT */}
+
+                                                <div className="pt-1 lg:mt-8 lg:pt-0">
+                                                    <h3 className="text-xl font-black text-white lg:text-2xl">
+                                                        {step.title}
+                                                    </h3>
+
+                                                    <p className="mt-3 text-sm leading-6 text-slate-400">
+                                                      {step.description}
+                                                    </p>
+
+                                                </div>
+
+                                            </motion.div>
+
+                                        );
+
+                                    })}
+
+                                </div>
+
                             </div>
-
-                            {/* STEP TEXT */}
-
-                            <div className="pt-1 lg:mt-8 lg:pt-0">
-                                <h3 className="text-xl font-black text-white lg:text-2xl">
-                                    {step.title}
-                                </h3>
-
-                                <p className="mt-3 text-sm leading-6 text-slate-400">
-                                  {step.description}
-                                </p>
-
-                            </div>
-
-                        </motion.div>
-
-                    );
-
-                })}
-
-            </div>
-
-        </div>
 
         {/* TRANSFORMATION SECTION */}
 
