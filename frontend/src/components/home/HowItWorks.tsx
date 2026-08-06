@@ -51,9 +51,9 @@ export default function HowItWorks() {
         <section
             id="how-it-works"
             className="relative overflow-hidden bg-slate-950 py-24 text-white sm:py-28 lg:py-36"
-        >
+            >
       
-        {/* Background Grid */}
+            {/* Background Grid */}
 
             <div
                 className="pointer-events-none absolute inset-0 opacity-[0.035]"
@@ -163,6 +163,7 @@ export default function HowItWorks() {
                                                     <div className="absolute -right-2 -top-2 flex h-7 min-w-7 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-black text-white">
                                                         {step.number}
                                                     </div>
+
                                                 </div>
 
                                                 {/* STEP TEXT */}
@@ -173,7 +174,7 @@ export default function HowItWorks() {
                                                     </h3>
 
                                                     <p className="mt-3 text-sm leading-6 text-slate-400">
-                                                      {step.description}
+                                                        {step.description}
                                                     </p>
 
                                                 </div>
@@ -188,7 +189,7 @@ export default function HowItWorks() {
 
                             </div>
 
-        {/* TRANSFORMATION SECTION */}
+                {/* TRANSFORMATION SECTION */}
 
                 <motion.div
                     initial={{ opacity: 0, y: 35 }}
