@@ -2,56 +2,45 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
-import {
-  BookOpen,
-  BrainCircuit,
-  ChartNoAxesCombined,
-  FlaskConical,
-  Sparkles,
-  TrendingUp,
-} from "lucide-react";
+import { BookOpen, BrainCircuit, ChartNoAxesCombined, FlaskConical, Sparkles, TrendingUp,} 
+
+from "lucide-react";
 
 const steps = [
   {
     number: "01",
     title: "Learn",
-    description:
-      "Build strong foundations with structured Prompt Engineering lessons.",
+    description: "Build strong foundations with structured Prompt Engineering lessons.",
     icon: BookOpen,
   },
   {
     number: "02",
     title: "Practice",
-    description:
-      "Experiment with real prompts using an interactive AI playground.",
+    description: "Experiment with real prompts using an interactive AI playground.",
     icon: FlaskConical,
   },
   {
     number: "03",
     title: "Analyze",
-    description:
-      "Understand clarity, context, role, constraints and output quality.",
+    description: "Understand clarity, context, role, constraints and output quality.",
     icon: ChartNoAxesCombined,
   },
   {
     number: "04",
     title: "Improve",
-    description:
-      "Turn weak instructions into clearer and more effective prompts.",
+    description: "Turn weak instructions into clearer and more effective prompts.",
     icon: TrendingUp,
   },
   {
     number: "05",
     title: "Track",
-    description:
-      "Follow your scores, learning progress, XP and Prompt Engineering growth.",
+    description: "Follow your scores, learning progress, XP and Prompt Engineering growth.",
     icon: Sparkles,
   },
   {
     number: "06",
     title: "Master",
-    description:
-      "Progress from beginner concepts toward advanced AI communication skills.",
+    description: "Progress from beginner concepts toward advanced AI communication skills.",
     icon: BrainCircuit,
   },
 ];
@@ -100,62 +89,35 @@ export default function WhatIsPrompto() {
     >
       {/* Lightweight decorative gradients */}
 
-      <div
-        className="
-          pointer-events-none
-          absolute left-0 top-20
-          h-72 w-72
-          -translate-x-1/2
-          rounded-full
-          bg-purple-50
-        "
-      />
+      <div className=" pointer-events-none absolute left-0 top-20 h-72 w-72 -translate-x-1/2 rounded-full bg-purple-50 " />
 
-      <div
-        className="
-          pointer-events-none
-          absolute bottom-0 right-0
-          h-72 w-72
-          translate-x-1/2
-          rounded-full
-          bg-orange-50
-        "
-      />
+        <div className=" pointer-events-none absolute bottom-0 right-0 h-72 w-72 translate-x-1/2 rounded-full bg-orange-50 " />
 
-      <div
-        className="
-          relative mx-auto
-          max-w-[1400px]
-          px-5
+          <div className=" relative mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16 " >
 
-          sm:px-8
-          lg:px-12
-          xl:px-16
-        "
-      >
-        <motion.div
-          initial={
-            reduceMotion
-              ? false
-              : {
-                  opacity: 0,
-                  y: 25,
-                }
-          }
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.25,
-          }}
-          transition={{
-            duration: 0.55,
-            ease,
-          }}
-          className="mx-auto max-w-4xl text-center"
-        >
+            <motion.div
+              initial={
+                reduceMotion
+                ? false
+                  : {
+                    opacity: 0,
+                    y: 25,
+                  }
+              }
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+                amount: 0.25,
+              }}
+              transition={{
+                duration: 0.55,
+                ease,
+              }}
+              className="mx-auto max-w-4xl text-center"
+            >
           <span
             className="
               text-sm font-black uppercase

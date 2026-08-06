@@ -116,23 +116,23 @@ export default function HowItWorks() {
 
             <div className="absolute left-[8%] right-[8%] top-[42px] hidden h-[2px] bg-white/10 lg:block">
                 <motion.div
-                     initial={{ scaleX: 0 }}
-                     whileInView={{ scaleX: 1 }}
-                     viewport={{ once: true, amount: 0.5 }}
-                     transition={{ duration: 1.1 }}
-                     className="h-full origin-left bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true, amount: 0.5 }}
+                    transition={{ duration: 1.1 }}
+                    className="h-full origin-left bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500"
                     />
-                  </div>
+            </div>
 
-          {/* Mobile connecting line */}
+            {/* Mobile connecting line */}
 
-          <div className="absolute bottom-10 left-[35px] top-10 w-[2px] bg-white/10 lg:hidden">
-            <motion.div
-              initial={{ scaleY: 0 }}
-              whileInView={{ scaleY: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 1 }}
-              className="h-full origin-top bg-gradient-to-b from-orange-500 via-purple-500 to-pink-500"
+            <div className="absolute bottom-10 left-[35px] top-10 w-[2px] bg-white/10 lg:hidden">
+                <motion.div
+                    initial={{ scaleY: 0 }}
+                    whileInView={{ scaleY: 1 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 1 }}
+                    className="h-full origin-top bg-gradient-to-b from-orange-500 via-purple-500 to-pink-500"
             />
           </div>
 
