@@ -13,16 +13,8 @@ export default function StoryIntro() {
       
       {/* Static background glows */}
 
-      <div
-        className="
-          pointer-events-none
-          absolute left-[5%] top-[10%]
-          hidden h-[300px] w-[300px]
-          rounded-full
-          bg-purple-700/15
-          blur-[80px]
-
-          md:block
+      <div className=" pointer-events-none absolute left-[5%] top-[10%] hidden h-[300px] w-[300px] rounded-full
+          bg-purple-700/15 blur-[80px] md:block
         "
       />
 
