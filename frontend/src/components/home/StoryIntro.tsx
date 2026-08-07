@@ -15,13 +15,7 @@ export default function StoryIntro() {
 
       <div className=" pointer-events-none absolute left-[5%] top-[10%] hidden h-[300px] w-[300px] rounded-full bg-purple-700/15 blur-[80px] md:block " />
 
-      <div className=" pointer-events-none absolute bottom-[-100px] right-[5%] hidden h-[320px] w-[320px] rounded-full
-          bg-pink-600/10
-          blur-[80px]
-
-          md:block
-        "
-      />
+      <div className=" pointer-events-none absolute bottom-[-100px] right-[5%] hidden h-[320px] w-[320px] rounded-full bg-pink-600/10 blur-[80px] md:block " />
 
       {/* Grid */}
 
