@@ -39,10 +39,7 @@ export default function Marquee() {
           ))}
         </div>
 
-        <div
-          className="prompto-marquee-group"
-          aria-hidden="true"
-        >
+        <div className="prompto-marquee-group" aria-hidden="true" >
           {marqueeItems.map((item, index) => (
             <div
               key={`second-${index}`}
