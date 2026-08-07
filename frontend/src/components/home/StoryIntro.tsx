@@ -34,13 +34,7 @@ export default function StoryIntro() {
         }}
       />
 
-      <div
-        className="
-          relative z-10
-          mx-auto max-w-6xl
-          text-center
-        "
-      >
+      <div className=" relative z-10 mx-auto max-w-6xl text-center " >
         <motion.p
           initial={
             reduceMotion
