@@ -9,18 +9,8 @@ export default function StoryIntro() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section
-      className="
-        relative overflow-hidden
-        bg-[#09090f]
-        px-5 py-28
-        text-white
-
-        sm:px-8 sm:py-36
-
-        lg:px-12 lg:py-44
-      "
-    >
+    <section className=" relative overflow-hidden bg-[#09090f] px-5 py-28 text-white sm:px-8 sm:py-36 lg:px-12 lg:py-44 " >
+      
       {/* Static background glows */}
 
       <div
