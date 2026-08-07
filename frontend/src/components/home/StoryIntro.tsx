@@ -88,12 +88,7 @@ export default function StoryIntro() {
             duration: 0.4,
             ease,
           }}
-          className="
-            mx-auto my-10
-            h-16 w-px
-            origin-top
-            bg-gradient-to-b
-            from-purple-400
+          className=" mx-auto my-10 h-16 w-px origin-top bg-gradient-to-b from-purple-400
             to-pink-500
           "
         />
