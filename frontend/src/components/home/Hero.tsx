@@ -365,10 +365,7 @@ export default function Hero() {
                     </div>
 
                     <div
-                      className="
-                        h-2 overflow-hidden
-                        rounded-full bg-slate-100
-                      "
+                      className=" h-2 overflow-hidden rounded-full bg-slate-100 "
                     >
                       <div
                         className="
