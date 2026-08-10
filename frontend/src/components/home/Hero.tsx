@@ -317,13 +317,7 @@ export default function Hero() {
               </p>
 
               <div
-                className="
-                  rounded-2xl border border-slate-200
-                  bg-slate-50 p-4
-                  text-sm leading-6 text-slate-700
-
-                  sm:p-5 sm:text-base
-                "
+                className=" rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700 sm:p-5 sm:text-base "
               >
                 Act as an AI product strategist. Analyze the following product
                 idea and provide its target audience, key features, risks and a
