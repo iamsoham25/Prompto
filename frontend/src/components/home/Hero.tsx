@@ -368,13 +368,7 @@ export default function Hero() {
                       className=" h-2 overflow-hidden rounded-full bg-slate-100 "
                     >
                       <div
-                        className="
-                          h-full rounded-full
-                          bg-gradient-to-r
-                          from-indigo-500
-                          via-purple-500
-                          to-pink-500
-                        "
+                        className=" h-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
                         style={{
                           width: `${score.value}%`,
                         }}
