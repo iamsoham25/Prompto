@@ -1,45 +1,384 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
 
 :root {
-  --background: #fff7fb;
-  --foreground: #111827;
+  /* =====================================================
+     PROMPTO DESIGN TOKENS
+  ===================================================== */
+
+  --ink: #151327;
+  --ink-soft: #5b5670;
+  --ink-faint: #9a96ab;
+
+  --bg: #ffffff;
+  --bg-soft: #faf9fc;
+
+  --line: #eae7f2;
+
+  --orange: #ff5e1f;
+  --orange-soft: #ffe9dd;
+
+  --blue: #4c3df0;
+  --purple: #8b3de0;
+  --pink: #ec4899;
+
+  --card: #f6f3ff;
+
+  --green: #2fbe7a;
+
+  --hero-gradient: linear-gradient(
+    135deg,
+    #2c2a78 0%,
+    #6d2fd1 48%,
+    #e23e8c 100%
+  );
+
+  --progress-gradient: linear-gradient(
+    90deg,
+    var(--blue),
+    var(--purple),
+    var(--pink)
+  );
+
+  --radius-card: 16px;
+
+  --shadow-card:
+    0 12px 35px rgba(21, 19, 39, 0.06);
+
+  --shadow-card-hover:
+    0 18px 45px rgba(21, 19, 39, 0.11);
+
+  --ease:
+    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =====================================================
+   BASE
+===================================================== */
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
 }
 
-/* ========================================
-   PROMPTO HOME PAGE MARQUEE
-======================================== */
-
-.prompto-marquee {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-  animation: prompto-marquee-scroll 30s linear infinite;
+* {
+  box-sizing: border-box;
 }
 
-.prompto-marquee-group {
-  display: flex;
-  flex-shrink: 0;
+::selection {
+  background: var(--orange);
+  color: white;
+}
+
+/* =====================================================
+   TYPOGRAPHY
+===================================================== */
+
+.font-display {
+  font-family: var(--font-space), sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+.display-title {
+  font-family: var(--font-space), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.body-text {
+  color: var(--ink-soft);
+  line-height: 1.75;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.btn-primary {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 48px;
+  padding: 0 22px;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: var(--orange);
+  color: white;
+
+  font-family: var(--font-inter), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    background 0.22s ease;
 }
 
-@keyframes prompto-marquee-scroll {
-  from {
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background: #ef4f15;
+  box-shadow: 0 10px 25px rgba(255, 94, 31, 0.22);
+}
+
+.btn-ghost-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 48px;
+  padding: 0 22px;
+
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  backdrop-filter: blur(12px);
+
+  transition:
+    transform 0.22s var(--ease),
+    background 0.22s ease;
+}
+
+.btn-ghost-dark:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 46px;
+  padding: 0 20px;
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+
+  background: white;
+  color: var(--ink);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition:
+    transform 0.22s var(--ease),
+    border-color 0.22s ease,
+    box-shadow 0.22s var(--ease);
+}
+
+.btn-ghost:hover {
+  transform: translateY(-2px);
+  border-color: #d8d2e8;
+  box-shadow: var(--shadow-card);
+}
+
+/* =====================================================
+   SHARED CARD
+===================================================== */
+
+.prompto-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: white;
+  box-shadow: var(--shadow-card);
+}
+
+.prompto-card-hover {
+  transition:
+    transform 0.22s var(--ease),
+    box-shadow 0.22s var(--ease);
+}
+
+.prompto-card-hover:hover {
+  transform:
+    translateY(-5px)
+    perspective(1000px)
+    rotateX(1deg);
+
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* =====================================================
+   SECTION
+===================================================== */
+
+.prompto-section {
+  position: relative;
+  width: 100%;
+  padding: 110px 0;
+}
+
+.prompto-container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* =====================================================
+   GRADIENT HERO
+===================================================== */
+
+.prompto-gradient {
+  background: var(--hero-gradient);
+}
+
+/* =====================================================
+   PROGRESS
+===================================================== */
+
+.prompto-progress {
+  height: 8px;
+  width: 100%;
+
+  overflow: hidden;
+  border-radius: 999px;
+
+  background: var(--bg-soft);
+}
+
+.prompto-progress > div {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--progress-gradient);
+}
+
+/* =====================================================
+   SCROLL REVEAL
+===================================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+
+  transition:
+    opacity 0.65s var(--ease),
+    transform 0.65s var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =====================================================
+   AMBIENT ORBS
+===================================================== */
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: ambient-drift 16s ease-in-out infinite;
+}
+
+.ambient-orb-two {
+  animation-duration: 19s;
+  animation-delay: -5s;
+}
+
+.ambient-orb-three {
+  animation-duration: 13s;
+  animation-delay: -9s;
+}
+
+@keyframes ambient-drift {
+  0%,
+  100% {
     transform: translate3d(0, 0, 0);
   }
 
-  to {
-    transform: translate3d(-50%, 0, 0);
+  50% {
+    transform: translate3d(35px, -25px, 0);
   }
 }
 
+/* =====================================================
+   MARQUEE
+===================================================== */
+
+.prompto-marquee {
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background: white;
+}
+
+.prompto-marquee-track {
+  display: flex;
+  width: max-content;
+
+  animation:
+    prompto-marquee 30s linear infinite;
+}
+
+@keyframes prompto-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
 @media (prefers-reduced-motion: reduce) {
-  .prompto-marquee {
-    animation: none;
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 768px) {
+  .prompto-section {
+    padding: 80px 0;
+  }
+
+  .prompto-container {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .display-title {
+    letter-spacing: -0.045em;
   }
 }
