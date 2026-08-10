@@ -327,17 +327,7 @@ export default function Hero() {
               {/* Score */}
 
               <div
-                className="
-                  mt-5 flex flex-col gap-4
-                  rounded-2xl
-                  bg-gradient-to-r
-                  from-indigo-50 to-pink-50
-                  p-5
-
-                  sm:flex-row
-                  sm:items-center
-                  sm:justify-between
-                "
+                className=" mt-5 flex flex-col gap-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-pink-50 p-5 sm:flex-row sm:items-center sm:justify-between "
               >
                 <div>
                   <p className="text-sm text-slate-500">
