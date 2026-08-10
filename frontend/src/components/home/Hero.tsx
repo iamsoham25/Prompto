@@ -346,15 +346,7 @@ export default function Hero() {
                 </div>
 
                 <span
-                  className="
-                    w-fit rounded-full
-                    bg-emerald-100
-                    px-4 py-2
-                    text-xs font-extrabold
-                    text-emerald-700
-
-                    sm:text-sm
-                  "
+                  className=" w-fit rounded-full bg-emerald-100 px-4 py-2 text-xs font-extrabold text-emerald-700 sm:text-sm "
                 >
                   STRONG PROMPT
                 </span>
