@@ -358,11 +358,7 @@ export default function Hero() {
                 {scoreBars.map((score) => (
                   <div key={score.label}>
                     <div
-                      className="
-                        mb-2 flex
-                        items-center justify-between
-                        text-sm font-semibold
-                      "
+                      className=" mb-2 flex items-center justify-between text-sm font-semibold "
                     >
                       <span>{score.label}</span>
                       <span>{score.value}</span>
