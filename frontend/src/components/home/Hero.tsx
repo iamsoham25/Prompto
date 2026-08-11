@@ -275,12 +275,7 @@ export default function Hero() {
             >
               <div className="flex items-center gap-3">
                 <div
-                  className="
-                    flex h-11 w-11
-                    items-center justify-center
-                    rounded-xl bg-orange-100
-                    text-xl
-                  "
+                  className=" flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-xl "
                 >
                   🧠
                 </div>
