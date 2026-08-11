@@ -396,16 +396,7 @@ export default function Hero() {
           {/* XP card */}
 
           <div
-            className="
-              absolute -bottom-7 -left-3
-              hidden rounded-2xl
-              border border-white/50
-              bg-white px-5 py-4
-              text-slate-950 shadow-xl
-
-              sm:block
-              lg:-left-8
-            "
+            className=" absolute -bottom-7 -left-3 hidden rounded-2xl border border-white/50 bg-white px-5 py-4 text-slate-950 shadow-xl sm:block lg:-left-8 "
           >
             <p className="text-xs text-slate-500">
               Challenge Reward
