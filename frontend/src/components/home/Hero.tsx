@@ -413,14 +413,7 @@ export default function Hero() {
 
       <a
         href="#what-is-prompto"
-        className="
-          relative z-20 mx-auto mb-8
-          flex w-fit items-center gap-2
-          text-xs font-semibold uppercase
-          tracking-[0.18em] text-white/65
-
-          sm:text-sm
-        "
+        className=" relative z-20 mx-auto mb-8 flex w-fit items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/65 sm:text-sm "
       >
         Scroll to Explore
         <ChevronDown size={17} />
