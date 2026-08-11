@@ -266,12 +266,7 @@ export default function Hero() {
             {/* Header */}
 
             <div
-              className="
-                flex items-center justify-between
-                border-b border-slate-200
-                px-5 py-4
-                sm:px-7 sm:py-5
-              "
+              className=" flex items-center justify-between border-b border-slate-200 px-5 py-4 sm:px-7 sm:py-5 "
             >
               <div className="flex items-center gap-3">
                 <div
