@@ -381,12 +381,7 @@ export default function Hero() {
               {/* Tip */}
 
               <div
-                className="
-                  mt-6 flex items-start gap-3
-                  rounded-xl border border-orange-200
-                  bg-orange-50 p-4
-                  text-sm font-medium text-orange-800
-                "
+                className=" mt-6 flex items-start gap-3 rounded-xl border border-orange-200 bg-orange-50 p-4 text-sm font-medium text-orange-800 "
               >
                 <Lightbulb
                   size={18}
