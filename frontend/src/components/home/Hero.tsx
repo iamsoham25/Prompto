@@ -249,10 +249,7 @@ export default function Hero() {
             duration: 0.65,
             ease,
           }}
-          className="
-            relative mx-auto
-            w-full max-w-[620px]
-          "
+          className=" relative mx-auto w-full max-w-[620px] "
         >
           <div
             className=" relative overflow-hidden rounded-[28px] border border-white/40 bg-white text-slate-950 shadow-2xl "
