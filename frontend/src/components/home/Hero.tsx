@@ -255,11 +255,7 @@ export default function Hero() {
           "
         >
           <div
-            className="
-              relative overflow-hidden
-              rounded-[28px]
-              border border-white/40
-              bg-white text-slate-950 shadow-2xl "
+            className=" relative overflow-hidden rounded-[28px] border border-white/40 bg-white text-slate-950 shadow-2xl "
           >
             {/* Header */}
 
