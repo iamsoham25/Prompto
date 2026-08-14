@@ -207,11 +207,7 @@ export default function Hero() {
             {benefits.map((benefit) => (
               <div
                 key={benefit}
-                className="
-                  flex items-center gap-2
-                  text-sm font-medium text-white/85
-                  sm:text-base
-                "
+                className=" flex items-center gap-2 text-sm font-medium text-white/85 sm:text-base "
               >
                 <span
                   className=" flex h-5 w-5 items-center justify-center rounded-full border border-white/50 "
