@@ -214,11 +214,7 @@ export default function Hero() {
                 "
               >
                 <span
-                  className="
-                    flex h-5 w-5
-                    items-center justify-center
-                    rounded-full border border-white/50
-                  "
+                  className=" flex h-5 w-5 items-center justify-center rounded-full border border-white/50 "
                 >
                   <Check size={12} />
                 </span>
