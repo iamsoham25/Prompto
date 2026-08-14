@@ -259,9 +259,7 @@ export default function Hero() {
               relative overflow-hidden
               rounded-[28px]
               border border-white/40
-              bg-white text-slate-950
-              shadow-2xl
-            "
+              bg-white text-slate-950 shadow-2xl "
           >
             {/* Header */}
 
