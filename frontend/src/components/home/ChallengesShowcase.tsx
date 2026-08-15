@@ -136,12 +136,7 @@ export default function ChallengesShowcase() {
       ===================================================== */}
 
       <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          opacity-[0.035]
-        "
+        className=" pointer-events-none absolute inset-0 opacity-[0.035] "
         style={{
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.7) 1px, transparent 1px),
