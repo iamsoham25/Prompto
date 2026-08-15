@@ -188,17 +188,7 @@ export default function ChallengesShowcase() {
           className=" mx-auto max-w-4xl text-center "
         >
           <div
-            className="
-              inline-flex
-              items-center
-              gap-2
-              rounded-full
-              border
-              border-orange-400/20
-              bg-orange-400/10
-              px-4
-              py-2
-            "
+            className=" inline-flex items-center gap-2 rounded-full border border-orange-400/20 bg-orange-400/10 px-4 py-2 "
           >
             <Trophy
               size={15}
