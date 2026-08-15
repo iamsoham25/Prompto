@@ -151,17 +151,7 @@ export default function ChallengesShowcase() {
       />
 
       <div
-        className="
-          pointer-events-none
-          absolute
-          -right-[200px]
-          top-[30%]
-          h-[550px]
-          w-[550px]
-          rounded-full
-          bg-purple-600/20
-          blur-[170px]
-        "
+        className=" pointer-events-none absolute -right-[200px] top-[30%] h-[550px] w-[550px] rounded-full bg-purple-600/20 blur-[170px] "
       />
 
       <div
