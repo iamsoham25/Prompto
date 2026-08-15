@@ -196,13 +196,7 @@ export default function ChallengesShowcase() {
             />
 
             <span
-              className="
-                text-xs
-                font-black
-                uppercase
-                tracking-[0.22em]
-                text-orange-400
-              "
+              className=" text-xs font-black uppercase tracking-[0.22em] text-orange-400 "
             >
               Challenge Arena
             </span>
