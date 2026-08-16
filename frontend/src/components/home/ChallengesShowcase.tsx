@@ -2,13 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  Bot,
-  Braces,
-  BrainCircuit,
-  BriefcaseBusiness,
-  CheckCircle2,
+import { ArrowRight, Bot, Braces, BrainCircuit, BriefcaseBusiness, CheckCircle2,
   Code2,
   Crown,
   FileText,
