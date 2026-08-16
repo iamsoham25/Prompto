@@ -14,11 +14,7 @@ import { ArrowRight, Bot, Braces, BrainCircuit, BriefcaseBusiness, CheckCircle2,
   Medal,
   Network,
   Sparkles,
-  Star,
-  Target,
-  Trophy,
-  Zap,
-} from "lucide-react";
+  Star, Target, Trophy, Zap, } from "lucide-react";
 
 /* =========================================================
    CHALLENGE TRACKS
