@@ -10,11 +10,7 @@ import { ArrowRight, Bot, Braces, BrainCircuit, BriefcaseBusiness, CheckCircle2,
   GraduationCap,
   Lightbulb,
   Lock,
-  Megaphone,
-  Medal,
-  Network,
-  Sparkles,
-  Star, Target, Trophy, Zap, } from "lucide-react";
+  Megaphone, Medal, Network, Sparkles, Star, Target, Trophy, Zap, } from "lucide-react";
 
 /* =========================================================
    CHALLENGE TRACKS
