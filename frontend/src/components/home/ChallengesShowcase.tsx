@@ -120,9 +120,7 @@ export default function ChallengesShowcase() {
     return (
     <section
       id="challenges-showcase"
-      className=" relative overflow-hidden bg-[#080910] py-24 text-white sm:py-28
-        lg:py-36
-      "
+      className=" relative overflow-hidden bg-[#080910] py-24 text-white sm:py-28 lg:py-36 "
     >
       {/* =====================================================
           BACKGROUND
