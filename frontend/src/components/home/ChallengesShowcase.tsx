@@ -172,16 +172,7 @@ export default function ChallengesShowcase() {
           </div>
 
           <h2
-            className="
-              mt-6
-              text-4xl
-              font-black
-              leading-[1.05]
-              tracking-[-0.045em]
-
-              sm:text-5xl
-              lg:text-7xl
-            "
+            className=" mt-6 text-4xl font-black leading-[1.05] tracking-[-0.045em] sm:text-5xl lg:text-7xl "
           >
             Learning is only the start.
             <br />
