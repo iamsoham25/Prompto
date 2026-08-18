@@ -178,10 +178,7 @@ export default function ChallengesShowcase() {
             <br />
 
             <span
-              className=" bg-gradient-to-r from-orange-400 via-purple-400
-                to-pink-400
-                bg-clip-text
-                text-transparent
+              className=" bg-gradient-to-r from-orange-400 via-purple-400 to-pink-400 bg-clip-text text-transparent
               "
             >
               Now prove your skills.
