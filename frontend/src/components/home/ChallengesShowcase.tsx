@@ -178,16 +178,14 @@ export default function ChallengesShowcase() {
             <br />
 
             <span
-              className=" bg-gradient-to-r from-orange-400 via-purple-400 to-pink-400 bg-clip-text text-transparent
-              "
+              className=" bg-gradient-to-r from-orange-400 via-purple-400 to-pink-400 bg-clip-text text-transparent "
             >
               Now prove your skills.
             </span>
           </h2>
 
           <p
-            className="
-              mx-auto
+            className=" mx-auto
               mt-7
               max-w-3xl
               text-base
