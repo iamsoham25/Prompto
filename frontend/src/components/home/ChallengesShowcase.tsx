@@ -185,11 +185,7 @@ export default function ChallengesShowcase() {
           </h2>
 
           <p
-            className=" mx-auto
-              mt-7
-              max-w-3xl
-              text-base
-              leading-8
+            className=" mx-auto mt-7 max-w-3xl text-base leading-8
               text-slate-400
 
               sm:text-lg
