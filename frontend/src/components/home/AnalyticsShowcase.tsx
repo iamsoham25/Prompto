@@ -139,9 +139,7 @@ export default function AnalyticsShowcase() {
             <br />
 
             <span
-              className=" bg-gradient-to-r from-orange-500
-                via-purple-600
-                to-pink-500
+              className=" bg-gradient-to-r from-orange-500 via-purple-600 to-pink-500
                 bg-clip-text
                 text-transparent
               "
