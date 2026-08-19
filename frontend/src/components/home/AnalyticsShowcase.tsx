@@ -2,31 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  BarChart3,
-  BrainCircuit,
-  ChartNoAxesCombined,
-  CircleCheck,
-  Lightbulb,
-  Sparkles,
-  Target,
-  TrendingUp,
-  TriangleAlert,
-} from "lucide-react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  PolarAngleAxis,
-  PolarGrid,
-  Radar,
-  RadarChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { ArrowRight, BarChart3, BrainCircuit, ChartNoAxesCombined, CircleCheck, Lightbulb, Sparkles, Target, TrendingUp, TriangleAlert,} from "lucide-react";
+import { Area, AreaChart, CartesianGrid, PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from "recharts";
 
 /* =========================================================
    DEMO ANALYTICS DATA
@@ -97,15 +74,7 @@ export default function AnalyticsShowcase() {
   return (
     <section
       id="analytics-showcase"
-      className="
-        relative
-        overflow-hidden
-        bg-[#f8fafc]
-        py-24
-
-        sm:py-28
-        lg:py-36
-      "
+      className=" relative overflow-hidden bg-[#f8fafc] py-24 sm:py-28 lg:py-36 "
     >
       {/* =====================================================
           BACKGROUND
