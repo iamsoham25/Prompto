@@ -85,12 +85,7 @@ export default function AnalyticsShowcase() {
       />
 
       <div
-        className="
-          pointer-events-none
-          absolute
-          -right-40
-          top-[35%]
-          h-[500px]
+        className=" pointer-events-none absolute -right-40 top-[35%] h-[500px]
           w-[500px]
           rounded-full
           bg-orange-100/70
