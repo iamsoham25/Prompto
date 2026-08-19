@@ -1,2370 +1,1324 @@
 "use client";
 
-import API from "@/services/api";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import {
-  useEffect,
-  useState
-} from "react";
+/* ============================================================
+   DASHBOARD DATA
+   ------------------------------------------------------------
+   Keep Dashboard data separate from Analytics data.
 
-import {
-  useRouter
-} from "next/navigation";
+   Dashboard = current state, progression, recent activity,
+   achievements and next actions.
 
-import {
-  motion
-} from "framer-motion";
+   Analytics = historical trends, comparisons, detailed
+   evaluation analysis, charts, etc.
+   ============================================================ */
 
-import TiltCard from "@/components/ui/TiltCard";
-import Reveal from "@/components/ui/Reveal";
+const dashboardData = {
+  user: {
+    name: "Soham",
+    greeting: "GOOD AFTERNOON",
+  },
+
+  overview: {
+    totalXP: 440,
+    currentLevel: 2,
+    levelName: "Beginner",
+    rank: 1,
+    streak: 7,
+    challengesCompleted: 1,
+    challengeAttempts: 1,
+    levelProgress: 80,
+  },
+
+  skills: [
+    {
+      name: "Clarity",
+      score: 82,
+      description: "Clear and precise instructions",
+      icon: "✦",
+    },
+    {
+      name: "Context",
+      score: 74,
+      description: "Relevant background information",
+      icon: "◉",
+    },
+    {
+      name: "Constraints",
+      score: 68,
+      description: "Well-defined requirements",
+      icon: "◇",
+    },
+    {
+      name: "Output Format",
+      score: 79,
+      description: "Structured expected output",
+      icon: "▣",
+    },
+  ],
+
+  learning: [
+    {
+      name: "Prompt Fundamentals",
+      progress: 100,
+      status: "Completed",
+    },
+    {
+      name: "Prompt Structure",
+      progress: 80,
+      status: "In Progress",
+    },
+    {
+      name: "Advanced Prompting",
+      progress: 35,
+      status: "In Progress",
+    },
+    {
+      name: "AI Agents",
+      progress: 15,
+      status: "Locked",
+    },
+  ],
+
+  recentActivity: [
+    {
+      title: "Prompt Engineering Challenge",
+      type: "Challenge",
+      score: 87,
+      xp: 80,
+      status: "Completed",
+      icon: "01",
+    },
+    {
+      title: "AI Product Strategy Prompt",
+      type: "Evaluation",
+      score: 87,
+      xp: 40,
+      status: "Evaluated",
+      icon: "02",
+    },
+    {
+      title: "Machine Learning Explanation",
+      type: "Playground",
+      score: 91,
+      xp: 30,
+      status: "Completed",
+      icon: "03",
+    },
+  ],
+
+  achievements: [
+    {
+      title: "First Challenge",
+      description: "Completed your first challenge",
+      icon: "🏆",
+      unlocked: true,
+    },
+    {
+      title: "400 XP",
+      description: "Reached 400 experience points",
+      icon: "⚡",
+      unlocked: true,
+    },
+    {
+      title: "Prompt Evaluator",
+      description: "Completed your first evaluation",
+      icon: "🎯",
+      unlocked: true,
+    },
+    {
+      title: "7 Day Streak",
+      description: "Practiced for 7 consecutive days",
+      icon: "🔥",
+      unlocked: true,
+    },
+  ],
+};
+
+
+/* ============================================================
+   SMALL COMPONENTS
+   ============================================================ */
+
+function AnimatedNumber({
+  value,
+  duration = 900,
+}: {
+  value: number;
+  duration?: number;
+}) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    let startTime: number | null = null;
+    let animationFrame: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+
+      const progress = Math.min(
+        (timestamp - startTime) / duration,
+        1
+      );
+
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      setDisplayValue(Math.round(value * eased));
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [value, duration]);
+
+  return <>{displayValue}</>;
+}
+
+
+/* ============================================================
+   FLOATING 3D PARTICLES
+   ============================================================ */
+
+function Particles() {
+  const particles = Array.from({ length: 28 });
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {particles.map((_, index) => {
+        const left = (index * 37) % 100;
+        const top = (index * 61) % 100;
+        const delay = (index % 8) * 0.7;
+
+        return (
+          <span
+            key={index}
+            className="absolute h-1 w-1 rounded-full bg-white/50 animate-pulse"
+            style={{
+              left: `${left}%`,
+              top: `${top}%`,
+              animationDelay: `${delay}s`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+
+/* ============================================================
+   3D PROMPT ORB
+   ============================================================ */
+
+function PromptOrb() {
+  return (
+    <div className="relative mx-auto flex h-[300px] w-[300px] items-center justify-center sm:h-[350px] sm:w-[350px]">
+
+      {/* Outer glow */}
+      <div className="absolute h-[230px] w-[230px] rounded-full bg-fuchsia-600/30 blur-[70px] animate-pulse" />
+
+      {/* Outer rotating ring */}
+      <div
+        className="absolute h-[280px] w-[280px] rounded-full border border-purple-400/30 animate-[spin_18s_linear_infinite]"
+      />
+
+      {/* Second rotating ring */}
+      <div
+        className="absolute h-[235px] w-[235px] rounded-full border border-pink-400/30 animate-[spin_12s_linear_infinite_reverse]"
+      />
+
+      {/* Orbit */}
+      <div
+        className="absolute h-[205px] w-[205px] rounded-full border border-orange-400/30 animate-[spin_8s_linear_infinite]"
+      >
+        <div className="absolute -top-1 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-orange-400 shadow-[0_0_20px_#fb923c]" />
+      </div>
+
+      {/* Main sphere */}
+      <div className="relative h-[170px] w-[170px] rounded-full bg-gradient-to-br from-orange-400 via-pink-500 to-purple-700 shadow-[0_0_80px_rgba(217,70,239,0.55)] animate-[float_5s_ease-in-out_infinite]">
+
+        {/* Sphere highlight */}
+        <div className="absolute left-8 top-7 h-12 w-12 rounded-full bg-white/35 blur-md" />
+
+        {/* Inner sphere */}
+        <div className="absolute inset-[18px] rounded-full bg-gradient-to-br from-purple-950/80 via-pink-700/50 to-orange-500/40 backdrop-blur" />
+
+        {/* Prompt symbol */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-5xl font-black text-white drop-shadow-lg">
+            P
+          </span>
+        </div>
+      </div>
+
+      {/* Floating labels */}
+
+      <div className="absolute -left-5 top-10 rounded-2xl border border-white/10 bg-white/[0.08] px-4 py-2 backdrop-blur-xl animate-[float_4s_ease-in-out_infinite]">
+        <p className="text-[9px] font-bold uppercase tracking-widest text-white/50">
+          Skill
+        </p>
+        <p className="text-sm font-black text-white">
+          Prompting
+        </p>
+      </div>
+
+      <div className="absolute -right-4 bottom-10 rounded-2xl border border-white/10 bg-white/[0.08] px-4 py-2 backdrop-blur-xl animate-[float_4.5s_ease-in-out_infinite]">
+        <p className="text-[9px] font-bold uppercase tracking-widest text-white/50">
+          Level
+        </p>
+        <p className="text-sm font-black text-white">
+          02
+        </p>
+      </div>
+
+    </div>
+  );
+}
+
+
+/* ============================================================
+   MAIN DASHBOARD
+   ============================================================ */
 
 export default function DashboardPage() {
 
-  const router = useRouter();
+  const data = dashboardData;
 
+  /* ------------------------------------------------------------
+     Calculate current average from Dashboard activity.
 
-  // ========================================================
-  // Dashboard State
-  // ========================================================
+     This fixes the old "0.0" problem.
 
-  const [loading, setLoading] =
-    useState(true);
+     IMPORTANT:
+     This is a Dashboard summary only.
+     Detailed score history belongs to Analytics.
+     ------------------------------------------------------------ */
 
-  const [greeting, setGreeting] =
-    useState("");
+  const scoredActivities = data.recentActivity.filter(
+    (activity) => typeof activity.score === "number"
+  );
 
-  const [recentChats, setRecentChats] =
-    useState<any[]>([]);
+  const averageScore =
+    scoredActivities.length > 0
+      ? (
+          scoredActivities.reduce(
+            (sum, activity) => sum + activity.score,
+            0
+          ) / scoredActivities.length
+        ).toFixed(1)
+      : "—";
 
-  const [rank, setRank] =
-    useState<number | string>("-");
 
-  const [dailyChallenge, setDailyChallenge] =
-    useState<any>(null);
+  const strongestSkill = [...data.skills].sort(
+    (a, b) => b.score - a.score
+  )[0];
 
-  const [xpData, setXpData] =
-    useState<any>(null);
+  const weakestSkill = [...data.skills].sort(
+    (a, b) => a.score - b.score
+  )[0];
 
-  const [streakData, setStreakData] =
-    useState<any>(null);
-
-  const [achievements, setAchievements] =
-    useState<any[]>([]);
-
-  const [coach, setCoach] =
-    useState<any>(null);
-
-  const [promptMastery, setPromptMastery] =
-    useState<any>(null);
-
-  const [
-    completedChallenges,
-    setCompletedChallenges
-  ] = useState(0);
-
-  const [
-    challengeAttempts,
-    setChallengeAttempts
-  ] = useState(0);
-
-
-  // ========================================================
-  // User Stats
-  // ========================================================
-
-  const [stats, setStats] = useState({
-
-    username: "",
-
-    email: "",
-
-    total_chats: 0,
-
-    completed_lessons: 0,
-
-    skill_level: "Beginner"
-
-  });
-
-
-  // ========================================================
-  // Learning Progress
-  // ========================================================
-
-  const [
-    lessonProgress,
-    setLessonProgress
-  ] = useState({
-
-    total_lessons: 0,
-
-    completed_lessons: 0,
-
-    progress: 0,
-
-    beginner_completed: 0,
-
-    intermediate_completed: 0,
-
-    intermediate_unlocked: false,
-
-    advanced_unlocked: false
-
-  });
-
-
-  // ========================================================
-  // Achievement Icons
-  // ========================================================
-
-  const achievementIcons:
-    Record<string, string> = {
-
-      "Beginner Explorer": "🧭",
-
-      "First Lesson": "📚",
-
-      "Learning Streak": "🔥",
-
-      "AI Explorer": "🤖",
-
-      "Prompt Engineer": "🚀",
-
-      "Prompt Master": "👑",
-
-      "Challenge Champion": "🏆",
-
-      "XP Hunter": "⚡"
-
-    };
-
-
-  // ========================================================
-  // Lesson Recommendation Map
-  // ========================================================
-
-  const lessonMap:
-    Record<string, string> = {
-
-      Clarity:
-        "Prompt Clarity Masterclass",
-
-      Context:
-        "Context Engineering",
-
-      Constraints:
-        "Constraint Engineering",
-
-      Specificity:
-        "Specific Prompting",
-
-      Role:
-        "Role Prompting",
-
-      Output:
-        "Output Format Engineering",
-
-      Examples:
-        "Few-Shot Prompting"
-
-    };
-
-
-  // ========================================================
-  // Greeting
-  // ========================================================
-
-  const getGreeting = () => {
-
-    const hour =
-      new Date().getHours();
-
-    if (hour < 12) {
-
-      return "Good Morning ☀️";
-
-    }
-
-    if (hour < 18) {
-
-      return "Good Afternoon 🌤️";
-
-    }
-
-    return "Good Evening 🌙";
-
-  };
-
-
-  // ========================================================
-  // Fetch Dashboard Stats
-  // ========================================================
-
-  const fetchDashboardStats =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        const res =
-          await API.get(
-            `/dashboard-stats/${email}`
-          );
-
-        if (res.data.success) {
-
-          setStats(
-            res.data
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Dashboard Stats Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch XP
-  // ========================================================
-
-  const fetchXP =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        const res =
-          await API.get(
-            `/xp/${email}`
-          );
-
-        if (res.data.success) {
-
-          setXpData(
-            res.data
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "XP Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch Rank
-  // ========================================================
-
-  const fetchUserRank =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        const res =
-          await API.get(
-            `/user-rank/${email}`
-          );
-
-        if (res.data.success) {
-
-          setRank(
-            res.data.rank
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Rank Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch Challenge Stats
-  // ========================================================
-
-  const fetchChallengeStats =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        const res =
-          await API.get(
-            `/challenge-stats/${email}`
-          );
-
-        if (res.data.success) {
-
-          setCompletedChallenges(
-            res.data.completed || 0
-          );
-
-          setChallengeAttempts(
-            res.data.attempts || 0
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Challenge Stats Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch Lesson Progress
-  // ========================================================
-
-  const fetchLessonProgress =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        const res =
-          await API.get(
-            `/lesson-progress/${email}`
-          );
-
-        if (res.data.success) {
-
-          setLessonProgress(
-            res.data
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Lesson Progress Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch Recent Chats
-  // ========================================================
-
-  const fetchRecentChats =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        const res =
-          await API.get(
-            `/recent-chats/${email}`
-          );
-
-        if (res.data.success) {
-
-          setRecentChats(
-            res.data.chats || []
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Recent Chats Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch Daily Challenge
-  // ========================================================
-
-  const fetchDailyChallenge =
-    async () => {
-
-      try {
-
-        const res =
-          await API.get(
-            "/daily-challenge"
-          );
-
-        if (res.data.success) {
-
-          setDailyChallenge(
-            res.data.challenge
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Daily Challenge Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch Prompt Mastery
-  // ========================================================
-
-  const fetchPromptMastery =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        const res =
-          await API.get(
-            `/prompt-mastery/${email}`
-          );
-
-        if (res.data.success) {
-
-          setPromptMastery(
-            res.data
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Prompt Mastery Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch Streak
-  // ========================================================
-
-  const fetchStreak =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        const res =
-          await API.get(
-            `/streak/${email}`
-          );
-
-        if (res.data.success !== false) {
-
-          setStreakData(
-            res.data
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Streak Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch Achievements
-  // ========================================================
-
-  const fetchAchievements =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        await API.post(
-          `/achievements/check/${email}`
-        );
-
-        const res =
-          await API.get(
-            `/achievements/${email}`
-          );
-
-        if (res.data.success) {
-
-          setAchievements(
-            res.data.badges || []
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Achievement Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Fetch AI Coach
-  // ========================================================
-
-  const fetchCoach =
-    async (
-      email: string
-    ) => {
-
-      try {
-
-        const res =
-          await API.get(
-            `/coach/${email}`
-          );
-
-        setCoach(
-          res.data
-        );
-
-      } catch (error) {
-
-        console.error(
-          "Coach Error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  // ========================================================
-  // Dashboard Initialization
-  // ========================================================
-
-  useEffect(() => {
-
-    const loadDashboard =
-      async () => {
-
-        const token =
-          localStorage.getItem(
-            "token"
-          );
-
-        const email =
-          localStorage.getItem(
-            "userEmail"
-          );
-
-        if (!token || !email) {
-
-          router.push(
-            "/login"
-          );
-
-          return;
-
-        }
-
-        setGreeting(
-          getGreeting()
-        );
-
-        try {
-
-          await Promise.all([
-
-            fetchDashboardStats(
-              email
-            ),
-
-            fetchXP(
-              email
-            ),
-
-            fetchUserRank(
-              email
-            ),
-
-            fetchChallengeStats(
-              email
-            ),
-
-            fetchLessonProgress(
-              email
-            ),
-
-            fetchRecentChats(
-              email
-            ),
-
-            fetchDailyChallenge(),
-
-            fetchPromptMastery(
-              email
-            ),
-
-            fetchStreak(
-              email
-            ),
-
-            fetchAchievements(
-              email
-            ),
-
-            fetchCoach(
-              email
-            )
-
-          ]);
-
-        } catch (error) {
-
-          console.error(
-            "Dashboard Loading Error:",
-            error
-          );
-
-        } finally {
-
-          setLoading(
-            false
-          );
-
-        }
-
-      };
-
-    loadDashboard();
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-  }, [router]);
-
-
-  // ========================================================
-  // Loading Screen
-  // ========================================================
-
-  if (loading) {
-
-    return (
-
-      <div
-        className="
-          min-h-screen
-          bg-slate-950
-          flex
-          items-center
-          justify-center
-          text-white
-          px-4
-        "
-      >
-
-        <div className="text-center">
-
-          <div
-            className="
-              text-4xl
-              mb-4
-              animate-pulse
-            "
-          >
-            🧠
-          </div>
-
-          <p
-            className="
-              text-xl
-              sm:text-2xl
-              font-bold
-            "
-          >
-            Loading Dashboard...
-          </p>
-
-        </div>
-
-      </div>
-
-    );
-
-  }
-
-
-  // ========================================================
-  // Derived Real Data
-  // ========================================================
-
-  const xp =
-    xpData?.xp ?? 0;
-
-  const xpLevel =
-    xpData?.level ?? 1;
-
-  const xpRank =
-    xpData?.rank ?? "Beginner";
-
-  const xpProgress =
-    Math.min(
-      Math.max(
-        xpData?.progress ?? 0,
-        0
-      ),
-      100
-    );
-
-  const promptLevel =
-    promptMastery?.mastery_level
-    ?? "Beginner";
-
-  const promptAverage =
-    promptMastery?.average_score
-    ?? 0;
-
-  const username =
-    stats.username
-    || localStorage.getItem(
-      "userName"
-    )
-    || "Learner";
-
-
-  // ========================================================
-  // UI
-  // ========================================================
 
   return (
+    <main className="min-h-screen overflow-hidden bg-[#f7f8fc] text-[#071126]">
 
-    <main
-      className="
-        min-h-screen
-        bg-slate-50
-        text-slate-900
-        px-4
-        py-6
-        sm:px-6
-        lg:px-8
-      "
-    >
+      {/* ======================================================
+          HERO
+          ====================================================== */}
 
-      <div
-        className="
-          max-w-[1600px]
-          mx-auto
-        "
-      >
+      <section className="relative overflow-hidden bg-[#070713]">
 
+        {/* Grid */}
+        <div
+          className="absolute inset-0 opacity-[0.12]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
 
-        {/* ==================================================
-            HERO
-        ================================================== */}
+        <Particles />
 
-        <Reveal>
+        {/* Background glows */}
 
-          <section className="relative overflow-hidden rounded-[28px] bg-[#151327] text-white">
+        <div className="absolute -left-40 top-20 h-[600px] w-[600px] rounded-full bg-purple-700/30 blur-[150px]" />
 
-            {/* Ambient gradient orbs */}
+        <div className="absolute right-[-120px] top-[-100px] h-[600px] w-[600px] rounded-full bg-pink-600/20 blur-[150px]" />
 
-            <div
-              className="
-                pointer-events-none
-                absolute
-                -left-24
-                -top-24
-                h-72
-                w-72
-                rounded-full
-                bg-[#4C3DF0]/40
-                blur-3xl
-                animate-[driftOne_17s_ease-in-out_infinite]
-              "
-            />
-
-            <div
-              className="
-                pointer-events-none
-                absolute
-                right-[-80px]
-                top-10
-                h-80
-                w-80
-                rounded-full
-                bg-[#EC4899]/30
-                blur-3xl
-                animate-[driftTwo_15s_ease-in-out_infinite]
-              "
-            />
-
-            <div
-              className="
-                pointer-events-none
-                absolute
-                bottom-[-100px]
-                left-[40%]
-                h-72
-                w-72
-                rounded-full
-                bg-[#8B3DE0]/25
-                blur-3xl
-                animate-[driftThree_19s_ease-in-out_infinite]
-              "
-            />
+        <div className="absolute bottom-[-250px] left-[30%] h-[500px] w-[500px] rounded-full bg-orange-500/15 blur-[150px]" />
 
 
-            {/* Grid */}
+        <div className="relative mx-auto max-w-[1500px] px-6 py-16 lg:px-12 lg:py-20">
 
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-0
-                opacity-[0.08]
-                [background-image:linear-gradient(rgba(255,255,255,.35)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.35)_1px,transparent_1px)]
-                [background-size:48px_48px]
-              "
-            />
+          {/* Workspace label */}
+
+          <div className="mb-10 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.06] px-5 py-2.5 backdrop-blur-xl">
+
+            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.9)] animate-pulse" />
+
+            <span className="text-xs font-black uppercase tracking-[0.2em] text-white/70">
+              Personal AI Workspace
+            </span>
+
+          </div>
 
 
-            <div
-              className="
-                relative
-                z-10
-                grid
-                grid-cols-1
-                xl:grid-cols-[1fr_390px]
-                gap-10
-                p-7
-                sm:p-10
-                lg:p-12
-              "
-            >
+          <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.8fr]">
 
-              {/* LEFT */}
-        
-              <div className="flex flex-col justify-center">
+            {/* ==================================================
+                HERO LEFT
+                ================================================== */}
 
-                <div
-                  className="
-                    inline-flex
-                    w-fit
-                    items-center
-                    gap-2
-                    rounded-full
-                    border
-                    border-white/15
-                    bg-white/10
-                    px-4
-                    py-2
-                    text-xs
-                    font-semibold
-                    uppercase
-                    tracking-[0.18em]
-                    text-white/80
-                    backdrop-blur-md
-                  "
-                >
-                  <span className="h-2 w-2 rounded-full bg-[#2FBE7A] shadow-[0_0_12px_#2FBE7A]" />
-        
-                  Personal AI Workspace
+            <div>
+
+              <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-purple-300">
+                Prompt Engineering Dashboard
+              </p>
+
+              <h1 className="max-w-[900px] text-6xl font-black leading-[0.9] tracking-[-0.06em] text-white sm:text-7xl lg:text-[94px]">
+
+                {data.user.greeting},
+                <br />
+
+                <span className="bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                  {data.user.name}.
+                </span>
+
+              </h1>
+
+
+              <p className="mt-8 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
+                Keep building better prompts, complete challenges,
+                strengthen your weak skills and move toward Prompt
+                Engineering mastery.
+              </p>
+
+
+              {/* Quick stats */}
+
+              <div className="mt-9 flex flex-wrap gap-3">
+
+                <div className="rounded-2xl border border-white/10 bg-white/[0.06] px-6 py-4 backdrop-blur-xl transition hover:-translate-y-1 hover:bg-white/[0.09]">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                    XP
+                  </p>
+                  <p className="mt-1 text-2xl font-black text-white">
+                    <AnimatedNumber value={data.overview.totalXP} />
+                  </p>
                 </div>
 
 
-                <h1
-                  className="
-                    mt-6
-                    max-w-4xl
-                    font-['Space_Grotesk']
-                    text-4xl
-                    font-bold
-                    uppercase
-                    leading-[1.03]
-                    tracking-[-0.04em]
-                    sm:text-5xl
-                    lg:text-6xl
-                    xl:text-7xl
-                  "
+                <div className="rounded-2xl border border-white/10 bg-white/[0.06] px-6 py-4 backdrop-blur-xl transition hover:-translate-y-1 hover:bg-white/[0.09]">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                    Rank
+                  </p>
+                  <p className="mt-1 text-2xl font-black text-white">
+                    #{data.overview.rank}
+                  </p>
+                </div>
+
+
+                <div className="rounded-2xl border border-white/10 bg-white/[0.06] px-6 py-4 backdrop-blur-xl transition hover:-translate-y-1 hover:bg-white/[0.09]">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                    Streak
+                  </p>
+                  <p className="mt-1 text-2xl font-black text-white">
+                    {data.overview.streak} days 🔥
+                  </p>
+                </div>
+
+              </div>
+
+
+              {/* CTA */}
+
+              <div className="mt-9 flex flex-wrap gap-4">
+
+                <Link
+                  href="/playground"
+                  className="group rounded-xl bg-[#ff6b00] px-7 py-4 text-sm font-bold text-white shadow-[0_12px_40px_rgba(255,107,0,0.25)] transition duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:bg-[#ff7a1a]"
                 >
-                  {greeting},{" "}
-                  <span
-                    className="
-                      bg-gradient-to-r
-                      from-white
-                      via-white
-                      to-white/60
-                      bg-clip-text
-                      text-transparent
-                    "
-                  >
-                    {username}
+                  Continue Practicing
+                  <span className="ml-2 transition group-hover:translate-x-1 inline-block">
+                    →
                   </span>
-                  .
-                </h1>
+                </Link>
 
 
-                <p
-                  className="
-                    mt-6
-                    max-w-2xl
-                    text-base
-                    leading-7
-                    text-white/70
-                    sm:text-lg
-                  "
+                <Link
+                  href="/learn"
+                  className="rounded-xl border border-white/15 bg-white/[0.06] px-7 py-4 text-sm font-bold text-white backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:bg-white/10"
                 >
-                  Keep building better prompts, complete challenges,
-                  strengthen your weak skills and move toward
-                  prompt engineering mastery.
-                </p>
+                  Continue Learning
+                </Link>
+
+              </div>
+
+            </div>
 
 
-                {/* Stats */}
+            {/* ==================================================
+                HERO RIGHT / 3D AREA
+                ================================================== */}
 
-                <div
-                  className="
-                    mt-8
-                    flex
-                    flex-wrap
-                    gap-3
-                  "
-                >
+            <div className="relative">
 
-                  <div
-                    className="
-                      rounded-xl
-                      border
-                      border-white/10
-                      bg-white/10
-                      px-4
-                      py-3
-                      backdrop-blur-md
-                    "
-                  >
-                    <p className="font-mono text-xs text-white/50">
-                      XP
+              <PromptOrb />
+
+              {/* Mastery card */}
+
+              <div className="relative mx-auto -mt-8 max-w-[430px] rounded-[28px] border border-white/10 bg-white/[0.08] p-6 shadow-2xl backdrop-blur-xl">
+
+                <div className="flex items-start justify-between">
+
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                      Prompt Mastery
                     </p>
 
-                    <p className="mt-1 font-mono text-lg font-bold">
-                      {xp}
+                    <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                      Current Level
                     </p>
+
+                    <h2 className="mt-1 text-3xl font-black text-white">
+                      {data.overview.levelName}
+                    </h2>
                   </div>
 
 
-                  <div
-                    className="
-                      rounded-xl
-                      border
-                      border-white/10
-                      bg-white/10
-                      px-4
-                      py-3
-                      backdrop-blur-md
-                    "
-                  >
-                    <p className="font-mono text-xs text-white/50">
-                      RANK
-                    </p>
-
-                    <p className="mt-1 font-mono text-lg font-bold">
-                      #{rank}
-                    </p>
-                  </div>
-
-
-                  <div
-                    className="
-                      rounded-xl
-                      border
-                      border-white/10
-                      bg-white/10
-                      px-4
-                      py-3
-                      backdrop-blur-md
-                    "
-                  >
-                    <p className="font-mono text-xs text-white/50">
-                      LEVEL
-                    </p>
-
-                    <p className="mt-1 font-mono text-lg font-bold">
-                      {xpLevel}
-                    </p>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff6b00] text-xl shadow-[0_0_30px_rgba(255,107,0,0.25)]">
+                    ✦
                   </div>
 
                 </div>
 
 
-                {/* CTA */}
+                {/* Average */}
 
-                <div className="mt-8 flex flex-wrap gap-3">
+                <div className="mt-7">
 
-                  <button
-                    onClick={() => router.push("/playground")}
-                    className="
-                      btn-primary
-                      rounded-xl
-                      bg-[#FF5E1F]
-                      px-6
-                      py-3.5
-                      font-semibold
-                      text-white
-                      shadow-lg
-                      shadow-orange-500/20
-                      transition-all
-                      duration-200
-                      hover:-translate-y-1
-                      hover:bg-[#ff6d32]
-                    "
-                  >
-                    Continue Practicing →
-                  </button>
+                  <p className="text-xs font-semibold text-slate-400">
+                    Current Activity Average
+                  </p>
 
+                  <div className="mt-1 flex items-end gap-2">
 
-                  <button
-                    onClick={() => router.push("/learn")}
-                    className="
-                      rounded-xl
-                      border
-                      border-white/20
-                      bg-white/10
-                      px-6
-                      py-3.5
-                      font-semibold
-                      text-white
-                      backdrop-blur-md
-                      transition-all
-                      duration-200
-                      hover:-translate-y-1
-                      hover:bg-white/15
-                    "
-                  >
-                    Continue Learning
-                  </button>
-      
-                </div>
-      
-              </div>
+                    <span className="text-4xl font-black text-white">
+                      {averageScore}
+                    </span>
 
-
-              {/* RIGHT — 3D CARD */}
-      
-              <TiltCard
-                intensity={7}
-                className="self-center"
-              >
-
-                <div
-                  className="
-                    relative
-                    overflow-hidden
-                    rounded-[24px]
-                    border
-                    border-white/15
-                    bg-white/[0.09]
-                    p-6
-                    shadow-2xl
-                    backdrop-blur-xl
-                  "
-                >
-
-                  {/* Glow */}
-
-                  <div
-                    className="
-                      pointer-events-none
-                      absolute
-                      -right-20
-                      -top-20
-                      h-48
-                      w-48
-                      rounded-full
-                      bg-[#EC4899]/30
-                      blur-3xl
-                    "
-                  />
-
-
-                  <div className="relative z-10">
-
-                    <div
-                      className="
-                        flex
-                        items-center
-                        justify-between
-                      "
-                    >
-
-                      <div>
-
-                        <p className="text-xs uppercase tracking-[0.16em] text-white/50">
-                          Prompt Mastery
-                        </p>
-
-                        <p className="mt-2 font-mono text-sm text-white/60">
-                          CURRENT LEVEL
-                        </p>
-
-                      </div>
-
-
-                      <div
-                        className="
-                          flex
-                          h-10
-                          w-10
-                          items-center
-                          justify-center
-                          rounded-xl
-                          bg-[#FF5E1F]
-                          text-lg
-                          shadow-lg
-                          shadow-orange-500/30
-                        "
-                      >
-                        ✦
-                      </div>
-      
-                    </div>
-
-
-                    <div className="mt-8">
-
-                      <p
-                        className="
-                          font-['Space_Grotesk']
-                          text-4xl
-                          font-bold
-                        "
-                      >
-                        {promptLevel}
-                      </p>
-
-                      <p className="mt-2 font-mono text-sm text-white/55">
-                        Average Prompt Score
-                      </p>
-  
-                      <p
-                        className="
-                          mt-1
-                          font-mono
-                          text-3xl
-                          font-bold
-                        "
-                      >
-                        {Number(promptAverage).toFixed(1)}
-                        <span className="text-base text-white/40">
-                          /100
-                        </span>
-                      </p>
-      
-                    </div>
-
-
-                    {/* Progress */}
-      
-                    <div className="mt-8">
-
-                      <div className="flex justify-between text-xs">
-
-                        <span className="text-white/50">
-                          Progress to next level
-                        </span>
-
-                        <span className="font-mono">
-                          {Math.round(xpProgress)}%
-                        </span>
-      
-                      </div>
-
-
-                      <div
-                        className="
-                          mt-3
-                          h-3
-                          overflow-hidden
-                          rounded-full
-                          bg-white/10
-                        "
-                      >
-
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{
-                            width: `${xpProgress}%`,
-                          }}
-                          transition={{
-                            duration: 1.2,
-                            ease: "easeOut",
-                          }}
-                          className="
-                            h-full
-                            rounded-full
-                            bg-gradient-to-r
-                            from-[#4C3DF0]
-                            via-[#8B3DE0]
-                            to-[#EC4899]
-                          "
-                        />
-      
-                      </div>
-
-                    </div>
-
-
-                    {/* Footer */}
-
-                    <div
-                      className="
-                        mt-8
-                        grid
-                        grid-cols-2
-                        gap-3
-                      "
-                    >
-
-                      <div
-                        className="
-                          rounded-xl
-                          border
-                          border-white/10
-                          bg-black/10
-                          p-4
-                        "
-                      >
-
-                        <p className="text-xs text-white/45">
-                          Challenges
-                        </p>
-
-                        <p className="mt-1 font-mono text-xl font-bold">
-                          {completedChallenges}
-                        </p>
-
-                      </div>
-
-
-                      <div
-                        className="
-                          rounded-xl
-                          border
-                          border-white/10
-                          bg-black/10
-                          p-4
-                        "
-                      >
-
-                        <p className="text-xs text-white/45">
-                          Attempts
-                        </p>
-
-                        <p className="mt-1 font-mono text-xl font-bold">
-                          {challengeAttempts}
-                        </p>
-
-                      </div>
-
-                    </div>
+                    <span className="pb-1 text-sm text-slate-500">
+                      /100
+                    </span>
 
                   </div>
 
-                </div>
-
-              </TiltCard>
-
-            </div>
-
-          </section>
-
-        </Reveal>
-
-
-        {/* ==================================================
-            KPI CARDS
-        ================================================== */}
-
-        <section
-          className="
-            grid
-            grid-cols-1
-            sm:grid-cols-2
-            xl:grid-cols-4
-            gap-4
-            sm:gap-6
-            mt-8
-          "
-        >
-
-          <DashboardCard
-            title="Total XP"
-            value={`${xp} XP`}
-            icon="⚡"
-          />
-
-          <DashboardCard
-            title="Challenges Completed"
-            value={
-              completedChallenges.toString()
-            }
-            icon="🏆"
-          />
-
-          <DashboardCard
-            title="Challenge Attempts"
-            value={
-              challengeAttempts.toString()
-            }
-            icon="🎯"
-          />
-
-          <DashboardCard
-            title="Platform Level"
-            value={xpRank}
-            icon="🚀"
-          />
-
-        </section>
-
-
-        {/* ==================================================
-            PROMPT ENGINEER PROFILE
-        ================================================== */}
-
-        <section
-          className="
-            mt-8
-            bg-gradient-to-r
-            from-indigo-600
-            via-purple-600
-            to-pink-600
-            rounded-2xl
-            sm:rounded-3xl
-            p-5
-            sm:p-8
-            shadow-xl
-            text-white
-          "
-        >
-
-          <h2
-            className="
-              text-2xl
-              sm:text-3xl
-              font-bold
-            "
-          >
-            🏆 Prompt Engineer Profile
-          </h2>
-
-
-          <div
-            className="
-              grid
-              grid-cols-1
-              sm:grid-cols-3
-              gap-6
-              mt-7
-            "
-          >
-
-            <ProfileStat
-              label="Current XP"
-              value={xp}
-            />
-
-            <ProfileStat
-              label="Level"
-              value={xpLevel}
-            />
-
-            <ProfileStat
-              label="Rank"
-              value={xpRank}
-            />
-
-          </div>
-
-
-          <div
-            className="
-              mt-8
-              max-w-3xl
-            "
-          >
-
-            <div
-              className="
-                flex
-                justify-between
-                gap-4
-                mb-2
-                text-sm
-                sm:text-base
-              "
-            >
-
-              <span>
-                Progress To Next Level
-              </span>
-
-              <span>
-                {Math.round(
-                  xpProgress
-                )}%
-              </span>
-
-            </div>
-
-
-            <div
-              className="
-                w-full
-                h-4
-                sm:h-5
-                bg-white/20
-                rounded-full
-                overflow-hidden
-              "
-            >
-
-              <div
-                className="
-                  h-full
-                  bg-yellow-400
-                  rounded-full
-                  transition-all
-                  duration-1000
-                "
-                style={{
-                  width:
-                    `${xpProgress}%`
-                }}
-              />
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        {/* ==================================================
-            STREAK
-        ================================================== */}
-
-        {streakData && (
-
-          <section
-            className="
-              mt-8
-              bg-gradient-to-r
-              from-orange-500
-              to-red-500
-              rounded-2xl
-              sm:rounded-3xl
-              p-5
-              sm:p-8
-              shadow-xl
-              text-white
-            "
-          >
-
-            <h2
-              className="
-                text-2xl
-                sm:text-3xl
-                font-bold
-              "
-            >
-              🔥 Learning Streak
-            </h2>
-
-
-            <div
-              className="
-                grid
-                grid-cols-2
-                gap-5
-                sm:gap-8
-                mt-7
-              "
-            >
-
-              <div>
-
-                <p
-                  className="
-                    text-sm
-                    sm:text-base
-                    text-white/80
-                  "
-                >
-                  Current Streak
-                </p>
-
-                <h3
-                  className="
-                    text-4xl
-                    sm:text-6xl
-                    font-bold
-                    mt-1
-                  "
-                >
-                  {
-                    streakData.current_streak
-                    ?? 0
-                  }
-                </h3>
-
-                <p>
-                  Days
-                </p>
-
-              </div>
-
-
-              <div>
-
-                <p
-                  className="
-                    text-sm
-                    sm:text-base
-                    text-white/80
-                  "
-                >
-                  Best Streak
-                </p>
-
-                <h3
-                  className="
-                    text-4xl
-                    sm:text-6xl
-                    font-bold
-                    mt-1
-                  "
-                >
-                  {
-                    streakData.best_streak
-                    ?? 0
-                  }
-                </h3>
-
-                <p>
-                  Days
-                </p>
-
-              </div>
-
-            </div>
-
-
-            <p
-              className="
-                mt-6
-                text-sm
-                sm:text-lg
-                text-white/90
-              "
-            >
-              ⭐ Keep learning daily to build
-              your streak!
-            </p>
-
-          </section>
-
-        )}
-
-
-        {/* ==================================================
-            ACHIEVEMENTS
-        ================================================== */}
-
-        {achievements.length > 0 && (
-
-          <motion.section
-
-            initial={{
-              opacity: 0,
-              y: 30
-            }}
-
-            animate={{
-              opacity: 1,
-              y: 0
-            }}
-
-            transition={{
-              duration: 0.5
-            }}
-
-            className="
-              mt-8
-              bg-white
-              rounded-2xl
-              sm:rounded-3xl
-              p-5
-              sm:p-8
-              shadow-md
-              border
-              border-slate-200
-            "
-          >
-
-            <h2
-              className="
-                text-2xl
-                sm:text-3xl
-                font-bold
-                text-slate-800
-              "
-            >
-              🏆 Achievements
-            </h2>
-
-
-            <div
-              className="
-                grid
-                grid-cols-1
-                sm:grid-cols-2
-                xl:grid-cols-4
-                gap-4
-                sm:gap-6
-                mt-7
-              "
-            >
-
-              {achievements.map(
-                (
-                  achievement,
-                  index
-                ) => (
-
-                  <div
-                    key={index}
-                    className="
-                      bg-gradient-to-r
-                      from-yellow-400
-                      to-orange-500
-                      text-white
-                      rounded-2xl
-                      p-5
-                      shadow-md
-                      transition-transform
-                      hover:-translate-y-1
-                    "
-                  >
-
-                    <div
-                      className="
-                        text-5xl
-                        text-center
-                      "
-                    >
-                      {
-                        achievementIcons[
-                          achievement
-                        ] || "🏆"
-                      }
-                    </div>
-
-                    <h3
-                      className="
-                        text-lg
-                        font-bold
-                        mt-4
-                        text-center
-                      "
-                    >
-                      {achievement}
-                    </h3>
-
-                    <p
-                      className="
-                        mt-2
-                        text-center
-                        text-sm
-                        text-white/85
-                      "
-                    >
-                      Achievement Unlocked
-                    </p>
-
-                  </div>
-
-                )
-              )}
-
-            </div>
-
-          </motion.section>
-
-        )}
-
-
-        {/* ==================================================
-            AI COACH
-        ================================================== */}
-
-        {coach && (
-
-          <section
-            className="
-              mt-8
-              bg-gradient-to-r
-              from-cyan-500
-              to-blue-600
-              text-white
-              rounded-2xl
-              sm:rounded-3xl
-              p-5
-              sm:p-8
-              shadow-xl
-            "
-          >
-
-            <h2
-              className="
-                text-2xl
-                sm:text-3xl
-                font-bold
-              "
-            >
-              🤖 AI Coach
-            </h2>
-
-
-            <div
-              className="
-                grid
-                grid-cols-1
-                md:grid-cols-2
-                gap-6
-                mt-7
-              "
-            >
-
-              <CoachItem
-                title="💪 Strongest Skill"
-                value={
-                  coach.strength
-                  || "Not enough data"
-                }
-              />
-
-
-              <CoachItem
-                title="🎯 Weakest Skill"
-                value={
-                  coach.weakness
-                  || "Not enough data"
-                }
-              />
-
-
-              <CoachItem
-                title="📚 Recommended Lesson"
-                value={
-                  lessonMap[
-                    coach.weakness
-                  ]
-                  ||
-                  "Prompt Fundamentals"
-                }
-              />
-
-
-              <CoachItem
-                title="🚀 Recommendation"
-                value={
-                  coach.recommendation
-                  ||
-                  "Keep practicing prompt engineering."
-                }
-              />
-
-            </div>
-
-          </section>
-
-        )}
-
-
-        {/* ==================================================
-            LEARNING + DAILY CHALLENGE
-        ================================================== */}
-
-        <section
-          className="
-            grid
-            grid-cols-1
-            lg:grid-cols-2
-            gap-6
-            mt-8
-          "
-        >
-
-
-          {/* Learning Progress */}
-
-          <div
-            className="
-              bg-white
-              border
-              border-slate-200
-              shadow-md
-              rounded-2xl
-              sm:rounded-3xl
-              p-5
-              sm:p-8
-            "
-          >
-
-            <h2
-              className="
-                text-2xl
-                font-bold
-              "
-            >
-              📚 Learning Progress
-            </h2>
-
-
-            <div className="mt-7">
-
-              <div
-                className="
-                  flex
-                  justify-between
-                  gap-4
-                  mb-2
-                  text-sm
-                  sm:text-base
-                "
-              >
-
-                <span>
-                  Completed Lessons
-                </span>
-
-                <span
-                  className="
-                    font-semibold
-                  "
-                >
-                  {
-                    lessonProgress.completed_lessons
-                  }
-                  /
-                  {
-                    lessonProgress.total_lessons
-                  }
-                </span>
-
-              </div>
-
-
-              <div
-                className="
-                  w-full
-                  h-3
-                  bg-slate-200
-                  rounded-full
-                  overflow-hidden
-                "
-              >
-
-                <div
-                  className="
-                    h-full
-                    bg-orange-500
-                    rounded-full
-                  "
-                  style={{
-                    width:
-                      `${Math.min(
-                        lessonProgress.progress,
-                        100
-                      )}%`
-                  }}
-                />
-
-              </div>
-
-            </div>
-
-
-            <div
-              className="
-                grid
-                grid-cols-1
-                sm:grid-cols-2
-                gap-4
-                mt-7
-              "
-            >
-
-              <div
-                className="
-                  bg-blue-50
-                  p-4
-                  rounded-xl
-                "
-              >
-
-                <p
-                  className="
-                    text-sm
-                    text-slate-500
-                  "
-                >
-                  Beginner Completed
-                </p>
-
-                <p
-                  className="
-                    text-2xl
-                    font-bold
-                    mt-1
-                  "
-                >
-                  {
-                    lessonProgress.beginner_completed
-                  }
-                </p>
-
-              </div>
-
-
-              <div
-                className="
-                  bg-green-50
-                  p-4
-                  rounded-xl
-                "
-              >
-
-                <p
-                  className="
-                    text-sm
-                    text-slate-500
-                  "
-                >
-                  Intermediate Completed
-                </p>
-
-                <p
-                  className="
-                    text-2xl
-                    font-bold
-                    mt-1
-                  "
-                >
-                  {
-                    lessonProgress.intermediate_completed
-                  }
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        {/* ==================================================
-            RECENT ACTIVITY
-        ================================================== */}
-
-        
-
-          <div
-            className="
-              bg-white
-              border
-              border-slate-200
-              shadow-md
-              rounded-2xl
-              sm:rounded-3xl
-              p-5
-              sm:p-8
-            "
-          >
-
-            <div
-              className="
-                flex
-                justify-between
-                items-center
-                gap-4
-              "
-            >
-
-              <h2
-                className="
-                  text-2xl
-                  font-bold
-                "
-              >
-                🕒 Recent Activity
-              </h2>
-
-              <span
-                className="
-                  text-sm
-                  text-slate-400
-                "
-              >
-                Latest prompts
-              </span>
-
-            </div>
-
-
-            <div
-              className="
-                space-y-3
-                mt-6
-              "
-            >
-
-              {recentChats.length > 0 ? (
-
-                recentChats
-                  .slice(
-                    0,
-                    5
-                  )
-                  .map(
-                    (
-                      chat,
-                      index
-                    ) => (
-
-                      <div
-                        key={index}
-                        className="
-                          bg-slate-50
-                          p-4
-                          rounded-xl
-                          border
-                          border-slate-100
-                        "
-                      >
-
-                        <p
-                          className="
-                            text-slate-700
-                            break-words
-                          "
-                        >
-                          {
-                            chat.prompt
-                          }
-                        </p>
-
-                      </div>
-
-                    )
-                  )
-
-              ) : (
-
-                <div
-                  className="
-                    bg-slate-50
-                    rounded-xl
-                    p-6
-                    text-center
-                  "
-                >
-
-                  <p
-                    className="
-                      text-slate-500
-                    "
-                  >
-                    No recent activity found.
+                  <p className="mt-1 text-[11px] text-slate-500">
+                    Based on your recent scored activities
                   </p>
 
                 </div>
 
-              )}
+
+                {/* Level progress */}
+
+                <div className="mt-7">
+
+                  <div className="mb-2 flex justify-between text-xs font-semibold">
+
+                    <span className="text-slate-400">
+                      Progress to next level
+                    </span>
+
+                    <span className="text-white">
+                      {data.overview.levelProgress}%
+                    </span>
+
+                  </div>
+
+
+                  <div className="h-3 overflow-hidden rounded-full bg-white/10">
+
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 shadow-[0_0_18px_rgba(217,70,239,0.5)] transition-all duration-1000"
+                      style={{
+                        width: `${data.overview.levelProgress}%`,
+                      }}
+                    />
+
+                  </div>
+
+                </div>
+
+
+                {/* Challenges */}
+
+                <div className="mt-7 grid grid-cols-2 gap-3">
+
+                  <div className="rounded-2xl border border-white/10 bg-black/10 p-4">
+
+                    <p className="text-xs text-slate-500">
+                      Challenges
+                    </p>
+
+                    <p className="mt-1 text-2xl font-black text-white">
+                      {data.overview.challengesCompleted}
+                    </p>
+
+                  </div>
+
+
+                  <div className="rounded-2xl border border-white/10 bg-black/10 p-4">
+
+                    <p className="text-xs text-slate-500">
+                      Attempts
+                    </p>
+
+                    <p className="mt-1 text-2xl font-black text-white">
+                      {data.overview.challengeAttempts}
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
 
             </div>
 
           </div>
 
-        </section>
+        </div>
+
+      </section>
 
 
-      </div>
+      {/* ======================================================
+          QUICK STATS
+          ====================================================== */}
 
-    </main>
+      <section className="relative bg-[#f7f8fc] px-6 py-14 lg:px-12">
 
-  );
+        <div className="mx-auto max-w-[1500px]">
 
-}
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+
+            {[
+              {
+                label: "TOTAL XP",
+                value: data.overview.totalXP,
+                suffix: "XP",
+                icon: "⚡",
+              },
+              {
+                label: "STREAK",
+                value: data.overview.streak,
+                suffix: "days",
+                icon: "🔥",
+              },
+              {
+                label: "CHALLENGES",
+                value: data.overview.challengesCompleted,
+                suffix: "",
+                icon: "🏆",
+              },
+              {
+                label: "ATTEMPTS",
+                value: data.overview.challengeAttempts,
+                suffix: "",
+                icon: "🎯",
+              },
+              {
+                label: "LEVEL",
+                value: data.overview.currentLevel,
+                suffix: "",
+                icon: "🚀",
+              },
+            ].map((stat) => (
+
+              <div
+                key={stat.label}
+                className="group rounded-[24px] border border-slate-200 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.04)] transition duration-300 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(15,23,42,0.09)]"
+              >
+
+                <div className="flex items-start justify-between">
+
+                  <div>
+
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
+                      {stat.label}
+                    </p>
+
+                    <div className="mt-4 flex items-end gap-2">
+
+                      <span className="text-4xl font-black tracking-tight">
+                        <AnimatedNumber value={stat.value} />
+                      </span>
+
+                      {stat.suffix && (
+                        <span className="pb-1 text-sm font-bold text-slate-400">
+                          {stat.suffix}
+                        </span>
+                      )}
+
+                    </div>
+
+                  </div>
 
 
-// ==========================================================
-// Dashboard Card
-// ==========================================================
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff3e9] text-xl transition duration-300 group-hover:rotate-12">
+                    {stat.icon}
+                  </div>
 
-function DashboardCard({
+                </div>
 
-  title,
+              </div>
 
-  value,
+            ))}
 
-  icon
-
-}: {
-
-  title: string;
-
-  value: string;
-
-  icon: string;
-
-}) {
-
-  return (
-
-    <div
-      className="
-        bg-white
-        border
-        border-slate-200
-        rounded-2xl
-        p-5
-        sm:p-6
-        shadow-sm
-        min-w-0
-      "
-    >
-
-      <div
-        className="
-          flex
-          justify-between
-          items-start
-          gap-4
-        "
-      >
-
-        <div
-          className="
-            min-w-0
-          "
-        >
-
-          <p
-            className="
-              text-sm
-              font-medium
-              text-slate-500
-            "
-          >
-            {title}
-          </p>
-
-          <p
-            className="
-              text-2xl
-              sm:text-3xl
-              font-bold
-              mt-2
-              break-words
-            "
-          >
-            {value}
-          </p>
+          </div>
 
         </div>
 
-        <span
-          className="
-            text-3xl
-            shrink-0
-          "
-        >
-          {icon}
-        </span>
+      </section>
 
-      </div>
 
-    </div>
+      {/* ======================================================
+          PROGRESS + LEVEL
+          ====================================================== */}
 
+      <section className="relative overflow-hidden bg-[#f7f8fc] px-6 pb-20 lg:px-12">
+
+        <div className="absolute right-[-150px] top-0 h-[500px] w-[500px] rounded-full bg-purple-100/50 blur-[120px]" />
+
+        <div className="relative mx-auto max-w-[1500px]">
+
+          <div className="mb-9">
+
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#ff6b00]">
+              Your Progress
+            </p>
+
+            <h2 className="mt-3 text-4xl font-black tracking-[-0.05em] sm:text-5xl">
+
+              Build better prompts.
+              <br />
+
+              <span className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+                Build better skills.
+              </span>
+
+            </h2>
+
+            <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+              Your Dashboard shows your current skill state.
+              Detailed trends and historical analysis are available
+              separately in Analytics.
+            </p>
+
+          </div>
+
+
+          <div className="grid gap-6 lg:grid-cols-[1.4fr_0.6fr]">
+
+            {/* Skills */}
+
+            <div className="rounded-[30px] border border-slate-200 bg-white p-7 shadow-[0_10px_40px_rgba(15,23,42,0.04)]">
+
+              <div className="flex items-center justify-between">
+
+                <div>
+
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+                    Current Snapshot
+                  </p>
+
+                  <h3 className="mt-2 text-2xl font-black">
+                    Prompt Engineering Skills
+                  </h3>
+
+                </div>
+
+                <Link
+                  href="/analytics"
+                  className="hidden text-sm font-bold text-[#ff6b00] transition hover:translate-x-1 sm:block"
+                >
+                  View Analytics →
+                </Link>
+
+              </div>
+
+
+              <div className="mt-8 space-y-7">
+
+                {data.skills.map((skill) => (
+
+                  <div key={skill.name} className="group">
+
+                    <div className="flex items-end justify-between">
+
+                      <div className="flex items-start gap-3">
+
+                        <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-sm font-bold text-purple-600 transition group-hover:scale-110">
+                          {skill.icon}
+                        </div>
+
+                        <div>
+
+                          <p className="font-bold text-[#071126]">
+                            {skill.name}
+                          </p>
+
+                          <p className="mt-1 text-sm text-slate-400">
+                            {skill.description}
+                          </p>
+
+                        </div>
+
+                      </div>
+
+
+                      <span className="text-lg font-black">
+                        {skill.score}
+                      </span>
+
+                    </div>
+
+
+                    <div className="mt-3 h-3 overflow-hidden rounded-full bg-slate-100">
+
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 transition-all duration-1000 group-hover:brightness-110"
+                        style={{
+                          width: `${skill.score}%`,
+                        }}
+                      />
+
+                    </div>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+            </div>
+
+
+            {/* Level */}
+
+            <div className="relative overflow-hidden rounded-[30px] bg-[#070713] p-7 text-white">
+
+              <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-purple-700/30 blur-[70px]" />
+
+              <div className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-pink-600/20 blur-[70px]" />
+
+              <div className="relative">
+
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-pink-400">
+                  Current Level
+                </p>
+
+                <h3 className="mt-5 text-4xl font-black">
+                  {data.overview.levelName}
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-slate-400">
+                  Build a strong foundation in roles, context,
+                  constraints and structured output.
+                </p>
+
+
+                <div className="mt-8">
+
+                  <div className="flex justify-between text-xs font-bold">
+
+                    <span className="text-slate-400">
+                      Level Progress
+                    </span>
+
+                    <span>
+                      {data.overview.levelProgress}%
+                    </span>
+
+                  </div>
+
+
+                  <div className="mt-3 h-3 rounded-full bg-white/10">
+
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500"
+                      style={{
+                        width: `${data.overview.levelProgress}%`,
+                      }}
+                    />
+
+                  </div>
+
+                </div>
+
+
+                <Link
+                  href="/learn"
+                  className="mt-8 inline-flex rounded-xl bg-[#ff6b00] px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-1 hover:bg-orange-500"
+                >
+                  Continue Learning →
+                </Link>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* ======================================================
+          AI RECOMMENDATION
+          ====================================================== */}
+
+      <section className="bg-[#f7f8fc] px-6 pb-20 lg:px-12">
+
+        <div className="mx-auto max-w-[1500px]">
+
+          <div className="relative overflow-hidden rounded-[32px] border border-purple-200 bg-gradient-to-br from-white via-purple-50/50 to-pink-50 p-8 shadow-[0_15px_50px_rgba(124,58,237,0.08)] sm:p-10">
+
+            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-purple-300/30 blur-[80px]" />
+
+            <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+
+              <div>
+
+                <div className="flex items-center gap-3">
+
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#070713] text-xl text-white">
+                    ✦
+                  </div>
+
+                  <p className="text-xs font-black uppercase tracking-[0.2em] text-purple-600">
+                    AI Recommendation
+                  </p>
+
+                </div>
+
+
+                <h2 className="mt-5 text-3xl font-black tracking-tight sm:text-4xl">
+                  Your next improvement is{" "}
+                  <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+                    {weakestSkill.name}.
+                  </span>
+                </h2>
+
+
+                <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
+
+                  Your current score is{" "}
+                  <strong>{weakestSkill.score}/100</strong>.
+                  Focus on clearly defining requirements and expected
+                  behaviour in your next prompts.
+
+                </p>
+
+              </div>
+
+
+              <Link
+                href="/playground"
+                className="inline-flex shrink-0 items-center justify-center rounded-xl bg-[#070713] px-7 py-4 text-sm font-bold text-white transition hover:-translate-y-1 hover:bg-black"
+              >
+                Practice {weakestSkill.name} →
+              </Link>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* ======================================================
+          ACHIEVEMENTS
+          ====================================================== */}
+
+      <section className="bg-white px-6 py-20 lg:px-12">
+
+        <div className="mx-auto max-w-[1500px]">
+
+          <div className="mb-9">
+
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#ff6b00]">
+              Achievements
+            </p>
+
+            <h2 className="mt-3 text-4xl font-black tracking-[-0.04em]">
+              Progress worth celebrating.
+            </h2>
+
+          </div>
+
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+            {data.achievements.map((achievement) => (
+
+              <div
+                key={achievement.title}
+                className="group rounded-[24px] border border-slate-200 bg-[#f8f9fc] p-6 transition duration-300 hover:-translate-y-2 hover:border-purple-200 hover:shadow-[0_20px_40px_rgba(124,58,237,0.08)]"
+              >
+
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm transition duration-300 group-hover:scale-110 group-hover:rotate-6">
+                  {achievement.icon}
+                </div>
+
+                <h3 className="mt-5 font-black">
+                  {achievement.title}
+                </h3>
+
+                <p className="mt-2 text-sm leading-6 text-slate-500">
+                  {achievement.description}
+                </p>
+
+                <div className="mt-5 text-xs font-bold text-emerald-500">
+                  ✓ Unlocked
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* ======================================================
+          LEARNING PATH
+          ====================================================== */}
+
+      <section className="bg-[#f7f8fc] px-6 py-20 lg:px-12">
+
+        <div className="mx-auto max-w-[1500px]">
+
+          <div className="mb-9">
+
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-500">
+              Learning Path
+            </p>
+
+            <h2 className="mt-3 text-4xl font-black tracking-[-0.04em] sm:text-5xl">
+              Your next skill always has a path.
+            </h2>
+
+            <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+              Learn concepts in order, practice them with real tools,
+              and gradually move toward advanced Prompt Engineering.
+            </p>
+
+          </div>
+
+
+          <div className="grid gap-4">
+
+            {data.learning.map((item, index) => (
+
+              <div
+                key={item.name}
+                className="group flex flex-col gap-5 rounded-[24px] border border-slate-200 bg-white p-6 transition duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(15,23,42,0.06)] sm:flex-row sm:items-center"
+              >
+
+                {/* Number */}
+
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#070713] text-sm font-black text-white">
+                  {(index + 1).toString().padStart(2, "0")}
+                </div>
+
+
+                {/* Name */}
+
+                <div className="min-w-[200px] sm:w-[260px]">
+
+                  <h3 className="font-black">
+                    {item.name}
+                  </h3>
+
+                  <p
+                    className={`mt-1 text-xs font-bold ${
+                      item.status === "Completed"
+                        ? "text-emerald-500"
+                        : item.status === "Locked"
+                        ? "text-slate-400"
+                        : "text-orange-500"
+                    }`}
+                  >
+                    {item.status}
+                  </p>
+
+                </div>
+
+
+                {/* Progress */}
+
+                <div className="flex-1">
+
+                  <div className="mb-2 flex justify-between text-xs font-bold">
+
+                    <span className="text-slate-400">
+                      Progress
+                    </span>
+
+                    <span>
+                      {item.progress}%
+                    </span>
+
+                  </div>
+
+                  <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+
+                    <div
+                      className={`h-full rounded-full transition-all duration-700 ${
+                        item.status === "Locked"
+                          ? "bg-slate-300"
+                          : "bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500"
+                      }`}
+                      style={{
+                        width: `${item.progress}%`,
+                      }}
+                    />
+
+                  </div>
+
+                </div>
+
+
+                <span className="text-xl text-slate-300 transition group-hover:translate-x-1 group-hover:text-orange-500">
+                  →
+                </span>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* ======================================================
+          RECENT ACTIVITY
+          ====================================================== */}
+
+      <section className="relative overflow-hidden bg-[#070713] px-6 py-20 text-white lg:px-12">
+
+        <div
+          className="absolute inset-0 opacity-[0.1]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
+
+        <div className="absolute right-[-100px] top-[-100px] h-[450px] w-[450px] rounded-full bg-purple-700/20 blur-[120px]" />
+
+        <div className="relative mx-auto max-w-[1500px]">
+
+          <div className="mb-10">
+
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-pink-400">
+              Recent Activity
+            </p>
+
+            <h2 className="mt-3 text-4xl font-black tracking-[-0.04em] sm:text-5xl">
+
+              Keep practicing.
+              <br />
+
+              <span className="bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                Keep improving.
+              </span>
+
+            </h2>
+
+          </div>
+
+
+          <div className="grid gap-4">
+
+            {data.recentActivity.map((activity) => (
+
+              <div
+                key={activity.title}
+                className="group flex flex-col gap-5 rounded-[22px] border border-white/10 bg-white/[0.045] p-5 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-purple-400/30 hover:bg-white/[0.07] sm:flex-row sm:items-center sm:justify-between"
+              >
+
+                <div className="flex items-center gap-4">
+
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600/30 to-pink-600/30 text-sm font-black">
+                    {activity.icon}
+                  </div>
+
+                  <div>
+
+                    <p className="font-bold">
+                      {activity.title}
+                    </p>
+
+                    <p className="mt-1 text-sm text-slate-500">
+                      {activity.type}
+                    </p>
+
+                  </div>
+
+                </div>
+
+
+                <div className="flex flex-wrap items-center gap-7">
+
+                  <div>
+
+                    <p className="text-[10px] uppercase tracking-wider text-slate-500">
+                      Score
+                    </p>
+
+                    <p className="mt-1 text-xl font-black">
+                      {activity.score}
+                    </p>
+
+                  </div>
+
+
+                  <div>
+
+                    <p className="text-[10px] uppercase tracking-wider text-slate-500">
+                      Reward
+                    </p>
+
+                    <p className="mt-1 font-black text-orange-400">
+                      +{activity.xp} XP
+                    </p>
+
+                  </div>
+
+
+                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-xs font-bold text-emerald-400">
+                    {activity.status}
+                  </span>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* ======================================================
+          FINAL CTA
+          ====================================================== */}
+
+      <section className="bg-[#f7f8fc] px-6 py-16 lg:px-12">
+
+        <div className="mx-auto max-w-[1500px]">
+
+          <div className="relative overflow-hidden rounded-[32px] bg-[#070713] p-8 sm:p-12 lg:p-14">
+
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(168,85,247,0.22),transparent_35%),radial-gradient(circle_at_20%_80%,rgba(255,107,0,0.16),transparent_30%)]" />
+
+            <div className="relative flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
+
+              <div>
+
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-400">
+                  Structured Progression
+                </p>
+
+                <h2 className="mt-4 max-w-3xl text-3xl font-black text-white sm:text-4xl lg:text-5xl">
+                  Your next skill always has a path.
+                </h2>
+
+                <p className="mt-4 max-w-2xl text-base leading-7 text-slate-400">
+                  Learn concepts in order, practice them with real tools
+                  and build the skills required for modern AI applications.
+                </p>
+
+              </div>
+
+
+              <Link
+                href="/learn"
+                className="shrink-0 rounded-xl bg-[#ff6b00] px-7 py-4 text-sm font-bold text-white shadow-[0_10px_30px_rgba(255,107,0,0.25)] transition duration-300 hover:-translate-y-1 hover:bg-orange-500"
+              >
+                Explore Learning →
+              </Link>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* ======================================================
+          ANIMATION KEYFRAMES
+          ====================================================== */}
+
+      <style jsx global>{`
+
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+
+          50% {
+            transform: translateY(-14px);
+          }
+        }
+
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes spin-reverse {
+          from {
+            transform: rotate(360deg);
+          }
+
+          to {
+            transform: rotate(0deg);
+          }
+        }
+
+      `}</style>
+
+    </main>
   );
-
-}
-
-
-// ==========================================================
-// Profile Stat
-// ==========================================================
-
-function ProfileStat({
-
-  label,
-
-  value
-
-}: {
-
-  label: string;
-
-  value: string | number;
-
-}) {
-
-  return (
-
-    <div>
-
-      <p
-        className="
-          text-sm
-          sm:text-base
-          text-white/70
-        "
-      >
-        {label}
-      </p>
-
-      <h3
-        className="
-          text-3xl
-          sm:text-4xl
-          lg:text-5xl
-          font-bold
-          mt-1
-          break-words
-        "
-      >
-        {value}
-      </h3>
-
-    </div>
-
-  );
-
-}
-
-
-// ==========================================================
-// AI Coach Item
-// ==========================================================
-
-function CoachItem({
-
-  title,
-
-  value
-
-}: {
-
-  title: string;
-
-  value: string;
-
-}) {
-
-  return (
-
-    <div
-      className="
-        bg-white/10
-        rounded-2xl
-        p-5
-        min-w-0
-      "
-    >
-
-      <h3
-        className="
-          text-lg
-          sm:text-xl
-          font-bold
-        "
-      >
-        {title}
-      </h3>
-
-      <p
-        className="
-          text-xl
-          sm:text-2xl
-          font-bold
-          mt-3
-          break-words
-        "
-      >
-        {value}
-      </p>
-
-    </div>
-
-  );
-
 }
