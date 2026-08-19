@@ -118,9 +118,7 @@ export default function AnalyticsShowcase() {
           className=" mx-auto max-w-4xl text-center "
         >
           <div
-            className=" inline-flex items-center gap-2 rounded-full border border-purple-200 bg-purple-50 px-4
-              py-2
-            "
+            className=" inline-flex items-center gap-2 rounded-full border border-purple-200 bg-purple-50 px-4 py-2 "
           >
             <ChartNoAxesCombined
               size={15}
