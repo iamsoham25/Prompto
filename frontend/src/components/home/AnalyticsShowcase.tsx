@@ -93,12 +93,7 @@ export default function AnalyticsShowcase() {
       />
 
       <div
-        className="
-          relative
-          z-10
-          mx-auto
-          max-w-[1450px]
-          px-5
+        className=" relative z-10 mx-auto max-w-[1450px] px-5
 
           sm:px-8
           lg:px-12
