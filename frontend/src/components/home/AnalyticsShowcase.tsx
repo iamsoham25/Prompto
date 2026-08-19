@@ -115,11 +115,7 @@ export default function AnalyticsShowcase() {
           transition={{
             duration: 0.55,
           }}
-          className="
-            mx-auto
-            max-w-4xl
-            text-center
-          "
+          className=" mx-auto max-w-4xl text-center "
         >
           <div
             className="
