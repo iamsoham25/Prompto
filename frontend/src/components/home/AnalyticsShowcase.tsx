@@ -126,13 +126,7 @@ export default function AnalyticsShowcase() {
             />
 
             <span
-              className="
-                text-xs
-                font-black
-                uppercase
-                tracking-[0.22em]
-                text-purple-600
-              "
+              className=" text-xs font-black uppercase tracking-[0.22em] text-purple-600 "
             >
               Analytics & Growth
             </span>
