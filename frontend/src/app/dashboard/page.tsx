@@ -15,6 +15,8 @@ import {
   motion
 } from "framer-motion";
 
+import TiltCard from "@/components/ui/TiltCard";
+import Reveal from "@/components/ui/Reveal";
 
 export default function DashboardPage() {
 
@@ -819,180 +821,522 @@ export default function DashboardPage() {
             HERO
         ================================================== */}
 
-        <section
-          className="
-            bg-gradient-to-r
-            from-blue-600
-            via-purple-600
-            to-pink-500
-            rounded-2xl
-            sm:rounded-3xl
-            p-5
-            sm:p-7
-            lg:p-8
-            text-white
-            shadow-xl
-          "
-        >
+        <Reveal>
 
-          <div
-            className="
-              flex
-              flex-col
-              xl:flex-row
-              xl:items-center
-              justify-between
-              gap-8
-            "
-          >
+          <section className="relative overflow-hidden rounded-[28px] bg-[#151327] text-white">
+
+            {/* Ambient gradient orbs */}
 
             <div
               className="
-                flex-1
-                min-w-0
+                pointer-events-none
+                absolute
+                -left-24
+                -top-24
+                h-72
+                w-72
+                rounded-full
+                bg-[#4C3DF0]/40
+                blur-3xl
+                animate-[driftOne_17s_ease-in-out_infinite]
+              "
+            />
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                right-[-80px]
+                top-10
+                h-80
+                w-80
+                rounded-full
+                bg-[#EC4899]/30
+                blur-3xl
+                animate-[driftTwo_15s_ease-in-out_infinite]
+              "
+            />
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                bottom-[-100px]
+                left-[40%]
+                h-72
+                w-72
+                rounded-full
+                bg-[#8B3DE0]/25
+                blur-3xl
+                animate-[driftThree_19s_ease-in-out_infinite]
+              "
+            />
+
+
+            {/* Grid */}
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-0
+                opacity-[0.08]
+                [background-image:linear-gradient(rgba(255,255,255,.35)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.35)_1px,transparent_1px)]
+                [background-size:48px_48px]
+              "
+            />
+
+
+            <div
+              className="
+                relative
+                z-10
+                grid
+                grid-cols-1
+                xl:grid-cols-[1fr_390px]
+                gap-10
+                p-7
+                sm:p-10
+                lg:p-12
               "
             >
 
-              <h1
-                className="
-                  text-3xl
-                  sm:text-4xl
-                  lg:text-5xl
-                  font-bold
-                  break-words
-                "
-              >
-                {greeting},{" "}
-                {username} 👋
-              </h1>
+              {/* LEFT */}
+        
+              <div className="flex flex-col justify-center">
 
-              <p
-                className="
-                  mt-3
-                  text-base
-                  sm:text-lg
-                  lg:text-xl
-                  text-white/90
-                "
-              >
-                Keep learning and level up your
-                Prompt Engineering skills.
-              </p>
-
-
-              <div
-                className="
-                  flex
-                  flex-wrap
-                  gap-3
-                  mt-6
-                "
-              >
-
-                <span
+                <div
                   className="
-                    bg-white/20
-                    backdrop-blur-md
+                    inline-flex
+                    w-fit
+                    items-center
+                    gap-2
+                    rounded-full
+                    border
+                    border-white/15
+                    bg-white/10
                     px-4
-                    py-2.5
-                    rounded-xl
-                    text-sm
-                    sm:text-base
+                    py-2
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-[0.18em]
+                    text-white/80
+                    backdrop-blur-md
                   "
                 >
-                  🎯 XP: {xp}
-                </span>
+                  <span className="h-2 w-2 rounded-full bg-[#2FBE7A] shadow-[0_0_12px_#2FBE7A]" />
+        
+                  Personal AI Workspace
+                </div>
 
-                <span
+
+                <h1
                   className="
-                    bg-white/20
-                    backdrop-blur-md
-                    px-4
-                    py-2.5
-                    rounded-xl
-                    text-sm
-                    sm:text-base
+                    mt-6
+                    max-w-4xl
+                    font-['Space_Grotesk']
+                    text-4xl
+                    font-bold
+                    uppercase
+                    leading-[1.03]
+                    tracking-[-0.04em]
+                    sm:text-5xl
+                    lg:text-6xl
+                    xl:text-7xl
                   "
                 >
-                  🏆 Rank #{rank}
-                </span>
+                  {greeting},{" "}
+                  <span
+                    className="
+                      bg-gradient-to-r
+                      from-white
+                      via-white
+                      to-white/60
+                      bg-clip-text
+                      text-transparent
+                    "
+                  >
+                    {username}
+                  </span>
+                  .
+                </h1>
 
-                <span
+
+                <p
                   className="
-                    bg-white/20
-                    backdrop-blur-md
-                    px-4
-                    py-2.5
-                    rounded-xl
-                    text-sm
-                    sm:text-base
+                    mt-6
+                    max-w-2xl
+                    text-base
+                    leading-7
+                    text-white/70
+                    sm:text-lg
                   "
                 >
-                  🚀 {xpRank}
-                </span>
+                  Keep building better prompts, complete challenges,
+                  strengthen your weak skills and move toward
+                  prompt engineering mastery.
+                </p>
 
+
+                {/* Stats */}
+
+                <div
+                  className="
+                    mt-8
+                    flex
+                    flex-wrap
+                    gap-3
+                  "
+                >
+
+                  <div
+                    className="
+                      rounded-xl
+                      border
+                      border-white/10
+                      bg-white/10
+                      px-4
+                      py-3
+                      backdrop-blur-md
+                    "
+                  >
+                    <p className="font-mono text-xs text-white/50">
+                      XP
+                    </p>
+
+                    <p className="mt-1 font-mono text-lg font-bold">
+                      {xp}
+                    </p>
+                  </div>
+
+
+                  <div
+                    className="
+                      rounded-xl
+                      border
+                      border-white/10
+                      bg-white/10
+                      px-4
+                      py-3
+                      backdrop-blur-md
+                    "
+                  >
+                    <p className="font-mono text-xs text-white/50">
+                      RANK
+                    </p>
+
+                    <p className="mt-1 font-mono text-lg font-bold">
+                      #{rank}
+                    </p>
+                  </div>
+
+
+                  <div
+                    className="
+                      rounded-xl
+                      border
+                      border-white/10
+                      bg-white/10
+                      px-4
+                      py-3
+                      backdrop-blur-md
+                    "
+                  >
+                    <p className="font-mono text-xs text-white/50">
+                      LEVEL
+                    </p>
+
+                    <p className="mt-1 font-mono text-lg font-bold">
+                      {xpLevel}
+                    </p>
+                  </div>
+
+                </div>
+
+
+                {/* CTA */}
+
+                <div className="mt-8 flex flex-wrap gap-3">
+
+                  <button
+                    onClick={() => router.push("/playground")}
+                    className="
+                      btn-primary
+                      rounded-xl
+                      bg-[#FF5E1F]
+                      px-6
+                      py-3.5
+                      font-semibold
+                      text-white
+                      shadow-lg
+                      shadow-orange-500/20
+                      transition-all
+                      duration-200
+                      hover:-translate-y-1
+                      hover:bg-[#ff6d32]
+                    "
+                  >
+                    Continue Practicing →
+                  </button>
+
+
+                  <button
+                    onClick={() => router.push("/learn")}
+                    className="
+                      rounded-xl
+                      border
+                      border-white/20
+                      bg-white/10
+                      px-6
+                      py-3.5
+                      font-semibold
+                      text-white
+                      backdrop-blur-md
+                      transition-all
+                      duration-200
+                      hover:-translate-y-1
+                      hover:bg-white/15
+                    "
+                  >
+                    Continue Learning
+                  </button>
+      
+                </div>
+      
               </div>
 
+
+              {/* RIGHT — 3D CARD */}
+      
+              <TiltCard
+                intensity={7}
+                className="self-center"
+              >
+
+                <div
+                  className="
+                    relative
+                    overflow-hidden
+                    rounded-[24px]
+                    border
+                    border-white/15
+                    bg-white/[0.09]
+                    p-6
+                    shadow-2xl
+                    backdrop-blur-xl
+                  "
+                >
+
+                  {/* Glow */}
+
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      -right-20
+                      -top-20
+                      h-48
+                      w-48
+                      rounded-full
+                      bg-[#EC4899]/30
+                      blur-3xl
+                    "
+                  />
+
+
+                  <div className="relative z-10">
+
+                    <div
+                      className="
+                        flex
+                        items-center
+                        justify-between
+                      "
+                    >
+
+                      <div>
+
+                        <p className="text-xs uppercase tracking-[0.16em] text-white/50">
+                          Prompt Mastery
+                        </p>
+
+                        <p className="mt-2 font-mono text-sm text-white/60">
+                          CURRENT LEVEL
+                        </p>
+
+                      </div>
+
+
+                      <div
+                        className="
+                          flex
+                          h-10
+                          w-10
+                          items-center
+                          justify-center
+                          rounded-xl
+                          bg-[#FF5E1F]
+                          text-lg
+                          shadow-lg
+                          shadow-orange-500/30
+                        "
+                      >
+                        ✦
+                      </div>
+      
+                    </div>
+
+
+                    <div className="mt-8">
+
+                      <p
+                        className="
+                          font-['Space_Grotesk']
+                          text-4xl
+                          font-bold
+                        "
+                      >
+                        {promptLevel}
+                      </p>
+
+                      <p className="mt-2 font-mono text-sm text-white/55">
+                        Average Prompt Score
+                      </p>
+  
+                      <p
+                        className="
+                          mt-1
+                          font-mono
+                          text-3xl
+                          font-bold
+                        "
+                      >
+                        {Number(promptAverage).toFixed(1)}
+                        <span className="text-base text-white/40">
+                          /100
+                        </span>
+                      </p>
+      
+                    </div>
+
+
+                    {/* Progress */}
+      
+                    <div className="mt-8">
+
+                      <div className="flex justify-between text-xs">
+
+                        <span className="text-white/50">
+                          Progress to next level
+                        </span>
+
+                        <span className="font-mono">
+                          {Math.round(xpProgress)}%
+                        </span>
+      
+                      </div>
+
+
+                      <div
+                        className="
+                          mt-3
+                          h-3
+                          overflow-hidden
+                          rounded-full
+                          bg-white/10
+                        "
+                      >
+
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{
+                            width: `${xpProgress}%`,
+                          }}
+                          transition={{
+                            duration: 1.2,
+                            ease: "easeOut",
+                          }}
+                          className="
+                            h-full
+                            rounded-full
+                            bg-gradient-to-r
+                            from-[#4C3DF0]
+                            via-[#8B3DE0]
+                            to-[#EC4899]
+                          "
+                        />
+      
+                      </div>
+
+                    </div>
+
+
+                    {/* Footer */}
+
+                    <div
+                      className="
+                        mt-8
+                        grid
+                        grid-cols-2
+                        gap-3
+                      "
+                    >
+
+                      <div
+                        className="
+                          rounded-xl
+                          border
+                          border-white/10
+                          bg-black/10
+                          p-4
+                        "
+                      >
+
+                        <p className="text-xs text-white/45">
+                          Challenges
+                        </p>
+
+                        <p className="mt-1 font-mono text-xl font-bold">
+                          {completedChallenges}
+                        </p>
+
+                      </div>
+
+
+                      <div
+                        className="
+                          rounded-xl
+                          border
+                          border-white/10
+                          bg-black/10
+                          p-4
+                        "
+                      >
+
+                        <p className="text-xs text-white/45">
+                          Attempts
+                        </p>
+
+                        <p className="mt-1 font-mono text-xl font-bold">
+                          {challengeAttempts}
+                        </p>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </TiltCard>
+
             </div>
 
+          </section>
 
-            {/* Prompt Mastery */}
-
-            <div
-              className="
-                w-full
-                xl:w-[340px]
-                bg-emerald-600
-                rounded-2xl
-                sm:rounded-3xl
-                p-6
-                shadow-xl
-              "
-            >
-
-              <p
-                className="
-                  text-sm
-                  text-center
-                  text-white/80
-                "
-              >
-                Prompt Mastery
-              </p>
-
-              <h3
-                className="
-                  mt-3
-                  text-3xl
-                  sm:text-4xl
-                  font-extrabold
-                  text-center
-                  break-words
-                "
-              >
-                {promptLevel}
-              </h3>
-
-              <p
-                className="
-                  mt-3
-                  text-center
-                  text-sm
-                  text-white/90
-                "
-              >
-                Average Prompt Score:
-                {" "}
-                {Number(
-                  promptAverage
-                ).toFixed(1)}
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
+        </Reveal>
 
 
         {/* ==================================================
@@ -1686,12 +2030,6 @@ export default function DashboardPage() {
             </div>
 
           </div>
-
-
-          
-
-        
-
 
         {/* ==================================================
             RECENT ACTIVITY
