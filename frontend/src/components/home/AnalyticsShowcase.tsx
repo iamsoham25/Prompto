@@ -81,17 +81,7 @@ export default function AnalyticsShowcase() {
       ===================================================== */}
 
       <div
-        className="
-          pointer-events-none
-          absolute
-          -left-40
-          top-20
-          h-[450px]
-          w-[450px]
-          rounded-full
-          bg-purple-100/70
-          blur-[150px]
-        "
+        className=" pointer-events-none absolute -left-40 top-20 h-[450px] w-[450px] rounded-full bg-purple-100/70 blur-[150px] "
       />
 
       <div
