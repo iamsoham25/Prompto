@@ -118,9 +118,7 @@ export default function AnalyticsShowcase() {
           className=" mx-auto max-w-4xl text-center "
         >
           <div
-            className="
-              inline-flex
-              items-center
+            className=" inline-flex items-center
               gap-2
               rounded-full
               border
