@@ -47,6 +47,7 @@ type DashboardData = {
   }[];
 
   recentActivity: {
+    id : string;
     title: string;
     type: string;
     score: number;
@@ -480,7 +481,23 @@ export default function DashboardPage() {
           },
         ],
 
-        recentActivity: previous.recentActivity,
+        recentActivity: (
+          activities.activities || []
+        ).map((activity: any, index: number) => ({
+          id: activity.id,
+
+          title: activity.title,
+
+          type: activity.type,
+
+          score: Number(activity.score ?? 0),
+
+          xp: 0,
+
+          status: "Completed",
+
+          icon: String(index + 1).padStart(2, "0"),
+        })),
 
         achievements: previous.achievements,
       }));
