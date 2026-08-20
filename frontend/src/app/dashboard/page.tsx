@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import API from "@/services/api";
 
 /* ============================================================
@@ -1363,11 +1364,11 @@ export default function DashboardPage() {
                   </div>
 
                 </div>
-                
+
               </div>
 
 
-              <div className="mt-[-8px] rounded-[28px] border border-white/10 bg-white/[0.08] p-7 shadow-2xl backdrop-blur-xl">
+              <div className="mt-[-4px] rounded-[28px] border border-white/10 bg-white/[0.08] p-7 shadow-2xl backdrop-blur-xl">
 
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
 
@@ -1708,73 +1709,48 @@ export default function DashboardPage() {
 
             {/* CURRENT LEVEL */}
 
-            <div className="rounded-[30px] bg-gradient-to-br from-[#14052c] via-[#16031e] to-[#030308] p-8 text-white shadow-2xl">
+            <div className="self-start rounded-[30px] bg-gradient-to-br from-[#19002f] via-[#100018] to-[#050008] p-8 text-white shadow-[0_25px_70px_rgba(20,0,40,0.18)]">
 
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-pink-400">
-
+              <div className="text-xs font-bold uppercase tracking-[0.22em] text-pink-400">
                 Current Level
+              </div>
 
-              </p>
-
-
-              <h3 className="mt-8 text-5xl font-black">
-
+              <h3 className="mt-5 text-4xl font-black tracking-tight">
                 {data.mastery_level}
-
               </h3>
 
-
-              <p className="mt-6 leading-7 text-slate-400">
-
+              <p className="mt-5 max-w-md text-base leading-7 text-blue-200/80">
                 Build a strong foundation in roles, context,
                 constraints and structured output.
-
               </p>
 
-
               <div className="mt-10">
-
-                <div className="mb-3 flex justify-between">
-
-                  <span className="text-sm text-slate-400">
-
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-blue-200/80">
                     Level Progress
-
                   </span>
 
-                  <span className="font-bold">
-
+                  <span className="text-sm font-bold text-white">
                     {data.xp_progress}%
-
                   </span>
-
                 </div>
 
-
-                <div className="h-3 rounded-full bg-white/10">
-
+                <div className="mt-3 h-3 overflow-hidden rounded-full bg-white/10">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500"
                     style={{
                       width: `${data.xp_progress}%`,
                     }}
                   />
-
                 </div>
-
               </div>
 
-
-              <button
-                onClick={() =>
-                  router.push("/learn")
-                }
-                className="mt-10 rounded-2xl bg-orange-500 px-7 py-4 font-black transition hover:bg-orange-600"
+              <Link
+                href="/learn"
+                className="mt-10 inline-flex rounded-2xl bg-orange-500 px-7 py-4 font-bold text-white transition hover:bg-orange-400"
               >
-
                 Continue Learning →
-
-              </button>
+              </Link>
 
             </div>
 
