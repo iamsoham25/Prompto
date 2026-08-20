@@ -9,6 +9,7 @@ import API from "@/services/api";
    TYPES
    ============================================================ */
 
+   
 type Skill = {
   name: string;
   score: number;
