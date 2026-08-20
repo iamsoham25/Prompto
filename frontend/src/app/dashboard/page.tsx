@@ -41,6 +41,7 @@ type DashboardData = {
   }[];
 
   learning: {
+    id: string;
     name: string;
     progress: number;
     status: string;
@@ -51,7 +52,7 @@ type DashboardData = {
     title: string;
     type: string;
     score: number;
-    xp: number;
+    xp: number | null;
     status: string;
     icon: string;
   }[];
@@ -195,7 +196,11 @@ function Particles() {
    3D PROMPT ORB
    ============================================================ */
 
-function PromptOrb() {
+function PromptOrb({
+  level,
+}: {
+  level: number;
+}) {
   return (
     <div className="relative mx-auto flex h-[300px] w-[300px] items-center justify-center sm:h-[350px] sm:w-[350px]">
 
@@ -252,7 +257,7 @@ function PromptOrb() {
           Level
         </p>
         <p className="text-sm font-black text-white">
-          02
+          {String(level).padStart(2, "0")}
         </p>
       </div>
 
@@ -299,37 +304,48 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   /* ------------------------------------------------------------
-     Calculate current average from Dashboard activity.
+     Current skill score
 
-     This fixes the old "0.0" problem.
+     Dashboard = current state.
+     Analytics = historical trends.
 
-     IMPORTANT:
-     This is a Dashboard summary only.
-     Detailed score history belongs to Analytics.
+     Therefore the score shown here is calculated from the
+     current skill snapshot returned by /current-skills/{email}.
      ------------------------------------------------------------ */
 
-  const scoredActivities = data.recentActivity.filter(
-    (activity) => typeof activity.score === "number"
+  const validSkills = data.skills.filter(
+    (skill) => Number.isFinite(Number(skill.score))
   );
 
-  const averageScore =
-    scoredActivities.length > 0
-      ? (
-          scoredActivities.reduce(
-            (sum, activity) => sum + activity.score,
+  const currentSkillScore =
+    validSkills.length > 0
+      ? Math.round(
+          validSkills.reduce(
+            (sum, skill) => sum + Math.min(100, Math.max(0, Number(skill.score))),
             0
-          ) / scoredActivities.length
-        ).toFixed(1)
-      : "—";
+          ) / validSkills.length
+        )
+      : 0;
 
+  const strongestSkill =
+    [...data.skills].sort(
+      (a, b) => b.score - a.score
+    )[0] || {
+      name: "your skills",
+      score: 0,
+      description: "",
+      icon: "✦",
+    };
 
-  const strongestSkill = [...data.skills].sort(
-    (a, b) => b.score - a.score
-  )[0];
-
-  const weakestSkill = [...data.skills].sort(
-    (a, b) => a.score - b.score
-  )[0];
+  const weakestSkill =
+    [...data.skills].sort(
+      (a, b) => a.score - b.score
+    )[0] || {
+      name: "your skills",
+      score: 0,
+      description: "",
+      icon: "✦",
+    };
 
   useEffect(() => {
     loadDashboard();
@@ -342,12 +358,12 @@ export default function DashboardPage() {
 
       const email = localStorage.getItem("userEmail");
 
-      
-
       if (!email) {
-        setError("User session not found.");
+        setError("User session not found. Please log in again.");
         return;
       }
+
+      const encodedEmail = encodeURIComponent(email);
 
       const [
         summaryResponse,
@@ -360,89 +376,220 @@ export default function DashboardPage() {
         achievementsResponse,
         learningResponse,
       ] = await Promise.all([
-        API.get(
-          `/dashboard-summary/${encodeURIComponent(email)}`
-        ),
-
-        API.get(
-          `/xp/${encodeURIComponent(email)}`
-        ),
-
-        API.get(
-          `/user-rank/${encodeURIComponent(email)}`
-        ),
-
-        API.get(
-          `/challenge-stats/${encodeURIComponent(email)}`
-        ),
-
-        API.get(
-          `/current-skills/${encodeURIComponent(email)}`
-        ),
-
-        API.get(
-          `/recent-activity/${encodeURIComponent(email)}`
-        ),
-
-        API.get(
-          `/streak/${encodeURIComponent(email)}`
-        ),
-
-        API.post(
-          `/achievements/check/${encodeURIComponent(email)}`
-        ),
-
-        API.get(
-          `/learning-dashboard/${encodeURIComponent(email)}`
-        ),
+        API.get(`/dashboard-summary/${encodedEmail}`),
+        API.get(`/xp/${encodedEmail}`),
+        API.get(`/user-rank/${encodedEmail}`),
+        API.get(`/challenge-stats/${encodedEmail}`),
+        API.get(`/current-skills/${encodedEmail}`),
+        API.get(`/recent-activity/${encodedEmail}`),
+        API.get(`/streak/${encodedEmail}`),
+        API.post(`/achievements/check/${encodedEmail}`),
+        API.get(`/learning-dashboard/${encodedEmail}`),
       ]);
 
-      
+      const summary = summaryResponse.data || {};
+      const xp = xpResponse.data || {};
+      const rank = rankResponse.data || {};
+      const challenges = challengeResponse.data || {};
+      const skillsResponseData = skillsResponse.data || {};
+      const activitiesResponseData = activityResponse.data || {};
+      const streak = streakResponse.data || {};
+      const achievementsResponseData = achievementsResponse.data || {};
+      const learning = learningResponse.data || {};
 
-      const summary = summaryResponse.data;
-
-      const xp = xpResponse.data;
-
-      const rank = rankResponse.data;
-
-      const challenges = challengeResponse.data;
-
-      const skills = skillsResponse.data;
-
-      const activities = activityResponse.data;
-
-      const streak = streakResponse.data;
-
-      const achievements = achievementsResponse.data;
-
-      const learning = learningResponse.data;
-      
-
-      if (!summary.success) { 
+      if (summary.success === false) {
         throw new Error("Unable to load dashboard summary.");
       }
 
-      setData((previous) => ({
-        ...previous,
+      const skillDescriptions: Record<string, string> = {
+        clarity: "Clear and precise instructions",
+        specificity: "Specific and actionable requirements",
+        context: "Relevant background information",
+        constraints: "Well-defined requirements",
+        role: "Clear role and perspective",
+        output: "Structured expected output",
+        "output format": "Structured expected output",
+        examples: "Useful examples and demonstrations",
+      };
 
+      const skillIcons: Record<string, string> = {
+        clarity: "✦",
+        specificity: "◎",
+        context: "◉",
+        constraints: "◇",
+        role: "◆",
+        output: "▣",
+        "output format": "▣",
+        examples: "⌘",
+      };
+
+      const apiSkills = Array.isArray(skillsResponseData.skills)
+        ? skillsResponseData.skills
+        : [];
+
+      const normalizedSkills = apiSkills.map(
+        (skill: any, index: number) => {
+          const name = String(skill?.name || `Skill ${index + 1}`);
+          const key = name.toLowerCase();
+
+          return {
+            name,
+            score: Math.min(
+              100,
+              Math.max(0, Number(skill?.score ?? 0))
+            ),
+            description:
+              skillDescriptions[key] ||
+              "Current prompt engineering skill score",
+            icon:
+              skillIcons[key] ||
+              ["✦", "◉", "◇", "▣", "◆", "⌘"][index % 6],
+          };
+        }
+      );
+
+      const fallbackSkills = initialDashboardData.skills;
+
+      const finalSkills =
+        normalizedSkills.length > 0
+          ? normalizedSkills
+          : fallbackSkills;
+
+      const safeProgress = (value: any) =>
+        Math.min(
+          100,
+          Math.max(0, Number(value ?? 0))
+        );
+
+      const beginnerProgress = safeProgress(
+        learning?.beginner?.progress
+      );
+
+      const intermediateProgress = safeProgress(
+        learning?.intermediate?.progress
+      );
+
+      const advancedProgress = safeProgress(
+        learning?.advanced?.progress
+      );
+
+      const agentsProgress = safeProgress(
+        learning?.agents?.progress ??
+        learning?.ai_agents?.progress ??
+        0
+      );
+
+      const normalizedActivities = Array.isArray(
+        activitiesResponseData.activities
+      )
+        ? activitiesResponseData.activities.map(
+            (activity: any, index: number) => ({
+              id:
+                String(
+                  activity?.id ??
+                  activity?._id ??
+                  `${activity?.created_at ?? "activity"}-${index}`
+                ),
+
+              title:
+                String(
+                  activity?.title ??
+                  activity?.name ??
+                  "Prompt Activity"
+                ),
+
+              type:
+                String(
+                  activity?.type ??
+                  "Activity"
+                ),
+
+              score:
+                Number.isFinite(
+                  Number(activity?.score)
+                )
+                  ? Number(activity.score)
+                  : 0,
+
+              xp:
+                activity?.xp !== undefined &&
+                activity?.xp !== null
+                  ? Number(activity.xp)
+                  : null,
+
+              status:
+                String(
+                  activity?.status ??
+                  "Completed"
+                ),
+
+              icon:
+                String(
+                  activity?.icon ??
+                  String(index + 1).padStart(2, "0")
+                ),
+            })
+          )
+        : [];
+
+      const normalizedAchievements = Array.isArray(
+        achievementsResponseData.achievements
+      )
+        ? achievementsResponseData.achievements.map(
+            (achievement: any) => ({
+              title: String(
+                achievement?.title ??
+                "Achievement"
+              ),
+
+              description:
+                getAchievementDescription(
+                  String(
+                    achievement?.title ??
+                    "Achievement"
+                  )
+                ),
+
+              icon:
+                String(
+                  achievement?.icon ??
+                  "🏆"
+                ),
+
+              unlocked:
+                achievement?.unlocked !== false,
+            })
+          )
+        : [];
+
+      const streakValue = Number(
+        streak?.current_streak ??
+        streak?.streak ??
+        0
+      );
+
+      setData({
         user: {
           name:
             summary.username ||
             localStorage.getItem("userName") ||
+            email.split("@")[0] ||
             "User",
-  
+
           greeting:
             new Date().getHours() < 12
               ? "GOOD MORNING"
               : new Date().getHours() < 18
-              ? "GOOD AFTERNOON"
-              : "GOOD EVENING",
+                ? "GOOD AFTERNOON"
+                : "GOOD EVENING",
         },
 
         overview: {
-          ...previous.overview,
-
-          totalXP: Number(summary.xp ?? xp.xp ?? 0),
+          totalXP: Number(
+            summary.xp ??
+            xp.xp ??
+            0
+          ),
 
           currentLevel: Number(
             summary.level ??
@@ -460,9 +607,9 @@ export default function DashboardPage() {
             "-",
 
           streak:
-            Number(
-              streak.current_streak ?? 0
-            ),
+            Number.isFinite(streakValue)
+              ? streakValue
+              : 0,
 
           challengesCompleted:
             Number(
@@ -477,135 +624,73 @@ export default function DashboardPage() {
               0
             ),
 
-          levelProgress:
-            Number(
-              summary.xp_progress ??
-              xp.progress ??
-              0
-            ),
+          levelProgress: safeProgress(
+            summary.xp_progress ??
+            xp.progress ??
+            0
+          ),
         },
 
+        skills: finalSkills,
+
         learning: [
-  {
-    id: "beginner",
-    name: "Prompt Fundamentals",
-    status:
-      learning.beginner.progress >= 100
-        ? "Completed"
-        : "In Progress",
-    progress: learning.beginner.progress,
-  },
-
-  {
-    id: "intermediate",
-    name: "Prompt Structure",
-    status:
-      learning.intermediate.progress >= 100
-        ? "Completed"
-        : learning.intermediate.progress > 0
-          ? "In Progress"
-          : "Locked",
-    progress: learning.intermediate.progress,
-  },
-
-  {
-    id: "advanced",
-    name: "Advanced Prompting",
-    status:
-      learning.advanced.progress >= 100
-        ? "Completed"
-        : learning.advanced.progress > 0
-          ? "In Progress"
-          : "Locked",
-    progress: learning.advanced.progress,
-  },
-
-  {
-    id: "agents",
-    name: "AI Agents",
-    status:
-      learning.advanced.progress >= 100
-        ? "In Progress"
-        : "Locked",
-    progress: 0,
-  },
-],
-
-        skills: [
           {
-            name: "Clarity",
-            score: Number(
-              skills.skills?.find(
-                (s: any) => s.name === "Clarity"
-              )?.score ?? 0
-            ),
-            description: "Clear and precise instructions",
-            icon: "✦",
+            id: "beginner",
+            name: "Prompt Fundamentals",
+            status:
+              beginnerProgress >= 100
+                ? "Completed"
+                : beginnerProgress > 0
+                  ? "In Progress"
+                  : "Locked",
+            progress: beginnerProgress,
           },
 
           {
-            name: "Context",
-            score: Number(
-              skills.skills?.find(
-                (s: any) => s.name === "Context"
-              )?.score ?? 0
-            ),
-            description: "Relevant background information",
-            icon: "◉",
+            id: "intermediate",
+            name: "Prompt Structure",
+            status:
+              intermediateProgress >= 100
+                ? "Completed"
+                : intermediateProgress > 0
+                  ? "In Progress"
+                  : "Locked",
+            progress: intermediateProgress,
           },
 
           {
-            name: "Constraints",
-            score: Number(
-              skills.skills?.find(
-                (s: any) => s.name === "Constraints"
-              )?.score ?? 0
-            ),
-            description: "Well-defined requirements",
-            icon: "◇",
+            id: "advanced",
+            name: "Advanced Prompting",
+            status:
+              advancedProgress >= 100
+                ? "Completed"
+                : advancedProgress > 0
+                  ? "In Progress"
+                  : "Locked",
+            progress: advancedProgress,
           },
 
           {
-            name: "Output Format",
-            score: Number(
-              skills.skills?.find(
-                (s: any) => s.name === "Output Format"
-              )?.score ?? 0
-            ),
-            description: "Structured expected output",
-            icon: "▣",
+            id: "agents",
+            name: "AI Agents",
+            status:
+              agentsProgress > 0
+                ? agentsProgress >= 100
+                  ? "Completed"
+                  : "In Progress"
+                : advancedProgress >= 100
+                  ? "In Progress"
+                  : "Locked",
+            progress: agentsProgress,
           },
         ],
 
-        recentActivity: (
-          activities.activities || []
-        ).map((activity: any, index: number) => ({
-          id: activity.id,
+        recentActivity:
+          normalizedActivities,
 
-          title: activity.title,
-
-          type: activity.type,
-
-          score: Number(activity.score ?? 0),
-
-          xp: 0,
-
-          status: "Completed",
-
-          icon: String(index + 1).padStart(2, "0"),
-        })),
-
-        achievements: (
-          achievements.achievements || []
-        ).map((achievement: any) => ({
-          title: achievement.title,
-          description: getAchievementDescription(
-            achievement.title
-          ),
-          icon: achievement.icon,
-          unlocked: achievement.unlocked,
-        })),
-      }));
+        achievements:
+          normalizedAchievements,
+      });
 
     } catch (err) {
       console.error(
@@ -614,7 +699,7 @@ export default function DashboardPage() {
       );
 
       setError(
-        "Unable to load dashboard data."
+        "Unable to load dashboard data. Check that the backend is running and try again."
       );
 
     } finally {
@@ -622,6 +707,47 @@ export default function DashboardPage() {
     }
   };
 
+
+  if (loading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#f7f8fc] px-6">
+        <div className="rounded-3xl border border-slate-200 bg-white px-10 py-8 text-center shadow-xl">
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-orange-500" />
+          <p className="mt-5 text-lg font-black">
+            Loading your dashboard...
+          </p>
+          <p className="mt-2 text-sm text-slate-500">
+            Fetching your current progress and achievements.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#f7f8fc] px-6">
+        <div className="max-w-lg rounded-3xl border border-red-200 bg-white p-8 text-center shadow-xl">
+          <div className="text-4xl">⚠️</div>
+
+          <h1 className="mt-4 text-2xl font-black">
+            Dashboard could not load
+          </h1>
+
+          <p className="mt-3 text-sm leading-6 text-slate-500">
+            {error}
+          </p>
+
+          <button
+            onClick={loadDashboard}
+            className="mt-6 rounded-xl bg-[#ff6b00] px-6 py-3 text-sm font-bold text-white transition hover:bg-orange-500"
+          >
+            Try Again
+          </button>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#f7f8fc] text-[#071126]">
@@ -768,7 +894,9 @@ export default function DashboardPage() {
 
             <div className="relative">
 
-              <PromptOrb />
+              <PromptOrb
+                level={data.overview.currentLevel}
+              />
 
               {/* Mastery card */}
 
@@ -803,13 +931,13 @@ export default function DashboardPage() {
                 <div className="mt-7">
 
                   <p className="text-xs font-semibold text-slate-400">
-                    Current Activity Average
+                    Current Skill Score
                   </p>
 
                   <div className="mt-1 flex items-end gap-2">
 
                     <span className="text-4xl font-black text-white">
-                      {averageScore}
+                      {currentSkillScore}
                     </span>
 
                     <span className="pb-1 text-sm text-slate-500">
@@ -819,7 +947,7 @@ export default function DashboardPage() {
                   </div>
 
                   <p className="mt-1 text-[11px] text-slate-500">
-                    Based on your recent scored activities
+                    Based on your current skill snapshot
                   </p>
 
                 </div>
@@ -847,7 +975,7 @@ export default function DashboardPage() {
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 shadow-[0_0_18px_rgba(217,70,239,0.5)] transition-all duration-1000"
                       style={{
-                        width: `${data.overview.levelProgress}%`,
+                        width: `${Math.min(100, Math.max(0, data.overview.levelProgress))}%`,
                       }}
                     />
 
@@ -1095,7 +1223,7 @@ export default function DashboardPage() {
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 transition-all duration-1000 group-hover:brightness-110"
                         style={{
-                          width: `${skill.score}%`,
+                          width: `${Math.min(100, Math.max(0, skill.score))}%`,
                         }}
                       />
 
@@ -1154,7 +1282,7 @@ export default function DashboardPage() {
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500"
                       style={{
-                        width: `${data.overview.levelProgress}%`,
+                        width: `${Math.min(100, Math.max(0, data.overview.levelProgress))}%`,
                       }}
                     />
 
@@ -1222,8 +1350,10 @@ export default function DashboardPage() {
 
                   Your current score is{" "}
                   <strong>{weakestSkill.score}/100</strong>.
-                  Focus on clearly defining requirements and expected
-                  behaviour in your next prompts.
+                  Your weakest current area is{" "}
+                  <strong>{weakestSkill.name}</strong>. Practice this skill
+                  in the Playground and re-evaluate your prompts to track
+                  improvement.
 
                 </p>
 
@@ -1267,6 +1397,17 @@ export default function DashboardPage() {
           </div>
 
 
+          {data.achievements.length === 0 ? (
+            <div className="rounded-[24px] border border-dashed border-slate-300 bg-[#f8f9fc] p-8 text-slate-500">
+              <p className="font-bold">
+                No achievements unlocked yet.
+              </p>
+              <p className="mt-2 text-sm">
+                Complete prompts, earn XP and maintain your learning streak
+                to unlock achievements.
+              </p>
+            </div>
+          ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
             {data.achievements.map((achievement) => (
@@ -1297,6 +1438,7 @@ export default function DashboardPage() {
             ))}
 
           </div>
+          )}
 
         </div>
 
@@ -1393,7 +1535,7 @@ export default function DashboardPage() {
                           : "bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500"
                       }`}
                       style={{
-                        width: `${item.progress}%`,
+                        width: `${Math.min(100, Math.max(0, item.progress))}%`,
                       }}
                     />
 
@@ -1456,6 +1598,17 @@ export default function DashboardPage() {
           </div>
 
 
+          {data.recentActivity.length === 0 ? (
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.045] p-8 text-slate-400">
+              <p className="font-bold text-white">
+                No recent activity yet.
+              </p>
+              <p className="mt-2 text-sm">
+                Complete an evaluation, lesson or challenge to see your
+                latest activity here.
+              </p>
+            </div>
+          ) : (
           <div className="grid gap-4">
 
             {data.recentActivity.map((activity) => (
@@ -1508,7 +1661,9 @@ export default function DashboardPage() {
                     </p>
 
                     <p className="mt-1 font-black text-orange-400">
-                      +{activity.xp} XP
+                      {activity.xp !== null
+                        ? `+${activity.xp} XP`
+                        : "—"}
                     </p>
 
                   </div>
@@ -1525,6 +1680,7 @@ export default function DashboardPage() {
             ))}
 
           </div>
+          )}
 
         </div>
 
