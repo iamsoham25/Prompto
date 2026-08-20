@@ -260,7 +260,32 @@ function PromptOrb() {
   );
 }
 
+function getAchievementDescription(title: string) {
 
+  const descriptions: Record<string, string> = {
+
+    "First Prompt":
+      "Created your first prompt.",
+
+    "Prompt Explorer":
+      "Completed 5 prompt activities.",
+
+    "Prompt Engineer":
+      "Reached 250 XP.",
+
+    "Prompt Guru":
+      "Reached 500 XP.",
+
+    "Consistency Master":
+      "Maintained a 7 day learning streak.",
+
+  };
+
+  return (
+    descriptions[title] ||
+    "Achievement unlocked."
+  );
+}
 /* ============================================================
    MAIN DASHBOARD
    ============================================================ */
@@ -331,6 +356,9 @@ export default function DashboardPage() {
         challengeResponse,
         skillsResponse,
         activityResponse,
+        streakResponse,
+        achievementsResponse,
+        learningResponse,
       ] = await Promise.all([
         API.get(
           `/dashboard-summary/${encodeURIComponent(email)}`
@@ -355,17 +383,39 @@ export default function DashboardPage() {
         API.get(
           `/recent-activity/${encodeURIComponent(email)}`
         ),
+
+        API.get(
+          `/streak/${encodeURIComponent(email)}`
+        ),
+
+        API.get(
+          `/achievements/check/${encodeURIComponent(email)}`
+        ),
+
+        API.get(
+          `/learning-dashboard/${encodeURIComponent(email)}`
+        ),
       ]);
 
       
 
       const summary = summaryResponse.data;
+
       const xp = xpResponse.data;
+
       const rank = rankResponse.data;
+
       const challenges = challengeResponse.data;
+
       const skills = skillsResponse.data;
+
       const activities = activityResponse.data;
 
+      const streak = streakResponse.data;
+
+      const achievements = achievementsResponse.data;
+
+      const learning = learningResponse.data;
       
 
       if (!summary.success) { 
@@ -410,7 +460,9 @@ export default function DashboardPage() {
             "-",
 
           streak:
-            previous.overview.streak,
+            Number(
+              streak.current_streak ?? 0
+            ),
 
           challengesCompleted:
             Number(
@@ -433,7 +485,51 @@ export default function DashboardPage() {
             ),
         },
 
-        learning: previous.learning,
+        learning: [
+  {
+    id: "beginner",
+    name: "Prompt Fundamentals",
+    status:
+      learning.beginner.progress >= 100
+        ? "Completed"
+        : "In Progress",
+    progress: learning.beginner.progress,
+  },
+
+  {
+    id: "intermediate",
+    name: "Prompt Structure",
+    status:
+      learning.intermediate.progress >= 100
+        ? "Completed"
+        : learning.intermediate.progress > 0
+          ? "In Progress"
+          : "Locked",
+    progress: learning.intermediate.progress,
+  },
+
+  {
+    id: "advanced",
+    name: "Advanced Prompting",
+    status:
+      learning.advanced.progress >= 100
+        ? "Completed"
+        : learning.advanced.progress > 0
+          ? "In Progress"
+          : "Locked",
+    progress: learning.advanced.progress,
+  },
+
+  {
+    id: "agents",
+    name: "AI Agents",
+    status:
+      learning.advanced.progress >= 100
+        ? "In Progress"
+        : "Locked",
+    progress: 0,
+  },
+],
 
         skills: [
           {
@@ -499,7 +595,16 @@ export default function DashboardPage() {
           icon: String(index + 1).padStart(2, "0"),
         })),
 
-        achievements: previous.achievements,
+        achievements: (
+          achievements.achievements || []
+        ).map((achievement: any) => ({
+          title: achievement.title,
+          description: getAchievementDescription(
+            achievement.title
+          ),
+          icon: achievement.icon,
+          unlocked: achievement.unlocked,
+        })),
       }));
 
     } catch (err) {
