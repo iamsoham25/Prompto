@@ -1356,7 +1356,7 @@ export default function DashboardPage() {
             {data.recentActivity.map((activity) => (
 
               <div
-                key={activity.title}
+                key={activity.id}
                 className="group flex flex-col gap-5 rounded-[22px] border border-white/10 bg-white/[0.045] p-5 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-purple-400/30 hover:bg-white/[0.07] sm:flex-row sm:items-center sm:justify-between"
               >
 
