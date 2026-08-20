@@ -388,7 +388,7 @@ export default function DashboardPage() {
           `/streak/${encodeURIComponent(email)}`
         ),
 
-        API.get(
+        API.post(
           `/achievements/check/${encodeURIComponent(email)}`
         ),
 
