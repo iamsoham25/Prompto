@@ -316,6 +316,8 @@ export default function DashboardPage() {
 
       const email = localStorage.getItem("userEmail");
 
+      
+
       if (!email) {
         setError("User session not found.");
         return;
@@ -354,15 +356,18 @@ export default function DashboardPage() {
         ),
       ]);
 
-      const [summary, setSummary] = useState<any>(null);
-      const [xp, setXp] = useState<any>(null);
-      const [rank, setRank] = useState<any>(null);
-      const [challenges, setChallenges] = useState<any>(null);
-      const [skills, setSkills] = useState<any>(null);
+      
 
-      const [recentActivity, setRecentActivity] = useState<any[]>([]);
+      const summary = summaryResponse.data;
+      const xp = xpResponse.data;
+      const rank = rankResponse.data;
+      const challenges = challengeResponse.data;
+      const skills = skillsResponse.data;
+      const activities = activityResponse.data;
 
-      if (!summary.success) {
+      
+
+      if (!summary.success) { 
         throw new Error("Unable to load dashboard summary.");
       }
 
