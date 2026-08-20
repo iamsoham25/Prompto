@@ -541,3 +541,78 @@ async def get_current_skills(email: str):
         "skills": skills
 
     }
+
+
+# ==========================================================
+# Recent Activity
+# ==========================================================
+
+@router.get("/recent-activity/{email}")
+async def get_recent_activity(email: str):
+
+    prompt_collection = db["prompt_submissions"]
+
+    activities = []
+
+    cursor = prompt_collection.find(
+        {
+            "user_email": email
+        }
+    ).sort(
+        "created_at",
+        -1
+    ).limit(10)
+
+    async for prompt in cursor:
+
+        score = float(
+            prompt.get(
+                "overall_score",
+                prompt.get(
+                    "score",
+                    0
+                )
+            )
+        )
+
+        title = (
+            prompt.get("title")
+            or prompt.get("prompt_title")
+            or prompt.get("name")
+            or "Prompt Evaluation"
+        )
+
+        activity_type = (
+            prompt.get("activity_type")
+            or prompt.get("source")
+            or "Evaluation"
+        )
+
+        activities.append({
+
+            "id": str(
+                prompt.get("_id")
+            ),
+
+            "title": title,
+
+            "type": activity_type,
+
+            "score": round(
+                score,
+                2
+            ),
+
+            "created_at": prompt.get(
+                "created_at"
+            )
+
+        })
+
+    return {
+
+        "success": True,
+
+        "activities": activities
+
+    }

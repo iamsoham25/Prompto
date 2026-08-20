@@ -327,6 +327,7 @@ export default function DashboardPage() {
         rankResponse,
         challengeResponse,
         skillsResponse,
+        activityResponse,
       ] = await Promise.all([
         API.get(
           `/dashboard-summary/${encodeURIComponent(email)}`
@@ -347,13 +348,19 @@ export default function DashboardPage() {
         API.get(
           `/current-skills/${encodeURIComponent(email)}`
         ),
+
+        API.get(
+          `/recent-activity/${encodeURIComponent(email)}`
+        ),
       ]);
 
-      const summary = summaryResponse.data;
-      const xp = xpResponse.data;
-      const rank = rankResponse.data;
-      const challenges = challengeResponse.data;
-      const skills = skillsResponse.data;
+      const [summary, setSummary] = useState<any>(null);
+      const [xp, setXp] = useState<any>(null);
+      const [rank, setRank] = useState<any>(null);
+      const [challenges, setChallenges] = useState<any>(null);
+      const [skills, setSkills] = useState<any>(null);
+
+      const [recentActivity, setRecentActivity] = useState<any[]>([]);
 
       if (!summary.success) {
         throw new Error("Unable to load dashboard summary.");
