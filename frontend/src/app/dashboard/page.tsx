@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import API from "@/services/api";
 
 /* ============================================================
    DASHBOARD DATA
@@ -15,126 +16,103 @@ import { useEffect, useState } from "react";
    evaluation analysis, charts, etc.
    ============================================================ */
 
-const dashboardData = {
+type DashboardData = {
   user: {
-    name: "Soham",
+    name: string;
+    greeting: string;
+  };
+
+  overview: {
+    totalXP: number;
+    currentLevel: number;
+    levelName: string;
+    rank: number | string;
+    streak: number;
+    challengesCompleted: number;
+    challengeAttempts: number;
+    levelProgress: number;
+  };
+
+  skills: {
+    name: string;
+    score: number;
+    description: string;
+    icon: string;
+  }[];
+
+  learning: {
+    name: string;
+    progress: number;
+    status: string;
+  }[];
+
+  recentActivity: {
+    title: string;
+    type: string;
+    score: number;
+    xp: number;
+    status: string;
+    icon: string;
+  }[];
+
+  achievements: {
+    title: string;
+    description: string;
+    icon: string;
+    unlocked: boolean;
+  }[];
+};
+
+
+const initialDashboardData: DashboardData = {
+  user: {
+    name: "User",
     greeting: "GOOD AFTERNOON",
   },
 
   overview: {
-    totalXP: 440,
-    currentLevel: 2,
+    totalXP: 0,
+    currentLevel: 1,
     levelName: "Beginner",
-    rank: 1,
-    streak: 7,
-    challengesCompleted: 1,
-    challengeAttempts: 1,
-    levelProgress: 80,
+    rank: "-",
+    streak: 0,
+    challengesCompleted: 0,
+    challengeAttempts: 0,
+    levelProgress: 0,
   },
 
   skills: [
     {
       name: "Clarity",
-      score: 82,
+      score: 0,
       description: "Clear and precise instructions",
       icon: "✦",
     },
     {
       name: "Context",
-      score: 74,
+      score: 0,
       description: "Relevant background information",
       icon: "◉",
     },
     {
       name: "Constraints",
-      score: 68,
+      score: 0,
       description: "Well-defined requirements",
       icon: "◇",
     },
     {
       name: "Output Format",
-      score: 79,
+      score: 0,
       description: "Structured expected output",
       icon: "▣",
     },
   ],
 
-  learning: [
-    {
-      name: "Prompt Fundamentals",
-      progress: 100,
-      status: "Completed",
-    },
-    {
-      name: "Prompt Structure",
-      progress: 80,
-      status: "In Progress",
-    },
-    {
-      name: "Advanced Prompting",
-      progress: 35,
-      status: "In Progress",
-    },
-    {
-      name: "AI Agents",
-      progress: 15,
-      status: "Locked",
-    },
-  ],
+  learning: [],
 
-  recentActivity: [
-    {
-      title: "Prompt Engineering Challenge",
-      type: "Challenge",
-      score: 87,
-      xp: 80,
-      status: "Completed",
-      icon: "01",
-    },
-    {
-      title: "AI Product Strategy Prompt",
-      type: "Evaluation",
-      score: 87,
-      xp: 40,
-      status: "Evaluated",
-      icon: "02",
-    },
-    {
-      title: "Machine Learning Explanation",
-      type: "Playground",
-      score: 91,
-      xp: 30,
-      status: "Completed",
-      icon: "03",
-    },
-  ],
+  recentActivity: [],
 
-  achievements: [
-    {
-      title: "First Challenge",
-      description: "Completed your first challenge",
-      icon: "🏆",
-      unlocked: true,
-    },
-    {
-      title: "400 XP",
-      description: "Reached 400 experience points",
-      icon: "⚡",
-      unlocked: true,
-    },
-    {
-      title: "Prompt Evaluator",
-      description: "Completed your first evaluation",
-      icon: "🎯",
-      unlocked: true,
-    },
-    {
-      title: "7 Day Streak",
-      description: "Practiced for 7 consecutive days",
-      icon: "🔥",
-      unlocked: true,
-    },
-  ],
+  achievements: [],
 };
 
 
@@ -288,7 +266,11 @@ function PromptOrb() {
 
 export default function DashboardPage() {
 
-  const data = dashboardData;
+  const [data, setData] = useState<DashboardData>( initialDashboardData );
+
+  const [loading, setLoading] = useState(true);
+
+  const [error, setError] = useState<string | null>(null);
 
   /* ------------------------------------------------------------
      Calculate current average from Dashboard activity.
@@ -322,6 +304,189 @@ export default function DashboardPage() {
   const weakestSkill = [...data.skills].sort(
     (a, b) => a.score - b.score
   )[0];
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  const loadDashboard = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const email = localStorage.getItem("userEmail");
+
+      if (!email) {
+        setError("User session not found.");
+        return;
+      }
+
+      const [
+        summaryResponse,
+        xpResponse,
+        rankResponse,
+        challengeResponse,
+        skillsResponse,
+      ] = await Promise.all([
+        API.get(
+          `/dashboard-summary/${encodeURIComponent(email)}`
+        ),
+
+        API.get(
+          `/xp/${encodeURIComponent(email)}`
+        ),
+
+        API.get(
+          `/user-rank/${encodeURIComponent(email)}`
+        ),
+
+        API.get(
+          `/challenge-stats/${encodeURIComponent(email)}`
+        ),
+
+        API.get(
+          `/current-skills/${encodeURIComponent(email)}`
+        ),
+      ]);
+
+      const summary = summaryResponse.data;
+      const xp = xpResponse.data;
+      const rank = rankResponse.data;
+      const challenges = challengeResponse.data;
+      const skills = skillsResponse.data;
+
+      if (!summary.success) {
+        throw new Error("Unable to load dashboard summary.");
+      }
+
+      setData((previous) => ({
+        ...previous,
+
+        user: {
+          name:
+            summary.username ||
+            localStorage.getItem("userName") ||
+            "User",
+  
+          greeting:
+            new Date().getHours() < 12
+              ? "GOOD MORNING"
+              : new Date().getHours() < 18
+              ? "GOOD AFTERNOON"
+              : "GOOD EVENING",
+        },
+
+        overview: {
+          ...previous.overview,
+
+          totalXP: Number(summary.xp ?? xp.xp ?? 0),
+
+          currentLevel: Number(
+            summary.level ??
+            xp.level ??
+            1
+          ),
+
+          levelName:
+            summary.rank ??
+            xp.rank ??
+            "Beginner",
+
+          rank:
+            rank.rank ??
+            "-",
+
+          streak:
+            previous.overview.streak,
+
+          challengesCompleted:
+            Number(
+              challenges.completed ??
+              summary.completed_challenges ??
+              0
+            ),
+
+          challengeAttempts:
+            Number(
+              challenges.attempts ??
+              0
+            ),
+
+          levelProgress:
+            Number(
+              summary.xp_progress ??
+              xp.progress ??
+              0
+            ),
+        },
+
+        learning: previous.learning,
+
+        skills: [
+          {
+            name: "Clarity",
+            score: Number(
+              skills.skills?.find(
+                (s: any) => s.name === "Clarity"
+              )?.score ?? 0
+            ),
+            description: "Clear and precise instructions",
+            icon: "✦",
+          },
+
+          {
+            name: "Context",
+            score: Number(
+              skills.skills?.find(
+                (s: any) => s.name === "Context"
+              )?.score ?? 0
+            ),
+            description: "Relevant background information",
+            icon: "◉",
+          },
+
+          {
+            name: "Constraints",
+            score: Number(
+              skills.skills?.find(
+                (s: any) => s.name === "Constraints"
+              )?.score ?? 0
+            ),
+            description: "Well-defined requirements",
+            icon: "◇",
+          },
+
+          {
+            name: "Output Format",
+            score: Number(
+              skills.skills?.find(
+                (s: any) => s.name === "Output Format"
+              )?.score ?? 0
+            ),
+            description: "Structured expected output",
+            icon: "▣",
+          },
+        ],
+
+        recentActivity: previous.recentActivity,
+
+        achievements: previous.achievements,
+      }));
+
+    } catch (err) {
+      console.error(
+        "Dashboard loading error:",
+        err
+      );
+
+      setError(
+        "Unable to load dashboard data."
+      );
+
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (

@@ -434,3 +434,110 @@ async def get_dashboard_summary(email: str):
             completed_challenges
 
     }
+
+
+# ==========================================================
+# Current Skill Snapshot
+# ==========================================================
+
+@router.get("/current-skills/{email}")
+async def get_current_skills(email: str):
+
+    prompt_collection = db["prompt_submissions"]
+
+    prompts = await prompt_collection.find(
+        {
+            "user_email": email
+        }
+    ).sort(
+        "created_at",
+        -1
+    ).to_list(
+        length=20
+    )
+
+    if not prompts:
+
+        return {
+            "success": True,
+            "skills": [
+                {
+                    "name": "Clarity",
+                    "score": 0
+                },
+                {
+                    "name": "Context",
+                    "score": 0
+                },
+                {
+                    "name": "Constraints",
+                    "score": 0
+                },
+                {
+                    "name": "Output Format",
+                    "score": 0
+                }
+            ]
+        }
+
+    latest = prompts[0]
+
+    def get_score(*keys):
+
+        for key in keys:
+
+            value = latest.get(key)
+
+            if value is not None:
+
+                try:
+                    return float(value)
+                except:
+                    pass
+
+        return 0
+
+    skills = [
+
+        {
+            "name": "Clarity",
+            "score": get_score(
+                "clarity_score",
+                "clarity"
+            )
+        },
+
+        {
+            "name": "Context",
+            "score": get_score(
+                "context_score",
+                "context"
+            )
+        },
+
+        {
+            "name": "Constraints",
+            "score": get_score(
+                "constraints_score",
+                "constraints"
+            )
+        },
+
+        {
+            "name": "Output Format",
+            "score": get_score(
+                "output_score",
+                "output_format",
+                "output"
+            )
+        }
+
+    ]
+
+    return {
+
+        "success": True,
+
+        "skills": skills
+
+    }
