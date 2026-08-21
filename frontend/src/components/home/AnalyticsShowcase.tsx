@@ -234,14 +234,7 @@ export default function AnalyticsShowcase() {
                 </p>
 
                 <h3
-                  className="
-                    mt-1
-                    text-lg
-                    font-black
-                    text-slate-950
-
-                    sm:text-xl
-                  "
+                  className=" mt-1 text-lg font-black text-slate-950 sm:text-xl "
                 >
                   Skill Growth Dashboard
                 </h3>
