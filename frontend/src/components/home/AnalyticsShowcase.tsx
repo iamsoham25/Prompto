@@ -217,17 +217,7 @@ export default function AnalyticsShowcase() {
           {/* Dashboard topbar */}
 
           <div
-            className="
-              flex
-              flex-col
-              gap-4
-              border-b
-              border-slate-200
-              px-5
-              py-5
-
-              sm:flex-row
-              sm:items-center
+            className=" flex flex-col gap-4 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center
               sm:justify-between
               sm:px-7
 
