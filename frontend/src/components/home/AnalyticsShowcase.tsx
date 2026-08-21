@@ -212,15 +212,7 @@ export default function AnalyticsShowcase() {
           transition={{
             duration: 0.65,
           }}
-          className="
-            mt-8
-            overflow-hidden
-            rounded-[34px]
-            border
-            border-slate-200
-            bg-white
-            shadow-[0_25px_80px_rgba(15,23,42,0.08)]
-          "
+          className=" mt-8 overflow-hidden rounded-[34px] border border-slate-200 bg-white shadow-[0_25px_80px_rgba(15,23,42,0.08)] "
         >
           {/* Dashboard topbar */}
 
