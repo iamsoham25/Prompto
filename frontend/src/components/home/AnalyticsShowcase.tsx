@@ -148,16 +148,7 @@ export default function AnalyticsShowcase() {
           </h2>
 
           <p
-            className="
-              mx-auto
-              mt-7
-              max-w-3xl
-              text-base
-              leading-8
-              text-slate-600
-
-              sm:text-lg
-            "
+            className=" mx-auto mt-7 max-w-3xl text-base leading-8 text-slate-600 sm:text-lg "
           >
             Prompto turns every evaluated prompt into measurable skill
             insights, helping you understand what you do well, where you
