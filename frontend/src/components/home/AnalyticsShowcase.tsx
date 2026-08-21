@@ -228,13 +228,7 @@ export default function AnalyticsShowcase() {
 
               <div>
                 <p
-                  className="
-                    text-xs
-                    font-black
-                    uppercase
-                    tracking-[0.16em]
-                    text-purple-600
-                  "
+                  className=" text-xs font-black uppercase tracking-[0.16em] text-purple-600 "
                 >
                   Prompt Intelligence
                 </p>
