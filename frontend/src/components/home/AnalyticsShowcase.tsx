@@ -242,13 +242,7 @@ export default function AnalyticsShowcase() {
             </div>
 
             <div
-              className="
-                flex
-                w-fit
-                items-center
-                gap-2
-                rounded-full
-                bg-emerald-50
+              className=" flex w-fit items-center gap-2 rounded-full bg-emerald-50
                 px-3
                 py-2
                 text-xs
