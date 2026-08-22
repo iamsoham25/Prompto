@@ -19,14 +19,17 @@ export default function InsightCard({
         min-h-[700px]
         overflow-hidden
         rounded-[32px]
-        border border-purple-500/20
+        border
+        border-purple-500/20
         bg-[#08030f]
         p-8
         shadow-[0_25px_70px_rgba(30,10,55,0.22)]
         sm:p-10
       "
     >
-      {/* Ambient background */}
+
+      {/* Background glow */}
+
       <div
         className="
           pointer-events-none
@@ -55,8 +58,11 @@ export default function InsightCard({
         "
       />
 
-      {/* Header */}
+
+      {/* HEADER */}
+
       <div className="relative z-10">
+
         <p
           className="
             text-xs
@@ -86,7 +92,6 @@ export default function InsightCard({
         <p
           className="
             mt-4
-            max-w-xl
             text-base
             leading-7
             text-slate-400
@@ -96,12 +101,21 @@ export default function InsightCard({
           Personalized insights generated from your actual prompt
           evaluation data.
         </p>
+
       </div>
 
-      {/* INSIGHT CARDS */}
+
+      {/* =====================================================
+          STACKED INSIGHTS
+      ===================================================== */}
+
       <div className="relative z-10 mt-10 space-y-6">
 
-        {/* Strongest Skill */}
+
+        {/* ===================================================
+            STRONGEST SKILL
+        =================================================== */}
+
         <div
           className="
             group
@@ -118,9 +132,9 @@ export default function InsightCard({
             hover:shadow-[0_15px_40px_rgba(16,185,129,0.10)]
           "
         >
+
           <div className="flex items-center gap-5">
 
-            {/* Icon */}
             <div
               className="
                 flex
@@ -134,14 +148,13 @@ export default function InsightCard({
                 border-emerald-400/20
                 bg-emerald-400/10
                 text-3xl
-                shadow-[0_0_30px_rgba(16,185,129,0.10)]
               "
             >
               💪
             </div>
 
-            {/* Content */}
             <div className="min-w-0">
+
               <p
                 className="
                   text-xs
@@ -174,13 +187,20 @@ export default function InsightCard({
                   text-slate-400
                 "
               >
-                You communicate your intent clearly and effectively.
+                Your strongest prompt engineering dimension.
               </p>
+
             </div>
+
           </div>
+
         </div>
 
-        {/* Focus Area */}
+
+        {/* ===================================================
+            FOCUS AREA
+        ===================================================== */}
+
         <div
           className="
             group
@@ -197,9 +217,9 @@ export default function InsightCard({
             hover:shadow-[0_15px_40px_rgba(239,68,68,0.10)]
           "
         >
+
           <div className="flex items-center gap-5">
 
-            {/* Icon */}
             <div
               className="
                 flex
@@ -218,8 +238,8 @@ export default function InsightCard({
               🎯
             </div>
 
-            {/* Content */}
             <div className="min-w-0">
+
               <p
                 className="
                   text-xs
@@ -252,13 +272,20 @@ export default function InsightCard({
                   text-slate-400
                 "
               >
-                Focus on this skill to improve your overall prompt quality.
+                Improving this area can raise your overall score.
               </p>
+
             </div>
+
           </div>
+
         </div>
 
-        {/* Recommendation */}
+
+        {/* ===================================================
+            RECOMMENDATION
+        ===================================================== */}
+
         <div
           className="
             group
@@ -275,9 +302,9 @@ export default function InsightCard({
             hover:shadow-[0_15px_40px_rgba(168,85,247,0.12)]
           "
         >
+
           <div className="flex items-center gap-5">
 
-            {/* Icon */}
             <div
               className="
                 flex
@@ -296,8 +323,8 @@ export default function InsightCard({
               💡
             </div>
 
-            {/* Content */}
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
+
               <p
                 className="
                   text-xs
@@ -321,11 +348,15 @@ export default function InsightCard({
               >
                 {recommendation}
               </p>
+
             </div>
+
           </div>
+
         </div>
 
       </div>
+
     </section>
   );
 }
