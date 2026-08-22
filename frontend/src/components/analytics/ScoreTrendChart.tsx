@@ -1,9 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import API from "@/services/api";
-
 import {
   ResponsiveContainer,
   LineChart,
@@ -14,79 +10,108 @@ import {
   Tooltip,
 } from "recharts";
 
-export default function ScoreTrendChart() {
+interface TrendItem {
+  prompt: number;
+  score: number;
+  created_at?: string;
+}
 
-  const [chartData, setChartData] = useState<any[]>([]);
-
-  useEffect(() => {
-
-    loadTrend();
-
-  }, []);
-
-  const loadTrend = async () => {
-
-    try {
-
-      const email = localStorage.getItem("userEmail");
-
-      const res = await API.get(
-        `/dashboard/prompt-trend/${email}`
-      );
-
-      if (res.data.success) {
-
-        setChartData(res.data.trend);
-
-      }
-
-    } catch (err) {
-
-      console.log(err);
-
-    }
-
-  };
-
+export default function ScoreTrendChart({
+  data,
+}: {
+  data: TrendItem[];
+}) {
   return (
+    <div className="group relative overflow-hidden rounded-[30px] border border-slate-200 bg-white p-7 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-xl lg:col-span-2">
 
-    <div className="bg-white rounded-3xl shadow-lg p-6">
+      <div className="absolute right-[-80px] top-[-80px] h-48 w-48 rounded-full bg-purple-400/10 blur-3xl" />
 
-      <h2 className="text-2xl font-bold mb-6">
+      <div className="relative">
+        <p className="text-xs font-black uppercase tracking-[0.2em] text-purple-500">
+          Historical Performance
+        </p>
 
-        📈 Score Trend
+        <h2 className="mt-2 text-3xl font-black">
+          Score Trend
+        </h2>
 
-      </h2>
-
-      <div className="h-96">
-
-        <ResponsiveContainer width="100%" height="100%">
-
-          <LineChart data={chartData}>
-
-            <CartesianGrid strokeDasharray="3 3" />
-
-            <XAxis dataKey="prompt" />
-
-            <YAxis domain={[0, 100]} />
-
-            <Tooltip />
-
-            <Line
-              type="monotone"
-              dataKey="score"
-              stroke="#8B5CF6"
-              strokeWidth={3}
-            />
-
-          </LineChart>
-
-        </ResponsiveContainer>
-
+        <p className="mt-2 text-sm text-slate-500">
+          Track how your prompt quality has changed over time.
+        </p>
       </div>
 
+      <div className="mt-8 h-[400px]">
+
+        {data.length === 0 ? (
+          <div className="flex h-full items-center justify-center text-center text-slate-400">
+            <div>
+              <p className="font-bold">
+                No prompt history yet.
+              </p>
+
+              <p className="mt-1 text-sm">
+                Submit prompts in the Playground to build your trend.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={data}
+              margin={{
+                top: 10,
+                right: 20,
+                left: 0,
+                bottom: 10,
+              }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#e2e8f0"
+              />
+
+              <XAxis
+                dataKey="prompt"
+                tick={{
+                  fill: "#64748b",
+                  fontSize: 11,
+                }}
+                label={{
+                  value: "Prompt",
+                  position: "insideBottom",
+                  offset: -5,
+                  fill: "#94a3b8",
+                }}
+              />
+
+              <YAxis
+                domain={[0, 100]}
+                tick={{
+                  fill: "#64748b",
+                  fontSize: 11,
+                }}
+              />
+
+              <Tooltip />
+
+              <Line
+                type="monotone"
+                dataKey="score"
+                stroke="#8b3de0"
+                strokeWidth={4}
+                dot={{
+                  r: 4,
+                  fill: "#8b3de0",
+                }}
+                activeDot={{
+                  r: 7,
+                }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+
+      </div>
     </div>
-
   );
-
 }
