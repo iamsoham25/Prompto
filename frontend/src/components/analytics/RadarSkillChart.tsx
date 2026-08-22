@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "recharts";
 
-interface Skill {
+interface SkillData {
   skill: string;
   score: number;
 }
@@ -18,72 +18,191 @@ interface Skill {
 export default function RadarSkillChart({
   data,
 }: {
-  data: Skill[];
+  data: SkillData[];
 }) {
   return (
-    <div className="group relative overflow-hidden rounded-[30px] border border-slate-200 bg-white p-7 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-xl">
-      
-      <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-purple-400/10 blur-3xl" />
+    <div className="analytics-chart-card group relative overflow-hidden">
 
-      <div className="relative">
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-purple-500">
-          Skill Intelligence
-        </p>
+      {/* Ambient glow */}
+      <div className="analytics-card-glow analytics-glow-purple" />
+      <div className="analytics-card-glow analytics-glow-pink" />
 
-        <h2 className="mt-2 text-3xl font-black">
-          Skill Radar
-        </h2>
+      {/* Header */}
+      <div className="relative z-10">
 
-        <p className="mt-2 text-sm text-slate-500">
-          Your current Prompt Engineering capability across seven dimensions.
-        </p>
-      </div>
+        <div className="flex items-start justify-between">
 
-      <div className="relative mt-6 h-[420px]">
-        {data.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-slate-400">
-            No skill data available yet.
+          <div>
+            <p className="analytics-eyebrow">
+              SKILL INTELLIGENCE
+            </p>
+
+            <h2 className="analytics-chart-title">
+              Skill Radar
+            </h2>
+
+            <p className="analytics-chart-description">
+              Your current Prompt Engineering capability across seven dimensions.
+            </p>
           </div>
-        ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart
-              data={data}
-              cx="50%"
-              cy="50%"
-              outerRadius="70%"
-            >
-              <PolarGrid stroke="#e2e8f0" />
 
-              <PolarAngleAxis
-                dataKey="skill"
-                tick={{
-                  fill: "#64748b",
-                  fontSize: 12,
-                  fontWeight: 700,
-                }}
-              />
+          <div className="analytics-chart-icon purple">
+            ◈
+          </div>
 
-              <PolarRadiusAxis
-                domain={[0, 100]}
-                tick={{
-                  fill: "#94a3b8",
-                  fontSize: 10,
-                }}
-              />
+        </div>
 
-              <Tooltip />
-
-              <Radar
-                dataKey="score"
-                stroke="#8b3de0"
-                fill="#8b3de0"
-                fillOpacity={0.35}
-                strokeWidth={3}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
-        )}
       </div>
+
+      {/* Radar */}
+      <div className="relative z-10 mt-4 h-[430px]">
+
+        <ResponsiveContainer width="100%" height="100%">
+
+          <RadarChart
+            data={data || []}
+            cx="50%"
+            cy="50%"
+            outerRadius="70%"
+          >
+
+            <PolarGrid
+              stroke="#dfe3ee"
+              strokeOpacity={0.9}
+            />
+
+            <PolarAngleAxis
+              dataKey="skill"
+              tick={{
+                fill: "#64748b",
+                fontSize: 12,
+                fontWeight: 700,
+              }}
+            />
+
+            <PolarRadiusAxis
+              domain={[0, 100]}
+              tick={{
+                fill: "#94a3b8",
+                fontSize: 10,
+              }}
+              axisLine={false}
+            />
+
+            <Tooltip
+              contentStyle={{
+                borderRadius: "16px",
+                border: "1px solid #e9d5ff",
+                background: "rgba(255,255,255,.96)",
+                boxShadow: "0 15px 40px rgba(15,23,42,.12)",
+              }}
+              formatter={(value) => [`${value}/100`, "Score"]}
+            />
+
+            <Radar
+              name="Skill Score"
+              dataKey="score"
+              stroke="#8b3de0"
+              strokeWidth={3}
+              fill="url(#radarGradient)"
+              fillOpacity={0.65}
+              dot={{
+                r: 4,
+                fill: "#ec4899",
+                stroke: "#ffffff",
+                strokeWidth: 2,
+              }}
+            />
+
+            <defs>
+
+              <linearGradient
+                id="radarGradient"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="1"
+              >
+                <stop
+                  offset="0%"
+                  stopColor="#8b3de0"
+                  stopOpacity={0.85}
+                />
+
+                <stop
+                  offset="50%"
+                  stopColor="#ec4899"
+                  stopOpacity={0.65}
+                />
+
+                <stop
+                  offset="100%"
+                  stopColor="#ff5e1f"
+                  stopOpacity={0.45}
+                />
+              </linearGradient>
+
+            </defs>
+
+          </RadarChart>
+
+        </ResponsiveContainer>
+
+        {/* Center score */}
+        <div className="analytics-radar-center">
+
+          <span>SKILL</span>
+
+          <strong>
+            {data?.length
+              ? Math.round(
+                  data.reduce(
+                    (sum, item) => sum + Number(item.score || 0),
+                    0
+                  ) / data.length
+                )
+              : 0}
+          </strong>
+
+          <small>AVG</small>
+
+        </div>
+
+      </div>
+
+      {/* Bottom information */}
+      <div className="relative z-10 mt-2 flex items-center justify-between border-t border-slate-100 pt-5">
+
+        <div>
+          <p className="text-xs font-bold tracking-wider text-slate-400">
+            DIMENSIONS
+          </p>
+
+          <p className="mt-1 text-lg font-bold text-slate-900">
+            {data?.length || 0}
+          </p>
+        </div>
+
+        <div className="text-right">
+
+          <p className="text-xs font-bold tracking-wider text-slate-400">
+            STRONGEST
+          </p>
+
+          <p className="mt-1 text-lg font-bold text-purple-600">
+            {data?.length
+              ? data.reduce((best, item) =>
+                  Number(item.score) > Number(best.score)
+                    ? item
+                    : best
+                ).skill
+              : "-"}
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }
