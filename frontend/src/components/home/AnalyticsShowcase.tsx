@@ -302,11 +302,7 @@ export default function AnalyticsShowcase() {
               {/* TREND CHART */}
 
               <div
-                className=" min-w-0 rounded-[26px] border border-slate-200 bg-slate-50/70
-                  p-5
-
-                  sm:p-6
-                "
+                className=" min-w-0 rounded-[26px] border border-slate-200 bg-slate-50/70 p-5 sm:p-6 "
               >
                 <div
                   className="
