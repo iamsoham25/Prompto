@@ -297,9 +297,7 @@ export default function AnalyticsShowcase() {
             ================================================= */}
 
             <div
-              className=" mt-5 grid gap-5
-                lg:grid-cols-[1.35fr_0.85fr]
-              "
+              className=" mt-5 grid gap-5 lg:grid-cols-[1.35fr_0.85fr] "
             >
               {/* TREND CHART */}
 
