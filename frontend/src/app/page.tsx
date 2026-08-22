@@ -8,6 +8,9 @@ import LearningRoadmap from "@/components/home/LearningRoadmap";
 import ChallengesShowcase from "@/components/home/ChallengesShowcase";
 import AnalyticsShowcase from "@/components/home/AnalyticsShowcase";
 
+
+
+
 export default function HomePage() {
   return (
     <main className="overflow-x-hidden bg-white text-slate-950">
