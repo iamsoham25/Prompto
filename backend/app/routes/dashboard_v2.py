@@ -1,9 +1,8 @@
 from fastapi import APIRouter
-
 from app.config.db import db
 
 
-print("Dashboard V2 Loaded")
+print("🔥 Dashboard V2 Loaded")
 
 
 router = APIRouter()
@@ -25,22 +24,19 @@ prompt_collection = db["prompt_submissions"]
 def calculate_mastery_level(average_score: float):
 
     if average_score >= 90:
-
         return "Master"
 
     elif average_score >= 80:
-
         return "Advanced"
 
     elif average_score >= 60:
-
         return "Intermediate"
 
     return "Beginner"
 
 
 # ==========================================================
-# Dashboard Prompt Analytics
+# Dashboard Analytics
 # ==========================================================
 
 @router.get("/analytics/{email}")
@@ -52,46 +48,51 @@ async def get_dashboard_analytics(email: str):
         }
     )
 
+    # ======================================================
+    # NO ANALYTICS YET
+    # ======================================================
+
     if not analytics:
 
         return {
-
             "success": True,
 
             "cards": {
-
                 "total_prompts": 0,
-
                 "average_score": 0,
-
                 "best_score": 0,
-
                 "lowest_score": 0
-
             },
 
             "radar": [],
 
             "bar_chart": [],
 
-            "distribution": {},
+            "distribution": {
+                "excellent": 0,
+                "good": 0,
+                "average": 0,
+                "poor": 0
+            },
+
+            "trend": [],
 
             "insights": {
-
                 "strongest": "-",
-
                 "weakest": "-",
-
                 "recommendation":
-                    "Analyze prompts to receive personalized recommendations."
-
+                    "Analyze your first prompt to receive personalized recommendations."
             },
 
             "mastery_level": "Beginner",
 
             "improvement": 0
-
         }
+
+
+    # ======================================================
+    # BASIC ANALYTICS
+    # ======================================================
 
     average_score = float(
         analytics.get(
@@ -100,69 +101,119 @@ async def get_dashboard_analytics(email: str):
         )
     )
 
+    best_score = float(
+        analytics.get(
+            "best_score",
+            0
+        )
+    )
+
+    lowest_score = float(
+        analytics.get(
+            "lowest_score",
+            0
+        )
+    )
+
+    total_prompts = int(
+        analytics.get(
+            "total_prompts",
+            0
+        )
+    )
+
+
+    # ======================================================
+    # MASTERY
+    # ======================================================
+
     mastery_level = calculate_mastery_level(
         average_score
     )
+
+
+    # ======================================================
+    # SKILLS
+    # ======================================================
 
     skills = [
 
         (
             "Clarity",
-            analytics.get(
-                "clarity_avg",
-                0
+            float(
+                analytics.get(
+                    "clarity_avg",
+                    0
+                )
             )
         ),
 
         (
             "Specificity",
-            analytics.get(
-                "specificity_avg",
-                0
+            float(
+                analytics.get(
+                    "specificity_avg",
+                    0
+                )
             )
         ),
 
         (
             "Context",
-            analytics.get(
-                "context_avg",
-                0
+            float(
+                analytics.get(
+                    "context_avg",
+                    0
+                )
             )
         ),
 
         (
             "Constraints",
-            analytics.get(
-                "constraints_avg",
-                0
+            float(
+                analytics.get(
+                    "constraints_avg",
+                    0
+                )
             )
         ),
 
         (
             "Role",
-            analytics.get(
-                "role_avg",
-                0
+            float(
+                analytics.get(
+                    "role_avg",
+                    0
+                )
             )
         ),
 
         (
-            "Output",
-            analytics.get(
-                "output_avg",
-                0
+            "Output Format",
+            float(
+                analytics.get(
+                    "output_avg",
+                    0
+                )
             )
         ),
 
         (
             "Examples",
-            analytics.get(
-                "examples_avg",
-                0
+            float(
+                analytics.get(
+                    "examples_avg",
+                    0
+                )
             )
         )
 
     ]
+
+
+    # ======================================================
+    # RADAR DATA
+    # ======================================================
 
     radar = [
 
@@ -175,102 +226,174 @@ async def get_dashboard_analytics(email: str):
 
     ]
 
+
+    # ======================================================
+    # BAR DATA
+    # ======================================================
+
     bar_chart = [
 
         {
-            "name": name,
-            "value": score
+            "skill": name,
+            "score": score
         }
 
         for name, score in skills
 
     ]
 
+
+    # ======================================================
+    # PROMPT TREND
+    # ======================================================
+
+    prompts = await prompt_collection.find(
+        {
+            "user_email": email
+        }
+    ).sort(
+        "created_at",
+        1
+    ).to_list(
+        length=None
+    )
+
+
+    trend = []
+
+
+    for index, prompt in enumerate(prompts):
+
+        trend.append(
+
+            {
+                "prompt": index + 1,
+
+                "score": float(
+                    prompt.get(
+                        "overall_score",
+                        0
+                    )
+                ),
+
+                "created_at":
+                    prompt.get(
+                        "created_at"
+                    )
+            }
+
+        )
+
+
+    # ======================================================
+    # DISTRIBUTION
+    # ======================================================
+
+    distribution = analytics.get(
+
+        "distribution",
+
+        {
+            "excellent": 0,
+            "good": 0,
+            "average": 0,
+            "poor": 0
+        }
+
+    )
+
+
+    # ======================================================
+    # INSIGHTS
+    # ======================================================
+
+    strongest_skill = analytics.get(
+        "strongest_skill",
+        "-"
+    )
+
+    weakest_skill = analytics.get(
+        "weakest_skill",
+        "-"
+    )
+
+    recommendation = analytics.get(
+
+        "recommendation",
+
+        "Keep practicing Prompt Engineering."
+
+    )
+
+
+    # ======================================================
+    # IMPROVEMENT
+    # ======================================================
+
+    improvement = float(
+
+        analytics.get(
+            "improvement",
+            0
+        )
+
+    )
+
+
+    # ======================================================
+    # RESPONSE
+    # ======================================================
+
     return {
 
         "success": True,
 
-        # ==================================================
-        # KPI Cards
-        # ==================================================
-
         "cards": {
 
             "total_prompts":
-                analytics.get(
-                    "total_prompts",
-                    0
-                ),
+                total_prompts,
 
             "average_score":
                 average_score,
 
             "best_score":
-                analytics.get(
-                    "best_score",
-                    0
-                ),
+                best_score,
 
             "lowest_score":
-                analytics.get(
-                    "lowest_score",
-                    0
-                )
+                lowest_score
 
         },
 
-        # ==================================================
-        # Charts
-        # ==================================================
+        "radar":
+            radar,
 
-        "radar": radar,
-
-        "bar_chart": bar_chart,
+        "bar_chart":
+            bar_chart,
 
         "distribution":
-            analytics.get(
-                "distribution",
-                {}
-            ),
+            distribution,
 
-        # ==================================================
-        # AI Insights
-        # ==================================================
+        "trend":
+            trend,
 
         "insights": {
 
             "strongest":
-                analytics.get(
-                    "strongest_skill",
-                    "-"
-                ),
+                strongest_skill,
 
             "weakest":
-                analytics.get(
-                    "weakest_skill",
-                    "-"
-                ),
+                weakest_skill,
 
             "recommendation":
-                analytics.get(
-                    "recommendation",
-                    "Keep practicing Prompt Engineering."
-                )
+                recommendation
 
         },
-
-        # ==================================================
-        # Mastery
-        # ==================================================
 
         "mastery_level":
             mastery_level,
 
         "improvement":
-            analytics.get(
-                "improvement",
-                0
-            )
+            improvement
 
     }
 
@@ -293,9 +416,13 @@ async def get_prompt_trend(email: str):
         "created_at",
         1
 
-    ).to_list(length=None)
+    ).to_list(
+        length=None
+    )
+
 
     trend = []
+
 
     for index, prompt in enumerate(prompts):
 
@@ -303,14 +430,16 @@ async def get_prompt_trend(email: str):
 
             {
 
-                "prompt": index + 1,
+                "prompt":
+                    index + 1,
 
-                "score": float(
-                    prompt.get(
-                        "overall_score",
-                        0
-                    )
-                ),
+                "score":
+                    float(
+                        prompt.get(
+                            "overall_score",
+                            0
+                        )
+                    ),
 
                 "created_at":
                     prompt.get(
@@ -321,11 +450,13 @@ async def get_prompt_trend(email: str):
 
         )
 
+
     return {
 
         "success": True,
 
-        "trend": trend
+        "trend":
+            trend
 
     }
 
@@ -344,6 +475,7 @@ async def get_prompt_mastery(email: str):
         }
 
     )
+
 
     if not analytics:
 
@@ -365,23 +497,31 @@ async def get_prompt_mastery(email: str):
 
         }
 
+
     average = float(
+
         analytics.get(
             "average_score",
             0
         )
+
     )
 
+
     best = float(
+
         analytics.get(
             "best_score",
             0
         )
+
     )
+
 
     stored_improvement = analytics.get(
         "improvement"
     )
+
 
     if stored_improvement is not None:
 
@@ -396,9 +536,11 @@ async def get_prompt_mastery(email: str):
             2
         )
 
+
     level = calculate_mastery_level(
         average
     )
+
 
     return {
 
