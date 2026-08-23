@@ -1,781 +1,583 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import API from "@/services/api";
+import { challengeTracks } from "@/data/challengeTracks";
 
-interface Evaluation {
-  overall_score: number;
-  clarity: number;
-  specificity: number;
-  context: number;
-  constraints: number;
-  role: number;
-  output_format: number;
-  examples: number;
+type Challenge = {
+  id: number;
+  title: string;
+  description: string;
   difficulty: string;
-  strengths: string[];
-  improvements: string[];
-  summary: string;
+  xp: number;
+  time: string;
+  passScore: number;
+  bonusScore: number;
+  bonusXP: number;
+};
+
+type TrackConfig = {
+  icon: string;
+  description: string;
+  accent: string;
+};
+
+const trackConfig: Record<string, TrackConfig> = {
+  coding: {
+    icon: "💻",
+    description:
+      "Master prompts for coding assistants and debugging.",
+    accent: "Coding",
+  },
+
+  summarization: {
+    icon: "📄",
+    description:
+      "Create high-quality document summaries.",
+    accent: "Summarization",
+  },
+
+  "json-generation": {
+    icon: "📊",
+    description:
+      "Generate structured JSON responses.",
+    accent: "JSON Generation",
+  },
+
+  marketing: {
+    icon: "📣",
+    description:
+      "Create persuasive marketing prompts.",
+    accent: "Marketing",
+  },
+
+  "chain-of-thought": {
+    icon: "🧠",
+    description:
+      "Practice reasoning and structured thinking.",
+    accent: "Chain of Thought",
+  },
+
+  "agentic-ai": {
+    icon: "🤖",
+    description:
+      "Design prompts for autonomous AI agents.",
+    accent: "Agentic AI",
+  },
+
+  "rag": {
+    icon: "🔎",
+    description:
+      "Build prompts for retrieval-augmented generation.",
+    accent: "RAG",
+  },
+
+  "research": {
+    icon: "🔬",
+    description:
+      "Create precise prompts for research and analysis.",
+    accent: "Research",
+  },
+
+  "enterprise-ai": {
+    icon: "🏢",
+    description:
+      "Solve enterprise problems with effective AI prompts.",
+    accent: "Enterprise AI",
+  },
+
+  "prompt-engineering": {
+    icon: "⚡",
+    description:
+      "Master advanced prompt engineering techniques.",
+    accent: "Prompt Engineering",
+  },
+};
+
+function formatTrackName(track: string) {
+  return track
+    .split("-")
+    .map(
+      (word) =>
+        word.charAt(0).toUpperCase() + word.slice(1)
+    )
+    .join(" ");
 }
 
-export default function EvaluatorPage() {
-  const [prompt, setPrompt] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
+function getTrackConfig(track: string): TrackConfig {
+  return (
+    trackConfig[track] ?? {
+      icon: "🚀",
+      description:
+        "Practice real-world prompt engineering challenges.",
+      accent: formatTrackName(track),
+    }
+  );
+}
 
+export default function ChallengesPage() {
   const router = useRouter();
 
-  const evaluatePrompt = async () => {
-    if (!prompt.trim()) {
-      alert("Please enter a prompt.");
-      return;
-    }
+  const tracks = Object.entries(challengeTracks);
 
-    try {
-      setLoading(true);
+  const totalChallenges = tracks.reduce(
+    (total, [, challenges]) =>
+      total + (challenges as Challenge[]).length,
+    0
+  );
 
-      const email = localStorage.getItem("userEmail");
-
-      const response = await API.post("/evaluate-prompt", {
-        prompt,
-        user_email: email,
-      });
-
-      if (response.data.success) {
-        setEvaluation(response.data.evaluation);
-
-        setTimeout(() => {
-          document
-            .getElementById("evaluation-results")
-            ?.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-        }, 150);
-      }
-    } catch (error) {
-      console.error("Evaluation error:", error);
-      alert("Evaluation Failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getQuality = (score: number) => {
-    if (score >= 85) {
-      return {
-        label: "Excellent",
-        description: "Outstanding prompt structure",
-      };
-    }
-
-    if (score >= 70) {
-      return {
-        label: "Good",
-        description: "Strong foundation with room to refine",
-      };
-    }
-
-    if (score >= 50) {
-      return {
-        label: "Average",
-        description: "Several areas can be improved",
-      };
-    }
-
-    return {
-      label: "Needs Improvement",
-      description: "Significant refinement recommended",
-    };
-  };
-
-  const getScoreGradient = (value: number) => {
-    if (value >= 80) {
-      return "from-emerald-400 to-teal-500";
-    }
-
-    if (value >= 60) {
-      return "from-blue-500 to-indigo-500";
-    }
-
-    if (value >= 40) {
-      return "from-amber-400 to-orange-500";
-    }
-
-    return "from-red-400 to-pink-500";
-  };
-
-  function MetricCard({
-    title,
-    value,
-    icon,
-  }: {
-    title: string;
-    value: number;
-    icon: string;
-  }) {
-    return (
-      <div className="group rounded-[24px] border border-slate-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-purple-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.08)]">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-50 text-xl shadow-sm">
-              {icon}
-            </div>
-
-            <span className="font-bold text-slate-800">
-              {title}
-            </span>
-          </div>
-
-          <span className="text-2xl font-black text-slate-950">
-            {value}
-          </span>
-        </div>
-
-        <div className="mt-5 h-2.5 overflow-hidden rounded-full bg-slate-100">
-          <div
-            className={`h-full rounded-full bg-gradient-to-r ${getScoreGradient(
-              value
-            )} transition-all duration-700`}
-            style={{
-              width: `${Math.max(0, Math.min(value, 100))}%`,
-            }}
-          />
-        </div>
-
-        <div className="mt-2 flex justify-between text-[11px] font-semibold text-slate-400">
-          <span>0</span>
-          <span>100</span>
-        </div>
-      </div>
-    );
-  }
-
-  const quality = evaluation
-    ? getQuality(evaluation.overall_score)
-    : null;
+  const totalXP = tracks.reduce(
+    (total, [, challenges]) =>
+      total +
+      (challenges as Challenge[]).reduce(
+        (sum, challenge) => sum + challenge.xp,
+        0
+      ),
+    0
+  );
 
   return (
-    <main className="min-h-screen bg-[#f7f8fb] text-slate-950">
+    <main className="min-h-screen bg-[#f7f8fb] text-slate-900">
 
-      {/* ============================================================
-          HERO
-      ============================================================ */}
+      {/* ================================================= */}
+      {/* HERO */}
+      {/* ================================================= */}
 
-      <section className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white">
+      <section className="max-w-[1380px] mx-auto px-5 sm:px-8 pt-7">
 
-        <div className="absolute inset-0 opacity-10">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)",
-              backgroundSize: "42px 42px",
-            }}
-          />
-        </div>
+        <div className="relative overflow-hidden rounded-[34px] border border-slate-200 bg-white shadow-sm">
 
-        <div className="relative mx-auto max-w-7xl px-6 py-14 lg:px-10">
+          {/* Top gradient line */}
 
-          <div className="max-w-4xl">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600" />
 
-            {/* Badge */}
+          <div className="grid lg:grid-cols-[1.15fr_0.85fr] min-h-[650px]">
 
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-2.5 backdrop-blur-md">
-              <span className="text-sm">🧠</span>
+            {/* ========================================= */}
+            {/* LEFT */}
+            {/* ========================================= */}
 
-              <span className="text-xs font-extrabold uppercase tracking-[0.2em]">
-                AI Prompt Intelligence
-              </span>
-            </div>
+            <div className="p-8 sm:p-12 lg:p-14 xl:p-16 flex flex-col justify-center">
 
-            {/* Heading */}
+              {/* Label */}
 
-            <h1 className="text-4xl font-black tracking-[-0.04em] sm:text-5xl lg:text-6xl">
-              Evaluate.
-              <br />
+              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-xs sm:text-sm font-bold tracking-[0.18em] text-orange-600">
 
-              <span className="text-orange-300">
-                Improve.
-              </span>
+                <span className="h-2 w-2 rounded-full bg-orange-500" />
 
-              <br />
-
-              Master your prompts.
-            </h1>
-
-            <p className="mt-6 max-w-3xl text-base leading-7 text-white/85 sm:text-lg">
-              Analyze your prompts across clarity, specificity,
-              context, constraints, role definition, output format
-              and examples.
-            </p>
-
-            {/* Feature pills */}
-
-            <div className="mt-7 flex flex-wrap gap-3">
-
-              <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur-md">
-                ✦ 7 Skill Dimensions
-              </span>
-
-              <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur-md">
-                ✦ AI Evaluation
-              </span>
-
-              <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur-md">
-                ✦ Instant Feedback
-              </span>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-          MAIN
-      ============================================================ */}
-
-      <div className="mx-auto max-w-7xl px-6 pb-20 lg:px-10">
-
-        {/* ============================================================
-            WORKSPACE
-        ============================================================ */}
-
-        <section className="-mt-8 relative z-10 rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.10)] sm:p-8 lg:p-10">
-
-          {/* top accent */}
-
-          <div className="absolute left-10 right-10 top-0 h-1 rounded-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600" />
-
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-
-            <div>
-
-              <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-purple-600">
-                Prompt Workspace
-              </p>
-
-              <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
-                Analyze your prompt
-              </h2>
-
-              <p className="mt-2 max-w-2xl text-slate-500">
-                Paste your prompt below and let Prompto identify
-                its strengths and improvement areas.
-              </p>
-
-            </div>
-
-            <div className="rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-500">
-              {prompt.length} characters
-            </div>
-
-          </div>
-
-          {/* textarea */}
-
-          <div className="mt-7 overflow-hidden rounded-[26px] border border-slate-200 bg-[#fafbff] transition-all focus-within:border-purple-400 focus-within:ring-4 focus-within:ring-purple-100">
-
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              rows={9}
-              placeholder="Example: Act as a senior data scientist. Analyze this dataset, identify the key patterns and anomalies, and present your findings in a structured table..."
-              className="min-h-[240px] w-full resize-none bg-transparent p-6 text-base leading-7 text-slate-800 outline-none placeholder:text-slate-400 sm:p-7 sm:text-lg"
-            />
-
-            <div className="flex flex-col gap-4 border-t border-slate-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
-
-              <div className="flex flex-wrap gap-2">
-
-                <span className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-600">
-                  💡 Be specific
-                </span>
-
-                <span className="rounded-full bg-purple-50 px-3 py-1.5 text-xs font-semibold text-purple-600">
-                  🎯 Define your goal
-                </span>
-
-                <span className="rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-600">
-                  📋 Define output
-                </span>
+                PROMPTO CHALLENGE ARENA
 
               </div>
 
-              <button
-                onClick={evaluatePrompt}
-                disabled={loading}
-                className="rounded-2xl bg-orange-500 px-8 py-3.5 font-bold text-white shadow-[0_10px_25px_rgba(249,115,22,0.25)] transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-[0_16px_30px_rgba(249,115,22,0.30)] disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {loading
-                  ? "🤖 Evaluating..."
-                  : "🚀 Evaluate Prompt"}
-              </button>
+
+              {/* Main heading */}
+
+              <h1 className="mt-8 max-w-[700px] text-5xl sm:text-6xl xl:text-7xl font-black leading-[0.94] tracking-[-0.045em]">
+
+                <span className="block text-slate-950">
+                  Practice.
+                </span>
+
+                <span className="block bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+                  Improve.
+                </span>
+
+                <span className="block text-slate-950">
+                  Master Prompt
+                </span>
+
+                <span className="block text-slate-950">
+                  Engineering.
+                </span>
+
+              </h1>
+
+
+              {/* Description */}
+
+              <p className="mt-8 max-w-2xl text-lg sm:text-xl leading-relaxed text-slate-600">
+
+                Solve practical prompt engineering challenges
+                across coding, RAG, Agentic AI, JSON generation,
+                marketing, research and enterprise AI.
+
+              </p>
+
+
+              {/* Feature pills */}
+
+              <div className="mt-8 flex flex-wrap gap-3">
+
+                <FeaturePill>
+                  🎯 Real-world challenges
+                </FeaturePill>
+
+                <FeaturePill>
+                  ⭐ Earn XP
+                </FeaturePill>
+
+                <FeaturePill>
+                  📈 Level up
+                </FeaturePill>
+
+              </div>
+
+
+              {/* Stats */}
+
+              <div className="mt-10 grid grid-cols-3 gap-3 max-w-[540px]">
+
+                <HeroStat
+                  value={`${totalChallenges}+`}
+                  label="Challenges"
+                />
+
+                <HeroStat
+                  value={`${tracks.length}`}
+                  label="Learning Tracks"
+                />
+
+                <HeroStat
+                  value="3"
+                  label="Difficulty Levels"
+                />
+
+              </div>
 
             </div>
-          </div>
-        </section>
 
-        {/* ============================================================
-            LOADING
-        ============================================================ */}
 
-        {loading && (
-          <section className="mt-8 rounded-[28px] border border-purple-100 bg-white p-8 text-center shadow-[0_15px_40px_rgba(15,23,42,0.06)]">
+            {/* ========================================= */}
+            {/* RIGHT ARENA */}
+            {/* ========================================= */}
 
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 via-pink-500 to-purple-600">
+            <div className="bg-gradient-to-br from-orange-50 via-white to-purple-50 p-6 sm:p-10 lg:p-12 flex items-center">
 
-              <div className="h-7 w-7 animate-spin rounded-full border-4 border-white/30 border-t-white" />
+              <div className="w-full max-w-[560px] mx-auto rounded-[30px] border border-slate-200 bg-white p-6 sm:p-7 shadow-xl">
 
-            </div>
+                {/* Panel header */}
 
-            <h3 className="mt-5 text-xl font-black">
-              AI is analyzing your prompt
-            </h3>
+                <div className="mb-7 flex items-center justify-between">
 
-            <p className="mt-2 text-slate-500">
-              Checking seven prompt engineering dimensions...
-            </p>
+                  <div className="flex items-center gap-4">
 
-          </section>
-        )}
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 text-2xl shadow-md">
+                      🚀
+                    </div>
 
-        {/* ============================================================
-            RESULTS
-        ============================================================ */}
+                    <div>
 
-        {evaluation && (
-          <div
-            id="evaluation-results"
-            className="mt-12 space-y-8 scroll-mt-28"
-          >
+                      <h2 className="text-lg font-black text-slate-950">
+                        Challenge Arena
+                      </h2>
 
-            {/* SCORE */}
-
-            <section className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-white p-7 shadow-[0_20px_55px_rgba(15,23,42,0.07)] sm:p-10">
-
-              <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-purple-100/50 blur-[90px]" />
-
-              <div className="relative grid items-center gap-10 lg:grid-cols-[1fr_auto]">
-
-                <div>
-
-                  <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-purple-600">
-                    AI Evaluation Result
-                  </p>
-
-                  <h2 className="mt-2 text-4xl font-black tracking-tight sm:text-5xl">
-                    Prompt Quality
-                  </h2>
-
-                  <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-500">
-                    Your prompt has been evaluated across seven
-                    core prompt engineering dimensions.
-                  </p>
-
-                  <div className="mt-6 flex flex-wrap gap-3">
-
-                    <span className="rounded-full bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-600">
-                      ✓ {quality?.label}
-                    </span>
-
-                    <span className="rounded-full bg-purple-50 px-4 py-2 text-sm font-bold text-purple-600">
-                      🏆 {evaluation.difficulty}
-                    </span>
-
-                  </div>
-
-                </div>
-
-                {/* Score */}
-
-                <div className="flex justify-center">
-
-                  <div className="relative flex h-56 w-56 items-center justify-center">
-
-                    <div
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: `conic-gradient(
-                          #f97316 0deg,
-                          #ec4899 ${
-                            evaluation.overall_score * 3.6
-                          }deg,
-                          #eef2f7 ${
-                            evaluation.overall_score * 3.6
-                          }deg 360deg
-                        )`,
-                      }}
-                    />
-
-                    <div className="absolute inset-[12px] flex items-center justify-center rounded-full bg-white">
-
-                      <div className="text-center">
-
-                        <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-slate-400">
-                          Score
-                        </p>
-
-                        <div className="mt-1 text-6xl font-black text-slate-950">
-                          {evaluation.overall_score}
-                        </div>
-
-                        <p className="text-sm font-bold text-slate-400">
-                          / 100
-                        </p>
-
-                      </div>
+                      <p className="text-sm text-slate-500">
+                        Pick a skill and start practicing
+                      </p>
 
                     </div>
 
                   </div>
 
-                </div>
-
-              </div>
-            </section>
-
-            {/* QUALITY */}
-
-            <div className="grid gap-6 md:grid-cols-2">
-
-              <section className="rounded-[28px] border border-slate-200 bg-white p-7 shadow-sm">
-
-                <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-purple-600">
-                  Quality Level
-                </p>
-
-                <div className="mt-5 flex items-center gap-4">
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-50 text-2xl">
-                    🎯
-                  </div>
-
-                  <div>
-
-                    <h3 className="text-2xl font-black">
-                      {quality?.label}
-                    </h3>
-
-                    <p className="mt-1 text-sm text-slate-500">
-                      {quality?.description}
-                    </p>
-
-                  </div>
+                  <span className="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_0_5px_rgba(52,211,153,0.12)]" />
 
                 </div>
 
-              </section>
 
-              <section className="rounded-[28px] border border-slate-200 bg-white p-7 shadow-sm">
+                {/* Track preview */}
 
-                <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-600">
-                  Prompt Difficulty
-                </p>
+                <div className="space-y-3">
 
-                <div className="mt-5 flex items-center gap-4">
+                  {tracks.slice(0, 3).map(
+                    ([track]) => {
 
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-2xl">
-                    🏆
-                  </div>
+                      const config =
+                        getTrackConfig(track);
 
-                  <div>
+                      const challenges =
+                        challengeTracks[
+                          track as keyof typeof challengeTracks
+                        ] as Challenge[];
 
-                    <h3 className="text-2xl font-black">
-                      {evaluation.difficulty}
-                    </h3>
-
-                    <p className="mt-1 text-sm text-slate-500">
-                      Based on prompt complexity and structure.
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </section>
-
-            </div>
-
-            {/* METRICS */}
-
-            <section className="rounded-[32px] border border-slate-200 bg-white p-7 shadow-sm sm:p-9">
-
-              <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-purple-600">
-                Skill Intelligence
-              </p>
-
-              <h2 className="mt-2 text-3xl font-black">
-                Prompt Metrics
-              </h2>
-
-              <p className="mt-2 text-slate-500">
-                Detailed performance across the seven dimensions.
-              </p>
-
-              <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-
-                <MetricCard
-                  title="Clarity"
-                  value={evaluation.clarity}
-                  icon="💡"
-                />
-
-                <MetricCard
-                  title="Specificity"
-                  value={evaluation.specificity}
-                  icon="🎯"
-                />
-
-                <MetricCard
-                  title="Context"
-                  value={evaluation.context}
-                  icon="🧩"
-                />
-
-                <MetricCard
-                  title="Constraints"
-                  value={evaluation.constraints}
-                  icon="🔒"
-                />
-
-                <MetricCard
-                  title="Role Definition"
-                  value={evaluation.role}
-                  icon="👤"
-                />
-
-                <MetricCard
-                  title="Output Format"
-                  value={evaluation.output_format}
-                  icon="📋"
-                />
-
-                <MetricCard
-                  title="Examples"
-                  value={evaluation.examples}
-                  icon="📝"
-                />
-
-              </div>
-            </section>
-
-            {/* STRENGTHS / IMPROVEMENTS */}
-
-            <div className="grid gap-7 lg:grid-cols-2">
-
-              <section className="rounded-[32px] border border-emerald-200 bg-white p-8 shadow-sm">
-
-                <div className="flex items-center gap-4">
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-2xl">
-                    💪
-                  </div>
-
-                  <div>
-
-                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-600">
-                      What you did well
-                    </p>
-
-                    <h2 className="mt-1 text-3xl font-black">
-                      Strengths
-                    </h2>
-
-                  </div>
-
-                </div>
-
-                <div className="mt-7 space-y-3">
-
-                  {evaluation.strengths?.length > 0 ? (
-                    evaluation.strengths.map(
-                      (item: string, index: number) => (
-                        <div
-                          key={index}
-                          className="flex gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"
+                      return (
+                        <button
+                          key={track}
+                          onClick={() =>
+                            router.push(
+                              `/challenges/${track}`
+                            )
+                          }
+                          className="group flex w-full items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition-all duration-200 hover:border-orange-200 hover:bg-white hover:shadow-md"
                         >
-                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-bold text-white">
-                            ✓
-                          </span>
 
-                          <p className="text-sm leading-6 text-slate-700">
-                            {item}
-                          </p>
-                        </div>
-                      )
-                    )
-                  ) : (
-                    <p className="text-slate-500">
-                      No specific strengths detected.
-                    </p>
-                  )}
+                          {/* Icon */}
 
-                </div>
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-2xl shadow-sm">
+                            {config.icon}
+                          </div>
 
-              </section>
 
-              <section className="rounded-[32px] border border-orange-200 bg-white p-8 shadow-sm">
+                          {/* Content */}
 
-                <div className="flex items-center gap-4">
+                          <div className="min-w-0 flex-1">
 
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-2xl">
-                    🎯
-                  </div>
+                            <p className="text-base font-black text-slate-950">
+                              {config.accent}
+                            </p>
 
-                  <div>
+                            <p className="mt-1 truncate text-xs text-slate-500">
+                              {config.description}
+                            </p>
 
-                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600">
-                      Next improvements
-                    </p>
+                          </div>
 
-                    <h2 className="mt-1 text-3xl font-black">
-                      Focus Areas
-                    </h2>
 
-                  </div>
+                          {/* Arrow */}
 
-                </div>
-
-                <div className="mt-7 space-y-3">
-
-                  {evaluation.improvements?.length > 0 ? (
-                    evaluation.improvements.map(
-                      (item: string, index: number) => (
-                        <div
-                          key={index}
-                          className="flex gap-3 rounded-2xl border border-orange-100 bg-orange-50/70 p-4"
-                        >
-                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white">
+                          <div className="text-xl text-slate-300 transition-all group-hover:translate-x-1 group-hover:text-orange-500">
                             →
-                          </span>
+                          </div>
 
-                          <p className="text-sm leading-6 text-slate-700">
-                            {item}
-                          </p>
-                        </div>
-                      )
-                    )
-                  ) : (
-                    <p className="text-slate-500">
-                      Excellent prompt. No major improvements detected.
-                    </p>
+                        </button>
+                      );
+                    }
                   )}
 
                 </div>
 
-              </section>
+
+                {/* Bottom CTA */}
+
+                <div className="mt-5 flex items-center justify-between rounded-2xl bg-slate-950 p-5 text-white">
+
+                  <div>
+
+                    <p className="font-bold">
+                      Ready for your next challenge?
+                    </p>
+
+                    <p className="mt-1 text-xs text-slate-400">
+                      Complete challenges and build your XP.
+                    </p>
+
+                  </div>
+
+                  <span className="text-2xl">
+                    ⭐
+                  </span>
+
+                </div>
+
+              </div>
 
             </div>
-
-            {/* SUMMARY */}
-
-            <section className="rounded-[32px] border border-purple-200 bg-white p-8 shadow-sm sm:p-10">
-
-              <div className="flex items-center gap-4">
-
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 text-2xl shadow-lg">
-                  🤖
-                </div>
-
-                <div>
-
-                  <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-purple-600">
-                    AI Intelligence
-                  </p>
-
-                  <h2 className="mt-1 text-3xl font-black">
-                    Evaluation Summary
-                  </h2>
-
-                </div>
-
-              </div>
-
-              <div className="mt-7 rounded-[24px] bg-slate-50 p-6 sm:p-8">
-
-                <p className="text-base leading-8 text-slate-700 sm:text-lg">
-                  {evaluation.summary ||
-                    `This prompt has an overall quality score of ${evaluation.overall_score}/100.`}
-                </p>
-
-              </div>
-
-            </section>
-
-            {/* ACTIONS */}
-
-            <section className="rounded-[32px] border border-slate-200 bg-white p-7 shadow-sm sm:p-9">
-
-              <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-600">
-                Next Steps
-              </p>
-
-              <h2 className="mt-2 text-3xl font-black">
-                Continue Improving
-              </h2>
-
-              <p className="mt-2 text-slate-500">
-                Use your evaluation to improve your prompt engineering skills.
-              </p>
-
-              <div className="mt-7 flex flex-wrap gap-4">
-
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      JSON.stringify(evaluation, null, 2)
-                    );
-                  }}
-                  className="rounded-2xl bg-emerald-500 px-6 py-3.5 font-bold text-white transition hover:-translate-y-1 hover:bg-emerald-600"
-                >
-                  📋 Copy Evaluation
-                </button>
-
-                <button
-                  onClick={() => router.push("/improver")}
-                  className="rounded-2xl bg-orange-500 px-6 py-3.5 font-bold text-white transition hover:-translate-y-1 hover:bg-orange-600"
-                >
-                  ✨ Improve Prompt
-                </button>
-
-                <button
-                  onClick={() => {
-                    setEvaluation(null);
-                    setPrompt("");
-
-                    window.scrollTo({
-                      top: 0,
-                      behavior: "smooth",
-                    });
-                  }}
-                  className="rounded-2xl border border-slate-200 bg-white px-6 py-3.5 font-bold text-slate-700 transition hover:-translate-y-1 hover:shadow-md"
-                >
-                  🔄 Evaluate Another
-                </button>
-
-              </div>
-
-            </section>
 
           </div>
-        )}
 
-      </div>
+        </div>
 
-      {/* FOOTER */}
+      </section>
 
-      <footer className="border-t border-slate-200 bg-white py-10 text-center">
 
-        <p className="text-sm font-medium text-slate-400">
-          Built with{" "}
-          <span className="text-pink-500">♥</span>{" "}
-          for better Prompt Engineering
-        </p>
+      {/* ================================================= */}
+      {/* LEARNING TRACKS */}
+      {/* ================================================= */}
 
-      </footer>
+      <section className="mx-auto max-w-[1380px] px-5 pb-24 pt-16 sm:px-8">
+
+        <div className="mb-8">
+
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600">
+            Learning Tracks
+          </p>
+
+          <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+            Practice & Improve
+          </h2>
+
+          <p className="mt-2 max-w-2xl text-slate-500">
+            Choose a learning track and complete practical
+            challenges to build your prompt engineering skills.
+          </p>
+
+        </div>
+
+
+        {/* Track grid */}
+
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+          {tracks.map(
+            ([track, trackChallenges]) => {
+
+              const config =
+                getTrackConfig(track);
+
+              const challenges =
+                trackChallenges as Challenge[];
+
+              const trackXP =
+                challenges.reduce(
+                  (sum, challenge) =>
+                    sum + challenge.xp,
+                  0
+                );
+
+              const difficulty =
+                challenges[0]?.difficulty ??
+                "Easy";
+
+              return (
+                <article
+                  key={track}
+                  className="group relative overflow-hidden rounded-[28px] border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl"
+                >
+
+                  {/* Gradient top line */}
+
+                  <div className="h-1 bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600" />
+
+
+                  <div className="p-6">
+
+                    {/* Header */}
+
+                    <div className="flex items-start justify-between">
+
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-3xl shadow-sm">
+                        {config.icon}
+                      </div>
+
+                      <div className="rounded-full border border-orange-100 bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-600">
+                        ⭐ {trackXP} XP
+                      </div>
+
+                    </div>
+
+
+                    {/* Title */}
+
+                    <h3 className="mt-6 text-2xl font-black text-slate-950">
+                      {config.accent}
+                    </h3>
+
+
+                    {/* Description */}
+
+                    <p className="mt-2 min-h-[48px] text-sm leading-relaxed text-slate-500">
+                      {config.description}
+                    </p>
+
+
+                    {/* Meta */}
+
+                    <div className="mt-6 flex flex-wrap gap-2">
+
+                      <span className="rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-600">
+                        {difficulty}
+                      </span>
+
+                      <span className="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
+                        📄 {challenges.length} Challenges
+                      </span>
+
+                    </div>
+
+
+                    {/* Divider */}
+
+                    <div className="mt-6 border-t border-slate-100 pt-5">
+
+                      <div className="mb-4 flex items-center justify-between">
+
+                        <div>
+
+                          <p className="text-xs text-slate-400">
+                            Learning Track
+                          </p>
+
+                          <p className="mt-1 text-sm font-semibold text-slate-700">
+                            Practice & improve
+                          </p>
+
+                        </div>
+
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-50 text-slate-500 transition-all group-hover:bg-orange-50 group-hover:text-orange-500">
+                          →
+                        </span>
+
+                      </div>
+
+
+                      {/* Button */}
+
+                      <button
+                        onClick={() =>
+                          router.push(
+                            `/challenges/${track}`
+                          )
+                        }
+                        className="w-full rounded-xl bg-orange-500 py-3.5 text-sm font-bold text-white shadow-md shadow-orange-100 transition-all hover:bg-orange-600 hover:shadow-lg"
+                      >
+                        Open Track →
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </article>
+              );
+            }
+          )}
+
+        </div>
+
+      </section>
 
     </main>
+  );
+}
+
+
+/* ========================================================= */
+/* FEATURE PILL */
+/* ========================================================= */
+
+function FeaturePill({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm">
+      {children}
+    </div>
+  );
+}
+
+
+/* ========================================================= */
+/* HERO STAT */
+/* ========================================================= */
+
+function HeroStat({
+  value,
+  label,
+}: {
+  value: string;
+  label: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+
+      <p className="text-2xl font-black text-slate-950 sm:text-3xl">
+        {value}
+      </p>
+
+      <p className="mt-1 text-xs text-slate-500 sm:text-sm">
+        {label}
+      </p>
+
+    </div>
   );
 }
