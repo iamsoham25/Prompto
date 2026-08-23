@@ -10,6 +10,7 @@ export const codingChallenges = [
     bonusScore: 85,
     bonusXP: 20,
   },
+
   {
     id: 2,
     title: "Debug Python Program",
@@ -21,10 +22,23 @@ export const codingChallenges = [
     bonusScore: 85,
     bonusXP: 20,
   },
+
   {
     id: 3,
+    title: "Code Explanation",
+    description: "Explain complex programming code clearly for developers.",
+    difficulty: "Easy",
+    xp: 60,
+    time: "10 mins",
+    passScore: 70,
+    bonusScore: 85,
+    bonusXP: 20,
+  },
+
+  {
+    id: 4,
     title: "SQL Query Generator",
-    description: "Generate optimized SQL queries.",
+    description: "Generate optimized SQL queries from natural language requirements.",
     difficulty: "Medium",
     xp: 70,
     time: "15 mins",
@@ -32,10 +46,11 @@ export const codingChallenges = [
     bonusScore: 90,
     bonusXP: 25,
   },
+
   {
-    id: 4,
+    id: 5,
     title: "Regex Builder",
-    description: "Create regex for text validation.",
+    description: "Create regular expressions for text validation and extraction.",
     difficulty: "Medium",
     xp: 80,
     time: "15 mins",
@@ -43,10 +58,11 @@ export const codingChallenges = [
     bonusScore: 90,
     bonusXP: 25,
   },
+
   {
-    id: 5,
+    id: 6,
     title: "REST API Generator",
-    description: "Design REST API endpoints.",
+    description: "Design REST API endpoints with appropriate methods and responses.",
     difficulty: "Medium",
     xp: 90,
     time: "20 mins",
@@ -54,10 +70,23 @@ export const codingChallenges = [
     bonusScore: 90,
     bonusXP: 30,
   },
+
   {
-    id: 6,
+    id: 7,
+    title: "Code Optimization",
+    description: "Create prompts that identify and improve inefficient code.",
+    difficulty: "Medium",
+    xp: 90,
+    time: "20 mins",
+    passScore: 75,
+    bonusScore: 90,
+    bonusXP: 30,
+  },
+
+  {
+    id: 8,
     title: "React Component Builder",
-    description: "Generate reusable React components.",
+    description: "Generate reusable React components with clear requirements.",
     difficulty: "Hard",
     xp: 100,
     time: "20 mins",
@@ -65,10 +94,11 @@ export const codingChallenges = [
     bonusScore: 95,
     bonusXP: 35,
   },
+
   {
-    id: 7,
+    id: 9,
     title: "Flask API Architect",
-    description: "Build scalable Flask APIs.",
+    description: "Design scalable Flask APIs using effective prompt instructions.",
     difficulty: "Hard",
     xp: 110,
     time: "25 mins",
@@ -76,10 +106,11 @@ export const codingChallenges = [
     bonusScore: 95,
     bonusXP: 35,
   },
+
   {
-    id: 8,
+    id: 10,
     title: "Dockerfile Creator",
-    description: "Generate Dockerfiles for projects.",
+    description: "Generate production-ready Dockerfiles for software projects.",
     difficulty: "Hard",
     xp: 120,
     time: "25 mins",
@@ -87,10 +118,35 @@ export const codingChallenges = [
     bonusScore: 95,
     bonusXP: 40,
   },
+
   {
-    id: 9,
+    id: 11,
+    title: "Unit Test Generator",
+    description: "Create detailed prompts for generating comprehensive unit tests.",
+    difficulty: "Hard",
+    xp: 120,
+    time: "25 mins",
+    passScore: 80,
+    bonusScore: 95,
+    bonusXP: 40,
+  },
+
+  {
+    id: 12,
+    title: "Git Workflow Assistant",
+    description: "Design prompts that help developers troubleshoot Git workflows.",
+    difficulty: "Hard",
+    xp: 125,
+    time: "25 mins",
+    passScore: 80,
+    bonusScore: 95,
+    bonusXP: 40,
+  },
+
+  {
+    id: 13,
     title: "Microservice Refactoring",
-    description: "Refactor apps into microservices.",
+    description: "Create prompts for refactoring monolithic applications into microservices.",
     difficulty: "Expert",
     xp: 140,
     time: "30 mins",
@@ -98,15 +154,88 @@ export const codingChallenges = [
     bonusScore: 98,
     bonusXP: 50,
   },
+
   {
-    id: 10,
+    id: 14,
+    title: "Security Code Auditor",
+    description: "Design prompts for identifying security vulnerabilities in application code.",
+    difficulty: "Expert",
+    xp: 145,
+    time: "30 mins",
+    passScore: 85,
+    bonusScore: 98,
+    bonusXP: 50,
+  },
+
+  {
+    id: 15,
+    title: "Legacy Code Migration",
+    description: "Create prompts for migrating legacy code to modern technologies.",
+    difficulty: "Expert",
+    xp: 150,
+    time: "30 mins",
+    passScore: 85,
+    bonusScore: 98,
+    bonusXP: 50,
+  },
+
+  {
+    id: 16,
+    title: "System Design Assistant",
+    description: "Build structured prompts for designing scalable software systems.",
+    difficulty: "Expert",
+    xp: 155,
+    time: "35 mins",
+    passScore: 85,
+    bonusScore: 98,
+    bonusXP: 55,
+  },
+
+  {
+    id: 17,
     title: "AI Code Review",
-    description: "Review and improve code quality.",
+    description: "Review and improve code quality using structured AI instructions.",
     difficulty: "Master",
     xp: 160,
     time: "35 mins",
     passScore: 90,
     bonusScore: 100,
     bonusXP: 60,
+  },
+
+  {
+    id: 18,
+    title: "Large Codebase Analysis",
+    description: "Design prompts for analyzing large and complex software repositories.",
+    difficulty: "Master",
+    xp: 170,
+    time: "40 mins",
+    passScore: 90,
+    bonusScore: 100,
+    bonusXP: 65,
+  },
+
+  {
+    id: 19,
+    title: "Autonomous Debugging Agent",
+    description: "Create a prompt workflow for an AI agent that investigates and fixes software issues.",
+    difficulty: "Master",
+    xp: 180,
+    time: "40 mins",
+    passScore: 90,
+    bonusScore: 100,
+    bonusXP: 70,
+  },
+
+  {
+    id: 20,
+    title: "Full-Stack Engineering Challenge",
+    description: "Design a comprehensive prompt for an AI coding assistant to plan, implement, test, and review a full-stack application.",
+    difficulty: "Master",
+    xp: 200,
+    time: "45 mins",
+    passScore: 90,
+    bonusScore: 100,
+    bonusXP: 80,
   },
 ];
