@@ -7,6 +7,11 @@ interface Props {
   track: string;
   challengeId: number;
   onRetry: () => void;
+
+  challengeXP: number;
+  passScore: number;
+  bonusScore: number;
+  bonusXP: number;
 }
 
 export default function ChallengeResult({
@@ -14,128 +19,248 @@ export default function ChallengeResult({
   track,
   challengeId,
   onRetry,
+  challengeXP,
+  passScore,
+  bonusScore,
+  bonusXP,
 }: Props) {
-
   if (!result) return null;
 
-  const score = result.overall_score;
+  const score = Math.round(Number(result.overall_score) || 0);
 
-  let xp = 20;
+  const completed = score >= passScore;
+  const bonusEarned = score >= bonusScore;
 
-  if (score >= 90) xp = 100;
-  else if (score >= 80) xp = 80;
-  else if (score >= 70) xp = 60;
-  else if (score >= 60) xp = 40;
+  let earnedXP = Math.floor(challengeXP * 0.4);
 
-  const completed = score >= 70;
+  if (completed) {
+    earnedXP = challengeXP;
+  }
+
+  if (bonusEarned) {
+    earnedXP = challengeXP + bonusXP;
+  }
 
   return (
+    <section className="rounded-[28px] bg-white border border-slate-200 shadow-sm overflow-hidden">
 
-    <div className="mt-10 bg-white rounded-3xl shadow-xl p-8">
+      {/* ====================================================== */}
+      {/* HEADER                                                 */}
+      {/* ====================================================== */}
 
-      <h2 className="text-3xl font-bold">
+      <div
+        className={`p-7 sm:p-9 border-b ${
+          completed
+            ? "border-emerald-100 bg-emerald-50/40"
+            : "border-orange-100 bg-orange-50/40"
+        }`}
+      >
 
-        🏆 Challenge Result
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 
-      </h2>
+          <div className="flex items-center gap-4">
 
-      <div className="grid md:grid-cols-3 gap-6 mt-8">
+            <div
+              className={`h-12 w-12 rounded-2xl flex items-center justify-center text-2xl ${
+                completed
+                  ? "bg-emerald-100"
+                  : "bg-orange-100"
+              }`}
+            >
+              {completed ? "🏆" : "🔁"}
+            </div>
 
-        {/* XP */}
+            <div>
 
-        <div className="bg-yellow-100 rounded-2xl p-6">
+              <p
+                className={`text-xs font-bold uppercase tracking-[0.16em] ${
+                  completed
+                    ? "text-emerald-600"
+                    : "text-orange-600"
+                }`}
+              >
+                Challenge Outcome
+              </p>
 
-          <h3 className="text-lg font-semibold">
+              <h2 className="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-950">
+                {completed
+                  ? "Challenge Completed"
+                  : "Keep Improving"}
+              </h2>
 
-            XP Earned
+            </div>
 
-          </h3>
+          </div>
 
-          <p className="text-4xl font-bold mt-3">
-
-            +{xp}
-
-          </p>
+          <div
+            className={`rounded-full px-4 py-2 text-sm font-bold ${
+              completed
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-orange-100 text-orange-700"
+            }`}
+          >
+            {completed ? "✓ Passed" : "Retry Available"}
+          </div>
 
         </div>
 
-        {/* Score */}
+      </div>
 
-        <div className="bg-blue-100 rounded-2xl p-6">
+      {/* ====================================================== */}
+      {/* STATS                                                  */}
+      {/* ====================================================== */}
 
-          <h3 className="text-lg font-semibold">
+      <div className="p-7 sm:p-9">
 
-            Overall Score
+        <div className="grid md:grid-cols-3 gap-4">
 
-          </h3>
+          {/* XP */}
 
-          <p className="text-4xl font-bold mt-3">
+          <div className="rounded-2xl border border-orange-100 bg-orange-50 p-6">
 
-            {score}/100
+            <p className="text-sm font-semibold text-slate-500">
+              XP Earned
+            </p>
 
-          </p>
+            <p className="mt-2 text-4xl font-extrabold text-orange-600">
+              +{earnedXP}
+            </p>
+
+            {bonusEarned && (
+              <p className="mt-2 text-sm font-semibold text-purple-600">
+                ⭐ Includes +{bonusXP} bonus XP
+              </p>
+            )}
+
+          </div>
+
+          {/* SCORE */}
+
+          <div className="rounded-2xl border border-purple-100 bg-purple-50 p-6">
+
+            <p className="text-sm font-semibold text-slate-500">
+              Overall Score
+            </p>
+
+            <p className="mt-2 text-4xl font-extrabold text-purple-600">
+              {score}/100
+            </p>
+
+            <p className="mt-2 text-sm text-slate-500">
+              Pass mark: {passScore}
+            </p>
+
+          </div>
+
+          {/* STATUS */}
+
+          <div
+            className={`rounded-2xl border p-6 ${
+              completed
+                ? "border-emerald-100 bg-emerald-50"
+                : "border-red-100 bg-red-50"
+            }`}
+          >
+
+            <p className="text-sm font-semibold text-slate-500">
+              Status
+            </p>
+
+            <p
+              className={`mt-2 text-2xl font-extrabold ${
+                completed
+                  ? "text-emerald-600"
+                  : "text-red-600"
+              }`}
+            >
+              {completed
+                ? "Completed"
+                : "Not Passed"}
+            </p>
+
+            <p className="mt-2 text-sm text-slate-500">
+              {completed
+                ? "Great work! Progress has been recorded."
+                : `Reach ${passScore}+ to complete this challenge.`}
+            </p>
+
+          </div>
 
         </div>
 
-        {/* Status */}
+        {/* ==================================================== */}
+        {/* SCORE MESSAGE                                        */}
+        {/* ==================================================== */}
 
         <div
-          className={`rounded-2xl p-6 ${
+          className={`mt-6 rounded-2xl border p-5 ${
             completed
-              ? "bg-green-100"
-              : "bg-red-100"
+              ? "border-emerald-100 bg-emerald-50"
+              : "border-orange-100 bg-orange-50"
           }`}
         >
 
-          <h3 className="text-lg font-semibold">
+          <div className="flex gap-4">
 
-            Status
+            <div className="text-2xl">
+              {completed ? "🎉" : "💡"}
+            </div>
 
-          </h3>
+            <div>
 
-          <p className="text-2xl font-bold mt-3">
+              <h3 className="font-extrabold text-slate-950">
+                {completed
+                  ? bonusEarned
+                    ? "Excellent! You earned the bonus reward."
+                    : "You passed the challenge!"
+                  : "You're close — give it another try."}
+              </h3>
 
-            {completed
-              ? "✅ Completed"
-              : "❌ Retry"}
+              <p className="mt-1 text-sm leading-6 text-slate-600">
+                {completed
+                  ? bonusEarned
+                    ? `You reached ${bonusScore}+ and earned the additional ${bonusXP} XP bonus.`
+                    : `You reached the ${passScore} passing score. Improve your prompt further to reach ${bonusScore}+ for the bonus.`
+                  : `Your score was ${score}. Strengthen the areas identified above and try again.`}
+              </p>
 
-          </p>
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* ==================================================== */}
+        {/* BUTTONS                                              */}
+        {/* ==================================================== */}
+
+        <div className="mt-7 flex flex-col sm:flex-row gap-3">
+
+          <button
+            onClick={onRetry}
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-6 py-3.5 text-sm font-bold text-slate-700 transition hover:bg-slate-200"
+          >
+            🔄 Retry Challenge
+          </button>
+
+          {completed && (
+            <Link
+              href={`/challenges/${track}/${challengeId + 1}`}
+              className="flex-1"
+            >
+              <button
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-purple-200 transition hover:from-purple-700 hover:to-indigo-700"
+              >
+                Next Challenge
+                <span>→</span>
+              </button>
+            </Link>
+          )}
 
         </div>
 
       </div>
 
-      {/* Buttons */}
-
-      <div className="flex gap-4 mt-10">
-
-        <button
-          onClick={onRetry}
-          className="px-8 py-3 rounded-xl bg-slate-200 hover:bg-slate-300"
-        >
-          Retry Challenge
-        </button>
-
-        {completed && (
-
-          <Link
-            href={`/challenges/${track}/${challengeId + 1}`}
-          >
-
-            <button
-              className="px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white"
-            >
-              Next Challenge →
-            </button>
-
-          </Link>
-
-        )}
-
-      </div>
-
-    </div>
-
+    </section>
   );
-
 }
