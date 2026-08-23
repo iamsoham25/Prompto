@@ -30,7 +30,7 @@ export default function ComparatorPage() {
 
       setResult(res.data.comparison);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert("Something went wrong while comparing the prompts.");
     } finally {
       setLoading(false);
@@ -44,83 +44,104 @@ export default function ComparatorPage() {
   };
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#f7f8fc] text-slate-950">
+    <main className="min-h-screen bg-[#f8f9fc] text-[#0b1024]">
 
-      {/* =========================================================
+      {/* =====================================================
+          BACKGROUND
+      ===================================================== */}
+
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute -left-40 top-40 h-[500px] w-[500px] rounded-full bg-orange-200/20 blur-[140px]" />
+
+        <div className="absolute right-[-180px] top-20 h-[520px] w-[520px] rounded-full bg-violet-200/20 blur-[150px]" />
+
+        <div className="absolute left-1/2 top-[700px] h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-pink-200/10 blur-[130px]" />
+      </div>
+
+
+      {/* =====================================================
           HERO
-      ========================================================= */}
+      ===================================================== */}
 
-      <section className="relative overflow-hidden px-5 pb-16 pt-12 sm:px-8 lg:px-10">
+      <section className="px-5 pb-8 pt-9 sm:px-8 lg:px-10">
 
-        {/* Background decoration */}
+        <div className="mx-auto max-w-7xl">
 
-        <div className="pointer-events-none absolute -left-40 top-0 h-96 w-96 rounded-full bg-orange-300/20 blur-[120px]" />
+          <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.07)]">
 
-        <div className="pointer-events-none absolute right-[-120px] top-20 h-[420px] w-[420px] rounded-full bg-fuchsia-300/20 blur-[130px]" />
+            {/* accent line */}
 
-        <div className="pointer-events-none absolute left-1/2 top-[-180px] h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-violet-300/15 blur-[120px]" />
+            <div className="absolute left-0 right-0 top-0 h-[3px] bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600" />
 
-        <div className="relative mx-auto max-w-7xl">
+            <div className="px-7 py-9 sm:px-10 lg:px-14 lg:py-11">
 
-          {/* Small badge */}
+              {/* label */}
 
-          <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/80 px-5 py-2 text-xs font-extrabold uppercase tracking-[0.2em] text-orange-600 shadow-sm backdrop-blur">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-2">
 
-            <span className="h-2 w-2 rounded-full bg-orange-500" />
+                <span className="h-2 w-2 rounded-full bg-orange-500" />
 
-            Prompt Comparison Studio
+                <span className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-orange-600">
+                  Prompt Comparison Studio
+                </span>
 
-          </div>
-
-          {/* Heading */}
-
-          <div className="max-w-4xl">
-
-            <h1 className="text-5xl font-black leading-[0.95] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
-
-              Compare.
-
-              <span className="block bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600 bg-clip-text text-transparent">
-
-                Decide.
-
-              </span>
-
-              <span className="block text-slate-950">
-
-                Build the better prompt.
-
-              </span>
-
-            </h1>
-
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-500 sm:text-xl">
-
-              Put two prompts head-to-head and discover which one delivers
-              stronger clarity, context, structure, constraints and overall
-              prompt quality.
-
-            </p>
-
-          </div>
-
-          {/* Feature pills */}
-
-          <div className="mt-8 flex flex-wrap gap-3">
-
-            {[
-              "⚔️ Side-by-side",
-              "📊 Score comparison",
-              "🎯 Skill breakdown",
-              "💡 AI suggestions",
-            ].map((item) => (
-              <div
-                key={item}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm"
-              >
-                {item}
               </div>
-            ))}
+
+
+              {/* heading */}
+
+              <div className="max-w-4xl">
+
+                <h1 className="text-4xl font-black leading-[0.98] tracking-[-0.045em] sm:text-5xl lg:text-[64px]">
+
+                  Compare.
+
+                  <br />
+
+                  <span className="bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600 bg-clip-text text-transparent">
+                    Decide.
+                  </span>
+
+                  {" "}Build better prompts.
+
+                </h1>
+
+                <p className="mt-5 max-w-3xl text-base leading-7 text-slate-500 sm:text-lg">
+                  Put two prompts head-to-head and discover which one delivers
+                  stronger clarity, context, structure, constraints and overall
+                  prompt quality.
+                </p>
+
+              </div>
+
+
+              {/* feature pills */}
+
+              <div className="mt-7 flex flex-wrap gap-3">
+
+                <FeaturePill
+                  icon="⚔️"
+                  label="Side-by-side"
+                />
+
+                <FeaturePill
+                  icon="📊"
+                  label="7 dimensions"
+                />
+
+                <FeaturePill
+                  icon="🏆"
+                  label="Winner detection"
+                />
+
+                <FeaturePill
+                  icon="💡"
+                  label="AI reasoning"
+                />
+
+              </div>
+
+            </div>
 
           </div>
 
@@ -129,46 +150,40 @@ export default function ComparatorPage() {
       </section>
 
 
-      {/* =========================================================
+      {/* =====================================================
           COMPARISON WORKSPACE
-      ========================================================= */}
+      ===================================================== */}
 
-      <section className="px-5 pb-20 sm:px-8 lg:px-10">
+      <section className="px-5 pb-12 sm:px-8 lg:px-10">
 
-        <div className="relative mx-auto max-w-7xl">
+        <div className="mx-auto max-w-7xl">
 
-          {/* Top gradient line */}
+          <div className="overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-[0_25px_80px_rgba(15,23,42,0.08)]">
 
-          <div className="absolute left-8 right-8 top-0 h-[3px] rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-violet-500" />
+            {/* workspace header */}
 
-          <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.10)]">
+            <div className="border-b border-slate-100 px-7 py-6 sm:px-9">
 
-            {/* Workspace header */}
-
-            <div className="border-b border-slate-100 px-6 py-7 sm:px-9">
-
-              <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
 
                 <div>
 
-                  <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-violet-500">
-
-                    Comparison workspace
-
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-violet-500">
+                    Comparison Workspace
                   </p>
 
-                  <h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
-
+                  <h2 className="mt-1 text-2xl font-black tracking-tight sm:text-3xl">
                     Put your prompts to the test.
-
                   </h2>
 
+                  <p className="mt-1 text-sm text-slate-400">
+                    Give the AI two versions and let it analyze the difference.
+                  </p>
+
                 </div>
 
-                <div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-500">
-
+                <div className="rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-500">
                   2 prompts required
-
                 </div>
 
               </div>
@@ -176,185 +191,107 @@ export default function ComparatorPage() {
             </div>
 
 
-            {/* Prompt editors */}
+            {/* prompt editors */}
 
-            <div className="relative grid gap-0 lg:grid-cols-2">
+            <div className="grid lg:grid-cols-[1fr_auto_1fr]">
 
-              {/* ================= PROMPT A ================= */}
+              {/* =================================================
+                  PROMPT A
+              ================================================= */}
 
-              <div className="relative p-6 sm:p-9 lg:border-r lg:border-slate-100">
-
-                {/* Prompt label */}
-
-                <div className="mb-5 flex items-center justify-between">
-
-                  <div className="flex items-center gap-3">
-
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-100 text-lg font-black text-orange-600">
-
-                      A
-
-                    </div>
-
-                    <div>
-
-                      <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-orange-500">
-
-                        Prompt A
-
-                      </p>
-
-                      <h3 className="mt-0.5 text-xl font-black">
-
-                        First version
-
-                      </h3>
-
-                    </div>
-
-                  </div>
-
-                  <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-orange-600">
-
-                    {promptA.length} chars
-
-                  </span>
-
-                </div>
-
-                {/* Editor */}
-
-                <div className="group relative rounded-[24px] border border-orange-100 bg-gradient-to-b from-orange-50/60 to-white p-2 transition-all duration-300 focus-within:border-orange-300 focus-within:shadow-[0_15px_40px_rgba(249,115,22,0.10)]">
-
-                  <textarea
-                    value={promptA}
-                    onChange={(e) => setPromptA(e.target.value)}
-                    placeholder="Write your first prompt..."
-                    className="h-72 w-full resize-none rounded-[18px] border-0 bg-transparent p-5 text-[16px] leading-7 text-slate-800 outline-none placeholder:text-slate-400 focus:ring-0"
-                  />
-
-                </div>
-
-                {/* Footer */}
-
-                <div className="mt-4 flex items-center gap-2 text-xs font-medium text-slate-400">
-
-                  <span>💡</span>
-
-                  <span>Try your original or less-refined prompt here.</span>
-
-                </div>
-
-              </div>
+              <PromptEditor
+                letter="A"
+                label="Prompt A"
+                description="Original version"
+                value={promptA}
+                onChange={setPromptA}
+                placeholder="Write your first prompt here..."
+                variant="orange"
+              />
 
 
-              {/* ================= VS DIVIDER ================= */}
+              {/* =================================================
+                  CENTER VS
+              ================================================= */}
 
-              <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
+              <div className="relative hidden items-center justify-center lg:flex">
 
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-white bg-gradient-to-br from-orange-500 via-pink-500 to-violet-600 text-sm font-black text-white shadow-[0_10px_35px_rgba(168,85,247,0.35)]">
+                <div className="absolute inset-y-8 w-px bg-slate-100" />
 
+                <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-4 border-white bg-[#0b1024] text-xs font-black text-white shadow-[0_10px_30px_rgba(15,23,42,0.20)]">
                   VS
-
                 </div>
 
               </div>
 
 
-              {/* ================= PROMPT B ================= */}
+              {/* mobile VS */}
 
-              <div className="relative border-t border-slate-100 p-6 sm:p-9 lg:border-t-0">
+              <div className="flex items-center gap-4 px-7 lg:hidden">
 
-                <div className="mb-5 flex items-center justify-between">
+                <div className="h-px flex-1 bg-slate-200" />
 
-                  <div className="flex items-center gap-3">
-
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-100 text-lg font-black text-violet-600">
-
-                      B
-
-                    </div>
-
-                    <div>
-
-                      <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-violet-500">
-
-                        Prompt B
-
-                      </p>
-
-                      <h3 className="mt-0.5 text-xl font-black">
-
-                        Alternative version
-
-                      </h3>
-
-                    </div>
-
-                  </div>
-
-                  <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-bold text-violet-600">
-
-                    {promptB.length} chars
-
-                  </span>
-
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0b1024] text-[10px] font-black text-white">
+                  VS
                 </div>
 
-                <div className="group relative rounded-[24px] border border-violet-100 bg-gradient-to-b from-violet-50/60 to-white p-2 transition-all duration-300 focus-within:border-violet-300 focus-within:shadow-[0_15px_40px_rgba(139,92,246,0.10)]">
-
-                  <textarea
-                    value={promptB}
-                    onChange={(e) => setPromptB(e.target.value)}
-                    placeholder="Write your second prompt..."
-                    className="h-72 w-full resize-none rounded-[18px] border-0 bg-transparent p-5 text-[16px] leading-7 text-slate-800 outline-none placeholder:text-slate-400 focus:ring-0"
-                  />
-
-                </div>
-
-                <div className="mt-4 flex items-center gap-2 text-xs font-medium text-slate-400">
-
-                  <span>✨</span>
-
-                  <span>Try an improved or alternative prompt here.</span>
-
-                </div>
+                <div className="h-px flex-1 bg-slate-200" />
 
               </div>
+
+
+              {/* =================================================
+                  PROMPT B
+              ================================================= */}
+
+              <PromptEditor
+                letter="B"
+                label="Prompt B"
+                description="Alternative version"
+                value={promptB}
+                onChange={setPromptB}
+                placeholder="Write your second prompt here..."
+                variant="violet"
+              />
 
             </div>
 
 
-            {/* =====================================================
+            {/* =================================================
                 ACTION BAR
-            ===================================================== */}
+            ================================================= */}
 
-            <div className="border-t border-slate-100 bg-slate-50/70 px-6 py-6 sm:px-9">
+            <div className="border-t border-slate-100 bg-[#fafbfe] px-7 py-6 sm:px-9">
 
-              <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
 
-                <div className="text-center sm:text-left">
+                <div className="flex items-center gap-3">
 
-                  <p className="text-sm font-bold text-slate-700">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
+                    ✨
+                  </div>
 
-                    Ready to compare?
+                  <div>
 
-                  </p>
+                    <p className="text-sm font-black text-slate-800">
+                      Ready to compare?
+                    </p>
 
-                  <p className="mt-1 text-xs text-slate-400">
+                    <p className="text-xs text-slate-400">
+                      AI will evaluate both prompts across multiple dimensions.
+                    </p>
 
-                    AI will evaluate both prompts across multiple dimensions.
-
-                  </p>
+                  </div>
 
                 </div>
 
-                <div className="flex w-full gap-3 sm:w-auto">
+
+                <div className="flex gap-3">
 
                   <button
                     onClick={clearPrompts}
                     disabled={loading}
-                    className="rounded-2xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-bold text-slate-600 transition hover:border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-100 disabled:opacity-50"
                   >
                     Clear
                   </button>
@@ -362,19 +299,11 @@ export default function ComparatorPage() {
                   <button
                     onClick={comparePrompts}
                     disabled={loading}
-                    className="group relative flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600 px-8 py-3.5 text-sm font-extrabold text-white shadow-[0_12px_30px_rgba(236,72,153,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(236,72,153,0.35)] disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
+                    className="rounded-xl bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600 px-7 py-3 text-sm font-extrabold text-white shadow-[0_10px_25px_rgba(236,72,153,0.22)] transition hover:-translate-y-0.5 hover:shadow-[0_15px_30px_rgba(236,72,153,0.28)] disabled:cursor-not-allowed disabled:opacity-60"
                   >
-
-                    <span className="absolute inset-0 -translate-x-full bg-white/20 transition-transform duration-500 group-hover:translate-x-full" />
-
-                    <span className="relative">
-
-                      {loading
-                        ? "⚡ Comparing..."
-                        : "⚔️ Compare Prompts"}
-
-                    </span>
-
+                    {loading
+                      ? "⚡ Comparing..."
+                      : "⚔️ Compare Prompts"}
                   </button>
 
                 </div>
@@ -390,46 +319,106 @@ export default function ComparatorPage() {
       </section>
 
 
-      {/* =========================================================
-          RESULT SECTION
-      ========================================================= */}
+      {/* =====================================================
+          WHAT WILL BE COMPARED
+      ===================================================== */}
+
+      {!result && (
+
+        <section className="px-5 pb-20 sm:px-8 lg:px-10">
+
+          <div className="mx-auto max-w-7xl">
+
+            <div className="mb-5">
+
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-400">
+                What AI checks
+              </p>
+
+              <h2 className="mt-1 text-2xl font-black">
+                Seven dimensions of prompt quality.
+              </h2>
+
+            </div>
+
+
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
+
+              {[
+                ["✨", "Clarity"],
+                ["🎯", "Specificity"],
+                ["🧠", "Context"],
+                ["📐", "Constraints"],
+                ["👤", "Role"],
+                ["📄", "Output"],
+                ["💡", "Examples"],
+              ].map(([icon, label]) => (
+
+                <div
+                  key={label}
+                  className="group rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-200 hover:shadow-md"
+                >
+
+                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-lg transition group-hover:bg-violet-50">
+                    {icon}
+                  </div>
+
+                  <p className="mt-3 text-xs font-extrabold text-slate-600">
+                    {label}
+                  </p>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </section>
+
+      )}
+
+
+      {/* =====================================================
+          RESULTS
+      ===================================================== */}
 
       {result && (
+
         <section className="px-5 pb-24 sm:px-8 lg:px-10">
 
           <div className="mx-auto max-w-7xl">
 
-            {/* Result heading */}
+            {/* result intro */}
 
-            <div className="mb-8">
+            <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-600">
+              <div>
 
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3.5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600">
 
-                Analysis complete
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+
+                  Analysis complete
+
+                </div>
+
+                <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
+                  Here&apos;s how they compare.
+                </h2>
 
               </div>
 
-              <h2 className="text-4xl font-black tracking-tight sm:text-5xl">
-
-                Here&apos;s how they compare.
-
-              </h2>
-
-              <p className="mt-3 max-w-2xl text-slate-500">
-
-                Review the winner, category-level performance and AI-generated
-                recommendations.
-
+              <p className="max-w-md text-sm leading-6 text-slate-500 sm:text-right">
+                Review the winner, category-level performance and
+                AI-generated recommendations.
               </p>
 
             </div>
 
 
-            {/* Existing result components */}
-
-            <div className="space-y-8">
+            <div className="space-y-7">
 
               <WinnerCard
                 winner={result.winner}
@@ -452,66 +441,144 @@ export default function ComparatorPage() {
           </div>
 
         </section>
-      )}
 
-
-      {/* =========================================================
-          BOTTOM INFO
-      ========================================================= */}
-
-      {!result && (
-        <section className="px-5 pb-20 sm:px-8 lg:px-10">
-
-          <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-3">
-
-            {[
-              {
-                icon: "🎯",
-                title: "Compare quality",
-                text: "Evaluate both prompts across important engineering dimensions.",
-              },
-              {
-                icon: "🏆",
-                title: "Find the winner",
-                text: "See which prompt achieves the stronger overall score.",
-              },
-              {
-                icon: "💡",
-                title: "Learn & improve",
-                text: "Use the comparison insights to create stronger prompts.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-              >
-
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-xl">
-
-                  {item.icon}
-
-                </div>
-
-                <h3 className="text-lg font-black">
-
-                  {item.title}
-
-                </h3>
-
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-
-                  {item.text}
-
-                </p>
-
-              </div>
-            ))}
-
-          </div>
-
-        </section>
       )}
 
     </main>
+  );
+}
+
+
+/* =============================================================
+   FEATURE PILL
+============================================================= */
+
+function FeaturePill({
+  icon,
+  label,
+}: {
+  icon: string;
+  label: string;
+}) {
+  return (
+    <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-600 shadow-sm">
+      <span>{icon}</span>
+      {label}
+    </div>
+  );
+}
+
+
+/* =============================================================
+   PROMPT EDITOR
+============================================================= */
+
+function PromptEditor({
+  letter,
+  label,
+  description,
+  value,
+  onChange,
+  placeholder,
+  variant,
+}: {
+  letter: string;
+  label: string;
+  description: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  variant: "orange" | "violet";
+}) {
+  const isOrange = variant === "orange";
+
+  return (
+    <div className="p-7 sm:p-9">
+
+      {/* editor heading */}
+
+      <div className="mb-5 flex items-center justify-between">
+
+        <div className="flex items-center gap-3">
+
+          <div
+            className={`flex h-11 w-11 items-center justify-center rounded-xl text-sm font-black ${
+              isOrange
+                ? "bg-orange-100 text-orange-600"
+                : "bg-violet-100 text-violet-600"
+            }`}
+          >
+            {letter}
+          </div>
+
+          <div>
+
+            <p
+              className={`text-[10px] font-extrabold uppercase tracking-[0.18em] ${
+                isOrange ? "text-orange-500" : "text-violet-500"
+              }`}
+            >
+              {label}
+            </p>
+
+            <p className="mt-0.5 text-sm font-black text-slate-800">
+              {description}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <span className="text-xs font-bold text-slate-400">
+          {value.length} chars
+        </span>
+
+      </div>
+
+
+      {/* textarea */}
+
+      <div
+        className={`rounded-[22px] border p-1.5 transition duration-300 ${
+          isOrange
+            ? "border-orange-100 bg-orange-50/40 focus-within:border-orange-300 focus-within:bg-orange-50/60"
+            : "border-violet-100 bg-violet-50/40 focus-within:border-violet-300 focus-within:bg-violet-50/60"
+        }`}
+      >
+
+        <textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          className="h-64 w-full resize-none rounded-[17px] border-0 bg-white/70 p-5 text-[15px] leading-7 text-slate-800 outline-none placeholder:text-slate-400 focus:ring-0"
+        />
+
+      </div>
+
+
+      {/* helper */}
+
+      <div className="mt-3 flex items-center justify-between">
+
+        <p className="text-xs text-slate-400">
+          {value.length === 0
+            ? "Start writing your prompt..."
+            : "Prompt ready for comparison"}
+        </p>
+
+        <span
+          className={`h-2 w-2 rounded-full ${
+            value.trim()
+              ? isOrange
+                ? "bg-orange-500"
+                : "bg-violet-500"
+              : "bg-slate-300"
+          }`}
+        />
+
+      </div>
+
+    </div>
   );
 }
