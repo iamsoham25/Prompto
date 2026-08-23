@@ -272,13 +272,15 @@ export default function ImproverPage() {
                   RIGHT TRANSFORMATION AREA
               ================================================= */}
 
-              <div className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#f4f0ff] via-[#f9f5ff] to-[#fff0f8] px-5 py-10 sm:px-8 lg:px-10">
+              <div className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#f3efff] via-[#faf7ff] to-[#fff2f8] px-5 py-10 sm:px-8 lg:px-10">
 
                 {/* Decorative blobs */}
 
-                <div className="pointer-events-none absolute right-[-100px] top-[-100px] h-80 w-80 rounded-full bg-violet-300/30 blur-[100px]" />
+                <div className="pointer-events-none absolute right-[-100px] top-[-100px] h-80 w-80 rounded-full bg-violet-300/20 blur-[110px]" />
 
-                <div className="pointer-events-none absolute bottom-[-120px] left-[-80px] h-80 w-80 rounded-full bg-pink-300/25 blur-[100px]" />
+                <div className="pointer-events-none absolute bottom-[-120px] left-[-80px] h-80 w-80 rounded-full bg-pink-300/20 blur-[110px]" />
+
+                <div className="pointer-events-none absolute left-[35%] top-[35%] h-64 w-64 rounded-full bg-indigo-200/15 blur-[100px]" />
 
 
                 {/* Transformation Card */}
