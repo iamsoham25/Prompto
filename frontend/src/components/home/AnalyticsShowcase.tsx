@@ -309,13 +309,7 @@ export default function AnalyticsShowcase() {
                 >
                   <div>
                     <p
-                      className="
-                        text-xs
-                        font-black
-                        uppercase
-                        tracking-[0.16em]
-                        text-slate-400
-                      "
+                      className=" text-xs font-black uppercase tracking-[0.16em] text-slate-400 "
                     >
                       Prompt Performance
                     </p>
