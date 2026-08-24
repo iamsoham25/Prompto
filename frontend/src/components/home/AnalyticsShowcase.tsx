@@ -424,9 +424,7 @@ export default function AnalyticsShowcase() {
                 className=" min-w-0 rounded-[26px] border border-slate-200 bg-slate-50/70 p-5 sm:p-6 "
               >
                 <p
-                  className=" text-xs font-black uppercase tracking-[0.16em]
-                    text-slate-400
-                  "
+                  className=" text-xs font-black uppercase tracking-[0.16em] text-slate-400 "
                 >
                   Skill Intelligence
                 </p>
