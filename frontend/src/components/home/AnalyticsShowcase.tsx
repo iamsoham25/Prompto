@@ -322,12 +322,7 @@ export default function AnalyticsShowcase() {
                   </div>
 
                   <div
-                    className=" flex w-fit items-center gap-2 rounded-full bg-emerald-50 px-3
-                      py-1.5
-                      text-xs
-                      font-bold
-                      text-emerald-700
-                    "
+                    className=" flex w-fit items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 "
                   >
                     <TrendingUp size={14} />
 
