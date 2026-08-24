@@ -331,13 +331,7 @@ export default function AnalyticsShowcase() {
                 </div>
 
                 <div
-                  className="
-                    mt-7
-                    h-[260px]
-                    w-full
-
-                    sm:h-[300px]
-                  "
+                  className=" mt-7 h-[260px] w-full sm:h-[300px] "
                 >
                   <ResponsiveContainer
                     width="100%"
