@@ -421,10 +421,7 @@ export default function AnalyticsShowcase() {
               {/* RADAR */}
 
               <div
-                className="
-                  min-w-0
-                  rounded-[26px]
-                  border
+                className=" min-w-0 rounded-[26px] border
                   border-slate-200
                   bg-slate-50/70
                   p-5
