@@ -436,8 +436,7 @@ export default function AnalyticsShowcase() {
                 </h4>
 
                 <div
-                  className="
-                    mt-4
+                  className=" mt-4
                     h-[300px]
                     w-full
                   "
