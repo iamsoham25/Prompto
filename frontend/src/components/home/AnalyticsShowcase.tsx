@@ -473,9 +473,7 @@ export default function AnalyticsShowcase() {
                   className=" flex items-center justify-center gap-2 text-xs font-semibold text-slate-500 "
                 >
                   <span
-                    className="
-                      h-2
-                      w-2
+                    className=" h-2 w-2
                       rounded-full
                       bg-purple-500
                     "
