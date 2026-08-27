@@ -470,10 +470,7 @@ export default function AnalyticsShowcase() {
                 </div>
 
                 <div
-                  className=" flex items-center justify-center gap-2 text-xs
-                    font-semibold
-                    text-slate-500
-                  "
+                  className=" flex items-center justify-center gap-2 text-xs font-semibold text-slate-500 "
                 >
                   <span
                     className="
