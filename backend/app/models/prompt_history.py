@@ -16,49 +16,52 @@ class PromptHistory:
 
             "prompt": prompt,
 
+            # Overall score
             "overall_score": evaluation.get(
                 "overall_score",
                 0
             ),
 
-            "clarity": evaluation.get(
+            # Evaluation scores
+            "clarity_score": evaluation.get(
                 "clarity",
                 0
             ),
 
-            "specificity": evaluation.get(
+            "specificity_score": evaluation.get(
                 "specificity",
                 0
             ),
 
-            "context": evaluation.get(
+            "context_score": evaluation.get(
                 "context",
                 0
             ),
 
-            "constraints": evaluation.get(
+            "constraints_score": evaluation.get(
                 "constraints",
                 0
             ),
 
-            "role": evaluation.get(
+            "role_definition_score": evaluation.get(
                 "role",
                 0
             ),
 
-            "output_format": evaluation.get(
+            "output_format_score": evaluation.get(
                 "output_format",
                 0
             ),
 
-            "examples": evaluation.get(
+            "examples_score": evaluation.get(
                 "examples",
                 0
             ),
 
+            # Additional information
             "difficulty": evaluation.get(
                 "difficulty",
-                0
+                ""
             ),
 
             "strengths": evaluation.get(
@@ -66,7 +69,7 @@ class PromptHistory:
                 []
             ),
 
-            "improvements": evaluation.get(
+            "weaknesses": evaluation.get(
                 "improvements",
                 []
             ),

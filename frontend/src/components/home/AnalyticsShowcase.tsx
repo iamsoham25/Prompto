@@ -431,7 +431,7 @@ export default function AnalyticsShowcase() {
 
                 <h4
                   className="
-                    mt-1
+         mt-1
                     text-xl
                     font-black
                     text-slate-950
