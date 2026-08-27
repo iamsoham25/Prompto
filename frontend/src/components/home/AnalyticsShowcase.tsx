@@ -430,9 +430,7 @@ export default function AnalyticsShowcase() {
                 </p>
 
                 <h4
-                  className=" mt-1 text-xl font-black
-                    text-slate-950
-                  "
+                  className=" mt-1 text-xl font-black text-slate-950 "
                 >
                   Prompt Skill Radar
                 </h4>
