@@ -486,13 +486,7 @@ export default function AnalyticsShowcase() {
             ================================================= */}
 
             <div
-              className="
-                mt-5
-                grid
-                gap-5
-
-                lg:grid-cols-[1.25fr_0.75fr]
-              "
+              className=" mt-5 grid gap-5 lg:grid-cols-[1.25fr_0.75fr] "
             >
               {/* Skill breakdown */}
 
