@@ -436,10 +436,7 @@ export default function AnalyticsShowcase() {
                 </h4>
 
                 <div
-                  className=" mt-4
-                    h-[300px]
-                    w-full
-                  "
+                  className=" mt-4 h-[300px] w-full "
                 >
                   <ResponsiveContainer
                     width="100%"
