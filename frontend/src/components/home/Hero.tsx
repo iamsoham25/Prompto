@@ -31,11 +31,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="
-        relative
-        min-h-[calc(100svh-5rem)]
-        overflow-hidden
-        bg-gradient-to-br
+      className=" relative min-h-[calc(100svh-5rem)] overflow-hidden bg-gradient-to-br
         from-[#4338ca]
         via-[#8617e8]
         to-[#ec268f]
