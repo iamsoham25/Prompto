@@ -491,8 +491,7 @@ export default function AnalyticsShowcase() {
               {/* Skill breakdown */}
 
               <div
-                className="
-                  rounded-[26px]
+                className=" rounded-[26px]
                   border
                   border-slate-200
                   p-5
