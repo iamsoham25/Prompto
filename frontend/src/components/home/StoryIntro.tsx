@@ -111,15 +111,7 @@ export default function StoryIntro() {
             duration: 0.5,
             ease,
           }}
-          className="
-            text-3xl font-black
-            uppercase leading-tight
-            tracking-[-0.03em]
-            text-white/60
-
-            sm:text-4xl
-            lg:text-6xl
-          "
+          className=" text-3xl font-black uppercase leading-tight tracking-[-0.03em] text-white/60 sm:text-4xl lg:text-6xl "
         >
           It knows what
           <br />
