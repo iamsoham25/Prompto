@@ -267,10 +267,7 @@ export default function WhatIsPrompto() {
                 </h3>
 
                 <p
-                  className="
-                    mt-4 max-w-sm
-                    text-base leading-7
-                    text-slate-600
+                  className=" mt-4 max-w-sm text-base leading-7 text-slate-600
                   "
                 >
                   {step.description}
