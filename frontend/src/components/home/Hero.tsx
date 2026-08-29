@@ -40,12 +40,7 @@ export default function Hero() {
       />
 
       <div
-        className="
-          pointer-events-none absolute -right-32 top-[20%]
-          hidden h-[400px] w-[400px]
-          rounded-full bg-pink-400/20 blur-[90px]
-          md:block
-        "
+        className=" pointer-events-none absolute -right-32 top-[20%] hidden h-[400px] w-[400px] rounded-full bg-pink-400/20 blur-[90px] md:block "
       />
 
       {/* Grid */}
