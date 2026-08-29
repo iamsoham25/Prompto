@@ -36,12 +36,7 @@ export default function Hero() {
       {/* Static background glows - much cheaper than animated blur */}
 
       <div
-        className="
-          pointer-events-none absolute -left-32 top-10
-          hidden h-[350px] w-[350px]
-          rounded-full bg-blue-400/20 blur-[80px]
-          md:block
-        "
+        className=" pointer-events-none absolute -left-32 top-10 hidden h-[350px] w-[350px] rounded-full bg-blue-400/20 blur-[80px] md:block "
       />
 
       <div
