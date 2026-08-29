@@ -170,8 +170,7 @@ export default function StoryIntro() {
             duration: 0.6,
             ease,
           }}
-          className="
-            bg-gradient-to-r
+          className=" bg-gradient-to-r
             from-orange-400
             via-purple-400
             to-pink-400

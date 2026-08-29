@@ -256,12 +256,7 @@ export default function WhatIsPrompto() {
                 </div>
 
                 <h3
-                  className="
-                    mt-12
-                    text-3xl font-black
-                    tracking-[-0.03em]
-                    text-slate-950
-                  "
+                  className=" mt-12 text-3xl font-black tracking-[-0.03em] text-slate-950 "
                 >
                   {step.title}
                 </h3>
