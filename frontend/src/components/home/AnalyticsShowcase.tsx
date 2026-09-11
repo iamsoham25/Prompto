@@ -523,14 +523,7 @@ export default function AnalyticsShowcase() {
               {/* AI Insights */}
 
               <div
-                className="
-                  rounded-[26px]
-                  bg-slate-950
-                  p-5
-                  text-white
-
-                  sm:p-6
-                "
+                className=" rounded-[26px] bg-slate-950 p-5 text-white sm:p-6 "
               >
                 <div
                   className="
