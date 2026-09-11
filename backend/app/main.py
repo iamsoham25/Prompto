@@ -107,7 +107,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 # ==========================
 # CORE ROUTERS
 # ==========================
