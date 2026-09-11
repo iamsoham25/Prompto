@@ -536,13 +536,7 @@ export default function AnalyticsShowcase() {
 
                   <div>
                     <p
-                      className="
-                        text-xs
-                        font-black
-                        uppercase
-                        tracking-[0.16em]
-                        text-purple-300
-                      "
+                      className=" text-xs font-black uppercase tracking-[0.16em] text-purple-300 "
                     >
                       AI Insights
                     </p>
