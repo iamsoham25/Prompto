@@ -542,9 +542,7 @@ export default function AnalyticsShowcase() {
                     </p>
 
                     <h4
-                      className=" mt-1 text-lg
-                        font-black
-                      "
+                      className=" mt-1 text-lg font-black "
                     >
                       Know what to improve next
                     </h4>
