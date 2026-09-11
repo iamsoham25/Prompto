@@ -501,11 +501,7 @@ export default function AnalyticsShowcase() {
                   </p>
 
                   <h4
-                    className=" mt-1
-                      text-xl
-                      font-black
-                      text-slate-950
-                    "
+                    className=" mt-2 text-xl font-black text-slate-950 "
                   >
                     Skill Breakdown
                   </h4>
