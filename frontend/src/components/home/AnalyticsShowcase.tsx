@@ -529,15 +529,7 @@ export default function AnalyticsShowcase() {
                   className=" flex items-center gap-3 "
                 >
                   <div
-                    className="
-                      flex
-                      h-11
-                      w-11
-                      items-center
-                      justify-center
-                      rounded-2xl
-                      bg-purple-500
-                    "
+                    className=" flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-500 "
                   >
                     <Sparkles size={20} />
                   </div>
