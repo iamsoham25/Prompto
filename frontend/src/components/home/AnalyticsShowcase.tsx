@@ -508,14 +508,7 @@ export default function AnalyticsShowcase() {
                 </div>
 
                 <div
-                  className="
-                    mt-7
-                    grid
-                    gap-x-8
-                    gap-y-5
-
-                    md:grid-cols-2
-                  "
+                  className=" mt-7 grid gap-x-8 gap-y-5 md:grid-cols-2 "
                 >
                   {skills.map((skill) => (
                     <SkillBar
