@@ -221,12 +221,7 @@ export default function ChallengesShowcase() {
             return (
               <div
                 key={track.name}
-                className="
-                  group
-                  inline-flex
-                  items-center
-                  gap-2
-                  rounded-full
+                className=" group inline-flex items-center gap-2 rounded-full
                   border
                   border-white/10
                   bg-white/[0.045]
