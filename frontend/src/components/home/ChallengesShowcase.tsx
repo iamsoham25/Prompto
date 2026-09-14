@@ -222,9 +222,7 @@ export default function ChallengesShowcase() {
               <div
                 key={track.name}
                 className=" group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045]
-                  px-4
-                  py-2.5
-                  text-sm
+                  px-4 py-2.5 text-sm
                   font-bold
                   text-slate-300
                   transition-all
