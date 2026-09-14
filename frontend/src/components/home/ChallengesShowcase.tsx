@@ -221,9 +221,7 @@ export default function ChallengesShowcase() {
             return (
               <div
                 key={track.name}
-                className=" group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045]
-                  px-4 py-2.5 text-sm font-bold text-slate-300 transition-all duration-300 hover:-translate-y-1
-                  hover:border-purple-400/30 hover:bg-purple-500/10 hover:text-white "
+                className=" group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045] px-4 py-2.5 text-sm font-bold text-slate-300 transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/30 hover:bg-purple-500/10 hover:text-white "
               >
                 <Icon
                   size={15}
