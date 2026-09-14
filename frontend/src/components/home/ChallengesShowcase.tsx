@@ -212,12 +212,7 @@ export default function ChallengesShowcase() {
           transition={{
             duration: 0.5,
           }}
-          className="
-            mt-14
-            flex
-            flex-wrap
-            justify-center
-            gap-3
+          className=" mt-14 flex flex-wrap justify-center gap-3
           "
         >
           {tracks.map((track) => {
