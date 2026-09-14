@@ -225,11 +225,7 @@ export default function ChallengesShowcase() {
               >
                 <Icon
                   size={15}
-                  className="
-                    text-orange-400
-                    transition-colors
-                    group-hover:text-purple-400
-                  "
+                  className=" text-orange-400 transition-colors group-hover:text-purple-400 "
                 />
 
                 {track.name}
