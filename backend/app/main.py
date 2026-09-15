@@ -81,35 +81,17 @@ load_dotenv()
 # FASTAPI APPLICATION
 # ==========================
 
-app = FastAPI(
-    title="Prompto API",
-    description="Backend API for the Prompto Prompt Engineering Learning Platform",
-    version="1.0.0"
-)
+app = FastAPI()
 
-
-# ==========================
-# CORS CONFIGURATION
-# ==========================
-
-FRONTEND_URL = os.getenv("FRONTEND_URL", "")
-
-allowed_origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://localhost:3000",
-]
-
-if FRONTEND_URL:
-    allowed_origins.append(FRONTEND_URL)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        FRONTEND_URL,
+        "https://prompto-gnn87yadi-sohams-projects-32907991.vercel.app",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
     ],
+    allow_origin_regex=r"https://.*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
