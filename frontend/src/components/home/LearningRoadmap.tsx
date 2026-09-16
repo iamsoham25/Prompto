@@ -832,8 +832,7 @@ function RoadmapContent({
       </p>
 
       <div
-        className=" mt-6 flex flex-wrap
-          gap-2
+        className=" mt-6 flex flex-wrap gap-2
         "
       >
         {stage.topics.map((topic) => {
