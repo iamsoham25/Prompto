@@ -832,10 +832,7 @@ function RoadmapContent({
       </p>
 
       <div
-        className="
-          mt-6
-          flex
-          flex-wrap
+        className=" mt-6 flex flex-wrap
           gap-2
         "
       >
