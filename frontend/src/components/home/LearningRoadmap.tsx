@@ -843,8 +843,7 @@ function RoadmapContent({
               className={`
                 inline-flex
                 items-center
-                gap-2
-                rounded-full border px-3 py-2 text-xs font-bold
+                gap-2 rounded-full border px-3 py-2 text-xs font-bold
 
                 ${theme.soft}
                 ${theme.text}
