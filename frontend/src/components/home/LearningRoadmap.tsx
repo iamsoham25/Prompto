@@ -826,9 +826,7 @@ function RoadmapContent({
       </h3>
 
       <p
-        className="
-          mt-4
-          leading-7
+        className=" mt-4 leading-7
           text-slate-600
         "
       >
