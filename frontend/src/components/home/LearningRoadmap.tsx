@@ -820,8 +820,7 @@ function RoadmapContent({
       </div>
 
       <h3
-        className=" mt-5 text-3xl font-black tracking-[-0.03em] text-slate-950
-        "
+        className=" mt-5 text-3xl font-black tracking-[-0.03em] text-slate-950 "
       >
         {stage.level}
       </h3>
