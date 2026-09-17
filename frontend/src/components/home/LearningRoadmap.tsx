@@ -787,8 +787,7 @@ function RoadmapContent({
           flex
           flex-wrap
           items-center
-          gap-3
-        "
+          gap-3 "
       >
         <span
           className={` text-xs font-black uppercase tracking-[0.18em]
