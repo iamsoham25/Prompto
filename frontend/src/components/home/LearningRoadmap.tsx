@@ -793,8 +793,7 @@ function RoadmapContent({
         <span
           className={`
             text-xs
-            font-black
-            uppercase tracking-[0.18em]
+            font-black uppercase tracking-[0.18em]
 
             ${theme.text}
           `}
