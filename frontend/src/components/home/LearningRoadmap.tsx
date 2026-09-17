@@ -794,8 +794,7 @@ function RoadmapContent({
           className={`
             text-xs
             font-black
-            uppercase
-            tracking-[0.18em]
+            uppercase tracking-[0.18em]
 
             ${theme.text}
           `}
