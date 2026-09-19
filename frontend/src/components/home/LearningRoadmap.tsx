@@ -743,8 +743,7 @@ export default function LearningRoadmap() {
               <ArrowRight
                 size={19}
                 className="
-                  transition-transform
-                  duration-300 group-hover:translate-x-1 "
+                  transition-transform duration-300 group-hover:translate-x-1 "
               />
             </Link>
           </div>
