@@ -766,8 +766,7 @@ function RoadmapContent({
 }) {
   return (
     <div
-      className=" rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl
-        sm:p-7
+      className=" rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-7
       "
     >
       <div
