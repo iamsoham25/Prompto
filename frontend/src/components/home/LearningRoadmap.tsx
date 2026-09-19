@@ -744,8 +744,7 @@ export default function LearningRoadmap() {
                 size={19}
                 className="
                   transition-transform
-                  duration-300
- group-hover:translate-x-1 "
+                  duration-300 group-hover:translate-x-1 "
               />
             </Link>
           </div>
