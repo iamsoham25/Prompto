@@ -731,7 +731,7 @@ export default function LearningRoadmap() {
                 text-white
                 shadow-lg
                 transition-all
-                duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-orange-500/20 "
+     duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-orange-500/20 "
             >
               Explore Learning
 
