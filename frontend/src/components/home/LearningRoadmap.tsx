@@ -735,8 +735,7 @@ export default function LearningRoadmap() {
 
                 hover:-translate-y-1
                 hover:bg-orange-600
-                hover:shadow-orange-500/20
-   "
+                hover:shadow-orange-500/20 "
             >
               Explore Learning
 
