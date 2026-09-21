@@ -247,8 +247,7 @@ export default function WhatIsPrompto() {
                       duration-200
 
                       group-hover:-translate-y-1
-                      group-hover:bg-orange-500
-     group-hover:text-white "
+                      group-hover:bg-orange-500 group-hover:text-white "
                   >
                     <Icon size={22} />
                   </div>
