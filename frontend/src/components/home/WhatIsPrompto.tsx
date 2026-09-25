@@ -237,8 +237,7 @@ export default function WhatIsPrompto() {
                   </span>
 
                   <div
-                    className=" flex h-12 w-12 items-center justify-center
-     rounded-2xl
+                    className=" flex h-12 w-12 items-center justify-center rounded-2xl
                       bg-slate-100
                       text-slate-800
                       transition duration-200 group-hover:-translate-y-1 group-hover:bg-orange-500 group-hover:text-white "
