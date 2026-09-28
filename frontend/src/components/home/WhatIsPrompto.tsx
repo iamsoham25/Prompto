@@ -227,8 +227,7 @@ export default function WhatIsPrompto() {
               >
                 <div className="flex items-start justify-between">
                   <span
-                    className="
-                      text-sm font-black
+                    className=" text-sm font-black
                       tracking-[0.2em]
                       text-orange-500
                     "
