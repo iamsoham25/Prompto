@@ -59,7 +59,7 @@ export default function StoryIntro() {
 
             sm:text-5xl
             lg:text-7xl
-          "
+   "
         >
           AI doesn&apos;t know
           <br />
