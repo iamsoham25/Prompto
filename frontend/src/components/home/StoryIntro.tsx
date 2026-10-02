@@ -20,8 +20,7 @@ export default function StoryIntro() {
       {/* Grid */}
 
       <div
-        className="
-   pointer-events-none absolute inset-0 opacity-[0.04] "
+        className=" pointer-events-none absolute inset-0 opacity-[0.04] "
         style={{
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
