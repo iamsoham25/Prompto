@@ -58,7 +58,7 @@ export default function StoryIntro() {
             tracking-[-0.04em]
 
             sm:text-5xl
-            lg:text-7xl "
+     lg:text-7xl "
         >
           AI doesn&apos;t know
           <br />
