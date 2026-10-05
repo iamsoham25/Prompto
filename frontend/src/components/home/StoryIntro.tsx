@@ -52,8 +52,7 @@ export default function StoryIntro() {
             duration: 0.55,
             ease,
           }}
-          className="
-     text-4xl font-black uppercase leading-tight tracking-[-0.04em] sm:text-5xl lg:text-7xl "
+          className=" text-4xl font-black uppercase leading-tight tracking-[-0.04em] sm:text-5xl lg:text-7xl "
         >
           AI doesn&apos;t know
           <br />
