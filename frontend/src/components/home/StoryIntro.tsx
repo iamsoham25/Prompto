@@ -155,8 +155,7 @@ export default function StoryIntro() {
             uppercase leading-tight
             tracking-[-0.04em]
             text-transparent
-
-     sm:text-5xl lg:text-7xl
+ sm:text-5xl lg:text-7xl
           "
         >
           Prompto teaches you
