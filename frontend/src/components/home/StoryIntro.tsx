@@ -153,7 +153,7 @@ export default function StoryIntro() {
           className=" bg-gradient-to-r from-orange-400 via-purple-400 to-pink-400 bg-clip-text
             text-4xl font-black
             uppercase leading-tight
-       tracking-[-0.04em] text-transparent sm:text-5xl lg:text-7xl
+ tracking-[-0.04em] text-transparent sm:text-5xl lg:text-7xl
           "
         >
           Prompto teaches you
