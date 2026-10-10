@@ -716,8 +716,7 @@ export default function LearningRoadmap() {
 
             <Link
               href="/learn"
-              className="
-     group
+              className=" group
                 inline-flex
                 shrink-0
                 items-center
