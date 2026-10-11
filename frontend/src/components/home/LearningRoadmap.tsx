@@ -724,8 +724,7 @@ export default function LearningRoadmap() {
                 gap-3
                 rounded-2xl
                 bg-orange-500
-                px-7
-   py-4 font-black text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-orange-500/20 "
+                px-7 py-4 font-black text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-orange-500/20 "
             >
               Explore Learning
 
